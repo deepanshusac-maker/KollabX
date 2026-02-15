@@ -1,0 +1,34 @@
+/* Variables - Light Theme */
+:root {
+    /* Color Palette - Light */
+    --bg-obsidian: #FFFFFF;
+    /* Re-purposed variable name to keep linking easy, or just use semantic names */
+    --bg-light: #FFFFFF;
+    --text-main: #1A1A1A;
+    --text-mist: #666666;
+    --accent-smoke: #333333;
+    /* Dark smoke for light bg */
+    --accent-color: #00e5ff;
+    /* Restored striking light color */
+
+    /* Utility Colors */
+    --glass-stroke: rgba(0, 0, 0, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+
+    /* Typography */
+    --font-primary: 'Inter', sans-serif;
+
+    /* Effects */
+    --glow-inner: none;
+    --blur-glass: 10px;
+
+    /* Legacy/Compat */
+    --primary-color: #2563EB;
+    /* Blue is good for light theme */
+    --background-color: var(--bg-light);
+    --text-color: var(--text-main);
+
+    /* Navbar specific */
+    --nav-scrolled-bg: rgba(255, 255, 255, 0.9);
+    --nav-text: #1A1A1A;
+}

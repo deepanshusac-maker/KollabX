@@ -1,11 +1,6 @@
 /* Global CSS */
-:root {
-    --primary-color: #007bff;
-    --secondary-color: #6c757d;
-    --background-color: #ffffff;
-    --text-color: #333333;
-    --font-family: 'Arial', sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import 'variables.css';
 
 * {
     box-sizing: border-box;
@@ -14,24 +9,120 @@
 }
 
 body {
-    font-family: var(--font-family);
-    background-color: var(--background-color);
-    color: var(--text-color);
+    font-family: var(--font-primary);
+    background-color: var(--bg-light);
+    color: var(--text-main);
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
-nav {
+/* Navbar Styles - Light Theme */
+.navbar {
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
+    align-items: center;
+    padding: 1.5rem 5%;
+    background-color: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: all 0.4s ease;
+}
+
+.navbar.scrolled {
+    background-color: var(--nav-scrolled-bg);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-stroke);
+    padding: 1rem 5%;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.navbar h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--nav-text);
+    letter-spacing: -0.02em;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    position: relative;
+    /* Essential for nav-indicator positioning */
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-mist);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: var(--primary-color);
+}
+
+/* Right Side Nav Items */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.notification-icon {
+    color: var(--text-mist);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.notification-icon:hover {
+    color: var(--primary-color);
+}
+
+.btn-signin {
+    padding: 0.6rem 1.5rem;
+    border-radius: 99px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-signin:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 footer {
     text-align: center;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-top: 1px solid #e9ecef;
-    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #f9fafb;
+    color: var(--text-mist);
+    border-top: 1px solid var(--glass-stroke);
+    font-size: 0.9rem;
+}
+
+/* Striking Light Animation - Restored */
+.nav-indicator {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 3px;
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 100;
 }

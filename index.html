@@ -1,26 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kollabx - Home</title>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/hero.css">
 </head>
+
 <body>
-    <nav>
-        <!-- Navbar content will go here -->
+    <nav class="navbar">
         <h1>Kollabx</h1>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-item active">Home</a></li>
+            <li><a href="explore.html" class="nav-item">Explore</a></li>
+            <li><a href="post.html" class="nav-item">Post</a></li>
+            <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
+            <li><a href="profile.html" class="nav-item">Profile</a></li>
+            <div class="nav-indicator"></div>
+        </ul>
+        <div class="nav-right">
+            <div class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </div>
+            <a href="signin.html" class="btn-signin">Sign In</a>
+        </div>
     </nav>
     <main>
         <section class="hero">
-            <h1>Welcome to Kollabx</h1>
-            <p>Connect, Collaborate, Create.</p>
+            <canvas id="smokeCanvas"></canvas>
+
+            <div class="hero-content">
+                <p class="tagline">Crafting Unique Brand Identities</p>
+
+                <h1 class="hero-title">
+                    <span class="split-text-heading">Find your next</span>
+                    <div class="word-card">
+                        <div class="loader">
+                            <div class="words">
+                                <span class="word">Striker</span>
+                                <span class="word">Lead Dev</span>
+                                <span class="word">Point Guard</span>
+                                <span class="word">Guitarist</span>
+                                <span class="word">Striker</span>
+                                <!-- Duplicate for loop smoothness if needed, though keyframes handle it -->
+                            </div>
+                        </div>
+                    </div>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Stop searching in chaotic group chats. Post your mission or join an existing one in seconds.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#" class="btn-hero btn-primary">Get Started Now</a>
+                    <a href="#" class="btn-hero btn-secondary">See Projects</a>
+                </div>
+            </div>
         </section>
     </main>
     <footer>
-        <p>&copy; 2024 Kollabx</p>
+        <p>&copy; 2024 Kollabx. All rights reserved.</p>
     </footer>
     <script src="js/main.js"></script>
+    <script src="js/hero.js"></script>
 </body>
+
 </html>

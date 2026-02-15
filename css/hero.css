@@ -1,0 +1,263 @@
+/* Hero Section - Mesh Minimalist */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: url('../assets/images/mesh-gradient.png') no-repeat center center/cover;
+    color: var(--text-main);
+    text-align: center;
+    padding-top: 80px;
+}
+
+/* Canvas Background - Hidden for Mesh Theme */
+#smokeCanvas {
+    display: none;
+}
+
+/* Hero Content Wrapper - Transparent (Glass Removed) */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 1.5s ease-out;
+    /* Glass styles removed per user request */
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+.tagline {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    backdrop-filter: blur(5px);
+}
+
+/* Headline */
+.hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    /* Decreased size */
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 2rem;
+    color: #000000;
+    /* High contrast black */
+}
+
+/* Subtitle */
+.hero-subtitle {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--text-mist);
+    max-width: 600px;
+    margin-bottom: 3rem;
+    font-weight: 400;
+}
+
+/* Buttons */
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-hero {
+    padding: 1rem 2.5rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Primary Button */
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background: #1d4ed8;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+/* Secondary Button - Glass on Glass */
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Split Text Animation Styles */
+.split-line {
+    overflow: hidden;
+    display: inline-block;
+}
+
+.split-char,
+.split-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(100%);
+    animation: revealText 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    margin-right: 0.25em;
+    /* Fix spacing between words */
+}
+
+@keyframes revealText {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Rotating Words Animation - User Provided */
+.word-card {
+    /* Renamed from .card to .word-card to avoid conflicts */
+    --bg-color: #111;
+    background-color: var(--bg-color);
+    padding: 0.5rem 1.5rem;
+    /* Adjusted opacity/sizing for inline feel */
+    border-radius: 1.25rem;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.loader {
+    color: rgb(124, 124, 124);
+    font-family: var(--font-primary, "Poppins", sans-serif);
+    /* Use site font */
+    font-weight: 500;
+    font-size: 25px;
+    /* Matched to roughly fit H1 scale or slightly smaller */
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 40px;
+    padding: 0;
+    /* Adjusted padding */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    border-radius: 8px;
+}
+
+.words {
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    /* Ensure fit */
+}
+
+/* Gradient mask for the scrolling words */
+.words::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(var(--bg-color) 0%,
+            transparent 20%,
+            transparent 80%,
+            var(--bg-color) 100%);
+    z-index: 20;
+}
+
+.word {
+    display: block;
+    height: 100%;
+    padding-left: 6px;
+    color: #956afa;
+    animation: spin_4991 4s infinite;
+    line-height: 40px;
+    /* Vertically center */
+    white-space: nowrap;
+}
+
+@keyframes spin_4991 {
+    10% {
+        -webkit-transform: translateY(-102%);
+        transform: translateY(-102%);
+    }
+
+    25% {
+        -webkit-transform: translateY(-100%);
+        transform: translateY(-100%);
+    }
+
+    35% {
+        -webkit-transform: translateY(-202%);
+        transform: translateY(-202%);
+    }
+
+    50% {
+        -webkit-transform: translateY(-200%);
+        transform: translateY(-200%);
+    }
+
+    60% {
+        -webkit-transform: translateY(-302%);
+        transform: translateY(-302%);
+    }
+
+    75% {
+        -webkit-transform: translateY(-300%);
+        transform: translateY(-300%);
+    }
+
+    85% {
+        -webkit-transform: translateY(-402%);
+        transform: translateY(-402%);
+    }
+
+    100% {
+        -webkit-transform: translateY(-400%);
+        transform: translateY(-400%);
+    }
+}
