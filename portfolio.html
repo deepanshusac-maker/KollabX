@@ -9,11 +9,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/portfolio.css">
     <link rel="stylesheet" href="css/sections.css">
 </head>
 
 <body>
+    <nav class="navbar">
+        <h1>Kollabx</h1>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-item">Home</a></li>
+            <li><a href="explore.html" class="nav-item">Explore</a></li>
+            <li><a href="post.html" class="nav-item">Post</a></li>
+            <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
+            <li><a href="profile.html" class="nav-item">Profile</a></li>
+            <div class="nav-indicator"></div>
+        </ul>
+        <div class="nav-right">
+            <div class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </div>
+            <a href="signin.html" class="btn-signin">Sign In</a>
+        </div>
+    </nav>
+
     <header class="portfolio-header">
         <div class="container header-content">
             <div class="profile-pic-container">
@@ -69,6 +93,9 @@
                 </div>
             </div>
 
+            <div style="display: flex; justify-content: center; margin-top: 4rem; margin-bottom: 1rem;">
+                <a href="profile.html" class="btn-edit-profile">Edit Profile</a>
+            </div>
         </section>
     </main>
 
@@ -143,6 +170,7 @@
         </div>
     </footer>
 
+    <script src="js/main.js"></script>
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();

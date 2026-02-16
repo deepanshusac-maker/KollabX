@@ -32,7 +32,7 @@ body {
 /* Header Section */
 .portfolio-header {
     background: transparent;
-    padding: 6rem 0 4rem;
+    padding: 8rem 0 4rem;
     margin-bottom: 2rem;
 }
 
@@ -232,4 +232,31 @@ footer {
     .portfolio-header {
         padding-top: 4rem;
     }
+}
+
+.btn-edit-profile {
+    display: inline-block;
+    background-color: var(--portfolio-primary);
+    color: white;
+    padding: 1.1rem 3.5rem;
+    border-radius: 50px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+    border: none;
+    cursor: pointer;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
+
+.btn-edit-profile:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(37, 117, 235, 0.3);
+}
+
+.btn-edit-profile:active {
+    transform: translateY(0);
 }

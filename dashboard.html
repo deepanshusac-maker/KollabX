@@ -6,125 +6,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kollabx - Dashboard</title>
     <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/dashboard.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
     <nav class="navbar">
-        <h1 style="color: var(--primary-color);">Kollabx</h1>
+        <h1>Kollabx</h1>
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
             <li><a href="post.html" class="nav-item">Post</a></li>
-            <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
+            <li><a href="dashboard.html" class="nav-item active">Dashboard</a></li>
             <li><a href="profile.html" class="nav-item">Profile</a></li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
-            <a href="notifications.html" class="notification-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
-                <div class="notification-badge">3</div>
-            </a>
+            <div class="notification-icon">
+                <i data-lucide="bell"></i>
+            </div>
             <a href="signin.html" class="btn-signin">Sign In</a>
         </div>
     </nav>
-    <main class="dashboard-layout">
-        <aside class="sidebar">
-            <nav>
-                <ul>
-                    <li><a href="dashboard.html">Dashboard</a></li>
-                    <li><a href="profile.html">Profile</a></li>
-                    <li><a href="settings.html">Settings</a></li>
-                </ul>
-            </nav>
-        </aside>
-        <section class="content">
-            <h1>Dashboard</h1>
-            <div class="widgets">
-                <!-- Dashboard widgets -->
-            </div>
-        </section>
-    </main>
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <div class="logo">
-                    <i data-lucide="rocket"></i>
-                    <span>KollabX</span>
-                </div>
-                <p>Connecting builders, one idea at a time. Find teammates by skills, not spam.</p>
-                <div class="footer-badges">
-                    <span class="f-badge">Student-first</span>
-                    <span class="f-badge">Skill matching</span>
-                    <span class="f-badge">Private chat</span>
-                </div>
-            </div>
 
-            <div class="footer-col">
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="explore.html">Features</a></li>
-                    <li><a href="index.html#how-it-works">How it works</a></li>
-                    <li><a href="index.html#faq">FAQ</a></li>
-                    <li><a href="explore.html">Explore ideas</a></li>
-                </ul>
+    <main class="dashboard-container">
+        <!-- Hero Section -->
+        <header class="dashboard-hero">
+            <div class="hero-text">
+                <h1>Welcome back 👋</h1>
+                <p>Manage your requests, teams, and recommended projects.</p>
             </div>
+            <a href="post.html" class="btn-post-idea">
+                <i data-lucide="plus"></i>
+                Post New Idea
+            </a>
+        </header>
 
-            <div class="footer-col">
-                <h4>Community</h4>
-                <ul>
-                    <li><a href="#">Campus ambassadors</a></li>
-                    <li><a href="#">Hackathon partners</a></li>
-                    <li><a href="#">Clubs & societies</a></li>
-                    <li><a href="#">Feedback</a></li>
-                </ul>
+        <!-- Tabs -->
+        <div class="dashboard-tabs">
+            <button class="tab-item active" data-tab="all">All</button>
+            <button class="tab-item" data-tab="recommended">Recommended</button>
+            <button class="tab-item" data-tab="requests">Requests</button>
+            <button class="tab-item" data-tab="teams">Teams</button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="glass-card stat-card">
+                <span class="stat-value">—</span>
+                <span class="stat-label">Active Teams</span>
             </div>
-
-            <div class="footer-col">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="#">Privacy & safety</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Report an issue</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
+            <div class="glass-card stat-card">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Incoming Requests</span>
             </div>
-
-            <div class="footer-newsletter">
-                <h4>Get updates</h4>
-                <p>New features, campus launches, and hackathon-ready updates.</p>
-                <form class="subscribe-form">
-                    <input type="email" placeholder="you@college.edu" required>
-                    <button type="submit" class="btn-subscribe">Subscribe</button>
-                </form>
-                <div class="footer-socials">
-                    <a href="#" class="social-btn"><i data-lucide="mail"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="link"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="instagram"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="github"></i></a>
-                </div>
+            <div class="glass-card stat-card">
+                <span class="stat-value">0</span>
+                <span class="stat-label">My Applications</span>
             </div>
         </div>
 
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Recommended for You -->
+            <div class="horizontal-card" data-category="recommended">
+                <div class="card-icon">
+                    <i data-lucide="shield"></i>
+                </div>
+                <div class="card-content">
+                    <h2>Recommended for You</h2>
+                    <p>Discover projects tailored to your specific skill set and interests.</p>
+                    <div class="empty-state">
+                        <span class="sub-text">No recommendations yet. Update your profile skills.</span>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <a href="explore.html" class="btn-arrow">
+                        <i data-lucide="arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Incoming Requests -->
+            <div class="horizontal-card" data-category="requests">
+                <div class="card-icon">
+                    <i data-lucide="filter"></i>
+                </div>
+                <div class="card-content">
+                    <h2>Incoming Requests</h2>
+                    <p>Manage project join requests from other talented builders.</p>
+                    <div class="empty-state">
+                        <span class="sub-text">No one has requested to join your projects yet.</span>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button class="btn-arrow">
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- My Requests -->
+            <div class="horizontal-card" data-category="requests">
+                <div class="card-icon">
+                    <i data-lucide="layout"></i>
+                </div>
+                <div class="card-content">
+                    <h2>My Requests</h2>
+                    <p>Track the status of your applications to join exciting new projects.</p>
+                    <div class="empty-state">
+                        <span class="sub-text">You haven't applied to any projects yet.</span>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button class="btn-arrow">
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- My Teams -->
+            <div class="horizontal-card" data-category="teams">
+                <div class="card-icon">
+                    <i data-lucide="rocket"></i>
+                </div>
+                <div class="card-content">
+                    <h2>My Teams</h2>
+                    <p>Collaborate and build with your roster of teammates across all projects.</p>
+                    <div class="empty-state">
+                        <span class="sub-text">You're not in any teams yet. Explore and apply.</span>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button class="btn-arrow">
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="logo">🚀 KollabX</div>
+                <p>Connecting builders, one idea at a time. Find teammates by skills, not spam.</p>
+                <div class="tags">
+                    <span>Student-first</span>
+                    <span>Skill matching</span>
+                    <span>Private chat</span>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">How it works</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Explore ideas</a>
+                </div>
+                <div class="link-group">
+                    <h4>Community</h4>
+                    <a href="#">Campus ambassadors</a>
+                    <a href="#">Hackathon partners</a>
+                    <a href="#">Clubs & societies</a>
+                    <a href="#">Feedback</a>
+                </div>
+                <div class="link-group">
+                    <h4>Support</h4>
+                    <a href="#">Privacy & safety</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Report an issue</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="footer-subscribe">
+                <h4>Get updates</h4>
+                <p>New features, campus launches, and hackathon-ready updates.</p>
+                <div class="subscribe-form">
+                    <input type="email" placeholder="you@college.edu">
+                    <button>Subscribe</button>
+                </div>
+                <div class="social-links">
+                    <i data-lucide="mail"></i>
+                    <i data-lucide="link"></i>
+                    <i data-lucide="instagram"></i>
+                    <i data-lucide="twitter"></i>
+                </div>
+            </div>
+        </div>
         <div class="footer-bottom">
-            <p>© 2026 KollabX • Made with 🔥 for problem solvers</p>
-            <div class="status-indicator">
-                <div class="dot"></div>
-                <span>Status: Beta</span>
+            <p>© 2026 CollabX - Made with 🔥 for problem solvers</p>
+            <div class="status">
+                <span class="status-dot"></span>
+                Status: Beta
             </div>
         </div>
     </footer>
+
     <script src="js/main.js"></script>
     <script src="js/dashboard.js"></script>
-    <script>lucide.createIcons();</script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
 </body>
 
 </html>
