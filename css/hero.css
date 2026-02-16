@@ -9,6 +9,7 @@
     align-items: center;
     overflow: hidden;
     background: url('../assets/images/mesh-gradient.png') no-repeat center center/cover;
+    background-size: cover;
     color: var(--text-main);
     text-align: center;
     padding-top: 80px;
@@ -221,11 +222,13 @@
 
 .btn-primary:hover {
     color: #fff;
-    border: 1px solid var(--primary-color);
+    border: 1px solid transparent;
 }
 
 .btn-primary:hover::before {
+    background: var(--maroon-grad);
     box-shadow: inset 0 0 0 10em var(--primary-color);
+    /* Keeping existing shadow logic if needed, but background will override */
 }
 
 /* Secondary Button */

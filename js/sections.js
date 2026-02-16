@@ -41,4 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.opacity = '0';
         observer.observe(el);
     });
+
+    const timelineItems = document.querySelectorAll('.kx-timeline-item');
+    timelineItems.forEach(el => {
+        observer.observe(el);
+    });
+
+    // Initialize Lucide Icons
+    if (window.lucide) {
+        lucide.createIcons();
+    }
 });

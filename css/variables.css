@@ -8,8 +8,8 @@
     --text-mist: #666666;
     --accent-smoke: #333333;
     /* Dark smoke for light bg */
-    --accent-color: #00e5ff;
-    /* Restored striking light color */
+    --accent-color: #b3526a;
+    /* Maroon accent */
 
     /* Utility Colors */
     --glass-stroke: rgba(0, 0, 0, 0.1);
@@ -23,12 +23,15 @@
     --blur-glass: 10px;
 
     /* Legacy/Compat */
-    --primary-color: #2563EB;
-    /* Blue is good for light theme */
+    --primary-color: #b3526a;
+    /* Maroon is the new primary */
     --background-color: var(--bg-light);
     --text-color: var(--text-main);
 
     /* Navbar specific */
     --nav-scrolled-bg: rgba(255, 255, 255, 0.9);
     --nav-text: #1A1A1A;
+
+    /* Custom Gradients */
+    --maroon-grad: linear-gradient(135deg, #EFA7A7 0%, #b3526a 100%);
 }

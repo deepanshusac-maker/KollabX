@@ -1,30 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kollabx - Sign In</title>
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="css/components.css">
+    <title>KollabX - Join the Squad</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --maroon-grad: linear-gradient(135deg, #EFA7A7 0%, #b3526a 100%);
+            --soft-white: #f8f9fa;
+            --glow-color: rgba(179, 82, 106, 0.15);
+            --primary-maroon: #b3526a;
+        }
+
+        @keyframes containerEntrance {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes elementFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background: url('assets/images/mesh-gradient.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Container with Glass Effect & Entrance Animation */
+        .container {
+            width: 850px;
+            max-width: 95%;
+            min-height: 600px;
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 0 8px 4px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: containerEntrance 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            z-index: 101;
+        }
+
+        /* Form Layout */
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .sign-in {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .sign-up {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .container.active .sign-in {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        .container.active .sign-up {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+        }
+
+        form {
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 45px;
+            height: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+            font-weight: 800;
+        }
+
+        .form-subtitle {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        input:not([type="checkbox"]) {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 14px 18px;
+            margin: 8px 0;
+            width: 100%;
+            border-radius: 12px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary-maroon);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(179, 82, 106, 0.1);
+        }
+
+        .options-row {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin: 15px 0;
+            color: #444;
+        }
+
+        .btn-main {
+            border-radius: 30px;
+            border: none;
+            background: var(--maroon-grad);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 14px 60px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px -5px rgba(179, 82, 106, 0.4);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -5px rgba(179, 82, 106, 0.5);
+        }
+
+        /* Staggered Element Animations */
+        .container.active .sign-up h1,
+        .container.active .sign-up .form-subtitle,
+        .container.active .sign-up input,
+        .container.active .sign-up .btn-main {
+            animation: elementFadeIn 0.5s ease-out forwards;
+        }
+
+        .sign-in h1,
+        .sign-in .form-subtitle,
+        .sign-in input,
+        .sign-in .btn-main {
+            animation: elementFadeIn 0.5s ease-out forwards;
+        }
+
+        .social-icons {
+            margin-top: 25px;
+        }
+
+        .social-icons a {
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            height: 40px;
+            width: 40px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .social-icons a:hover {
+            background-color: white;
+            color: var(--primary-maroon);
+            transform: scale(1.1);
+        }
+
+        /* --- TRAPEZIUM WITH MESH BACKGROUND --- */
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 100;
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .container.active .overlay-container {
+            transform: translateX(-100%);
+            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+        }
+
+        .overlay {
+            background: url('assets/images/mesh-gradient.png') no-repeat center center;
+            background-size: cover;
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .container.active .overlay {
+            transform: translateX(50%);
+        }
+
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 50px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transition: transform 0.6s ease-in-out;
+            z-index: 2;
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .container.active .overlay-left {
+            transform: translateX(0);
+        }
+
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .container.active .overlay-right {
+            transform: translateX(20%);
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            border: 2px solid #FFFFFF;
+            color: #FFFFFF;
+            border-radius: 30px;
+            padding: 12px 45px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        p {
+            font-size: 15px;
+            line-height: 24px;
+            margin: 20px 0;
+        }
+
+        .toggle-link {
+            color: var(--primary-maroon);
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
-    <main class="auth-container">
-        <h1>Sign In</h1>
-        <form id="signin-form">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form>
+                <h1>Join KollabX</h1>
+                <p class="form-subtitle">Create your account and start collaborating with verified squads today.</p>
+                <input type="text" placeholder="Full Name" style="animation-delay: 0.1s;" />
+                <input type="email" placeholder="Email Address" style="animation-delay: 0.2s;" />
+                <input type="password" placeholder="Choose Password" style="animation-delay: 0.3s;" />
+                <button type="button" class="btn-main" style="animation-delay: 0.4s;">Create Account</button>
+                <div class="social-icons" style="animation-delay: 0.5s;">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-google"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-container sign-in">
+            <form>
+                <h1>Welcome Back</h1>
+                <p class="form-subtitle">Login to your mission dashboard and track your squad's progress.</p>
+                <input type="email" placeholder="Email" />
+                <input type="password" placeholder="Password" />
+                <div class="options-row">
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" style="width: auto; margin: 0;"> Remember me
+                    </label>
+                    <a href="#" style="text-decoration:none; color:var(--primary-maroon); font-weight: 600;">Forgot
+                        Password?</a>
+                </div>
+                <button type="button" class="btn-main">Sign In</button>
+                <p style="font-size: 13px; color: #555; margin-top: 25px;">New to KollabX? <span class="toggle-link"
+                        id="signUpLink">Sign Up</span></p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-google"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>ALREADY A MEMBER?</h1>
+                    <p>Welcome back! Sign in to continue your mission where you left off.</p>
+                    <button class="btn-ghost" id="signInBtn">SIGN IN</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>READY TO BUILD?</h1>
+                    <p>Start your journey with us and discover top-tier talent for your next project.</p>
+                    <button class="btn-ghost" id="signUpBtn">GET STARTED</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Sign In</button>
-        </form>
-        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-    </main>
-    <script src="js/main.js"></script>
-    <script src="js/auth.js"></script>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const signUpBtn = document.getElementById('signUpBtn');
+        const signInBtn = document.getElementById('signInBtn');
+        const signUpLink = document.getElementById('signUpLink');
+
+        signUpBtn.addEventListener('click', () => container.classList.add("active"));
+        signInBtn.addEventListener('click', () => container.classList.remove("active"));
+        signUpLink.addEventListener('click', () => container.classList.add("active"));
+    </script>
+
 </body>
+
 </html>

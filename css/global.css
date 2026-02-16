@@ -87,19 +87,19 @@ body {
 .btn-signin {
     padding: 0.6rem 1.5rem;
     border-radius: 99px;
-    background: var(--primary-color);
+    background: var(--maroon-grad);
     color: white;
     text-decoration: none;
     font-weight: 500;
     font-size: 0.9rem;
-    border: 1px solid transparent;
+    border: none;
     transition: all 0.3s ease;
 }
 
 .btn-signin:hover {
-    background: #1d4ed8;
+    opacity: 0.9;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 12px rgba(179, 82, 106, 0.2);
 }
 
 footer {
@@ -111,14 +111,14 @@ footer {
     font-size: 0.9rem;
 }
 
-/* Striking Light Animation - Restored */
+/* Striking Light Animation - Maroon Gradient */
 .nav-indicator {
     position: absolute;
     bottom: -2px;
     left: 0;
     height: 3px;
-    background: var(--accent-color);
-    box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+    background: var(--maroon-grad);
+    box-shadow: 0 0 10px rgba(179, 82, 106, 0.5), 0 0 20px rgba(179, 82, 106, 0.3);
     border-radius: 2px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     width: 0;

@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/hero.css">
     <link rel="stylesheet" href="css/sections.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -94,52 +96,111 @@
         <!-- What You Can Do Section -->
         <section class="features-section">
             <h2>What You Can Do</h2>
-            <div class="feature-cards">
-                <div class="glass-card feature-card fade-in-up">
-                    <span class="icon">📢</span>
-                    <h3>Signal Your Mission</h3>
-                    <p>Define your team's needs. Whether you need a Power Forward, a Solidity Expert, or a Drummer, post
-                        the specs and let the right talent apply to you.</p>
+            <div class="kx-card-container">
+                <!-- Card 1: Signal Your Mission -->
+                <div class="kx-card kx-card--purple fade-in-up">
+                    <div class="kx-card-icon"><i data-lucide="radio"></i></div>
+                    <div class="kx-card-header">
+                        <h3 class="kx-card-title">Signal Your Mission</h3>
+                        <p class="kx-card-subtitle">Define your team's needs. Post the specs and let the right talent
+                            apply to you.</p>
+                    </div>
+                    <div class="kx-card-shapes">
+                        <img src="assets/images/shape2.png" alt="Abstract Shape">
+                    </div>
                 </div>
-                <div class="glass-card feature-card fade-in-up">
-                    <span class="icon">🎯</span>
-                    <h3>Find Your Fit</h3>
-                    <p>Browse opportunities based on your vibe. Filter by Tech Stack, Sport, or Genre and join a team
-                        that matches your ambition.</p>
+
+                <!-- Card 2: Find Your Fit -->
+                <div class="kx-card kx-card--peach fade-in-up">
+                    <div class="kx-card-icon"><i data-lucide="target"></i></div>
+                    <div class="kx-card-header">
+                        <h3 class="kx-card-title">Find Your Fit</h3>
+                        <p class="kx-card-subtitle">Discover active missions that match your expertise. Filter by domain
+                            and intensity.</p>
+                    </div>
+                    <div class="kx-card-shapes">
+                        <img src="assets/images/shape4.png" alt="Abstract Shape">
+                    </div>
+                </div>
+
+                <!-- Card 4: Skill Lab -->
+                <div class="kx-card kx-card--yellow fade-in-up">
+                    <div class="kx-card-icon"><i data-lucide="award"></i></div>
+                    <div class="kx-card-header">
+                        <h3 class="kx-card-title">Skill Lab</h3>
+                        <p class="kx-card-subtitle">Showcase your skills through real projects and build a portfolio
+                            that matters.</p>
+                    </div>
+                    <div class="kx-card-shapes">
+                        <img src="assets/images/shape3.png" alt="Abstract Shape">
+                    </div>
                 </div>
             </div>
         </section>
 
+
         <!-- How It Works Section -->
+        <!-- How It Works Section (Timeline) -->
         <section class="how-it-works-section">
             <h2>How It Works</h2>
-            <div class="stepper">
-                <div class="step fade-in-up">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3>Define</h3>
-                        <p>Create a profile highlighting what you bring to the table.</p>
+            <div class="kx-timeline">
+                <!-- Step 1: Purple -->
+                <div class="kx-timeline-item kx-theme--purple">
+                    <div class="kx-timeline-node"></div>
+                    <div class="kx-timeline-pill">STEP 01</div>
+                    <div class="kx-timeline-content">
+                        <div class="kx-timeline-card">
+                            <div class="kx-timeline-icon"><i data-lucide="user-plus"></i></div>
+                            <h3 class="kx-timeline-title">Create Your Profile</h3>
+                            <span class="kx-timeline-tag">Onboarding</span>
+                            <p>Set up your unique profile, showcase your skills, and let the community know what you're
+                                looking for.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="step fade-in-up">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>Pulse</h3>
-                        <p>Post your idea or "Signal" your availability for specific dates.</p>
+
+                <!-- Step 2: Peach -->
+                <div class="kx-timeline-item kx-theme--peach">
+                    <div class="kx-timeline-node"></div>
+                    <div class="kx-timeline-pill">STEP 02</div>
+                    <div class="kx-timeline-content">
+                        <div class="kx-timeline-card">
+                            <div class="kx-timeline-icon"><i data-lucide="search"></i></div>
+                            <h3 class="kx-timeline-title">Explore Missions</h3>
+                            <span class="kx-timeline-tag">Discovery</span>
+                            <p>Browse through hundreds of live project requests. Filter by category, skill level, and
+                                location.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="step fade-in-up">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>Match</h3>
-                        <p>Chat directly with founders or captains within the KollabX interface.</p>
+
+                <!-- Step 3: Mint -->
+                <div class="kx-timeline-item kx-theme--mint">
+                    <div class="kx-timeline-node"></div>
+                    <div class="kx-timeline-pill">STEP 03</div>
+                    <div class="kx-timeline-content">
+                        <div class="kx-timeline-card">
+                            <div class="kx-timeline-icon"><i data-lucide="message-square"></i></div>
+                            <h3 class="kx-timeline-title">Connect & Chat</h3>
+                            <span class="kx-timeline-tag">Communication</span>
+                            <p>Found a match? Start an instant conversation and discuss the mission details with your
+                                potential squad.</p>
+                        </div>
                     </div>
                 </div>
-                <div class="step fade-in-up">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h3>Execute</h3>
-                        <p>Form the squad, lock the roster, and go win.</p>
+
+                <!-- Step 4: Soft Blue -->
+                <div class="kx-timeline-item kx-theme--blue">
+                    <div class="kx-timeline-node"></div>
+                    <div class="kx-timeline-pill">STEP 04</div>
+                    <div class="kx-timeline-content">
+                        <div class="kx-timeline-card">
+                            <div class="kx-timeline-icon"><i data-lucide="rocket"></i></div>
+                            <h3 class="kx-timeline-title">Launch Project</h3>
+                            <span class="kx-timeline-tag">Execution</span>
+                            <p>Ready to go? Lock in your team and start building. Track progress and achieve your goals
+                                together.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -147,35 +208,92 @@
 
         <!-- Why KollabX Section -->
         <section class="why-section">
-            <h2>Why KollabX?</h2>
-            <div class="feature-list">
-                <div class="feature-item fade-in-up">
-                    <div class="checkmark">✓</div>
-                    <div>
-                        <h4>Verified Talent</h4>
-                        <p>No more bots. See real portfolios and past game stats.</p>
+            <h2 class="fade-in-up">Why KollabX?</h2>
+            <div class="kx-feature-container">
+                <!-- Card 1: Purple -->
+                <div class="kx-feature-card kx-feature--purple fade-in-up">
+                    <div class="kx-illustration-area">
+                        <div class="kx-illustration-bg"></div>
+                        <i data-lucide="shield-check"
+                            style="width: 48px; height: 48px; position: relative; z-index: 3;"></i>
                     </div>
+                    <div class="kx-content-area">
+                        <h3 class="kx-feature-title">Verified Talent</h3>
+                        <p class="kx-feature-desc">No more bots. Browse through real portfolios, verified skill sets,
+                            and past project stats.</p>
+                        <span class="kx-feature-meta">Trusted by 500+ builders</span>
+                    </div>
+                    <div class="kx-feature-action"><i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <!-- Ambient Dots -->
+                    <div class="kx-ambient-dot" style="width: 6px; height: 6px; top: 15%; left: 10%;"></div>
+                    <div class="kx-ambient-dot" style="width: 8px; height: 8px; top: 70%; left: 25%;"></div>
+                    <div class="kx-ambient-dot" style="width: 4px; height: 4px; top: 20%; right: 30%;"></div>
+                    <div class="kx-ambient-dot" style="width: 5px; height: 5px; bottom: 15%; right: 15%;"></div>
                 </div>
-                <div class="feature-item fade-in-up">
-                    <div class="checkmark">✓</div>
-                    <div>
-                        <h4>Zero Noise</h4>
-                        <p>We filter out the "Is this still available?" fluff.</p>
+
+                <!-- Card 2: Peach -->
+                <div class="kx-feature-card kx-feature--peach fade-in-up">
+                    <div class="kx-illustration-area">
+                        <div class="kx-illustration-bg"></div>
+                        <i data-lucide="filter" style="width: 48px; height: 48px; position: relative; z-index: 3;"></i>
                     </div>
+                    <div class="kx-content-area">
+                        <h3 class="kx-feature-title">Zero Noise</h3>
+                        <p class="kx-feature-desc">We filter out the fluff. Get direct access to captains who are ready
+                            to build right now.</p>
+                        <span class="kx-feature-meta">100% Signal Integrity</span>
+                    </div>
+                    <div class="kx-feature-action"><i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <!-- Ambient Dots -->
+                    <div class="kx-ambient-dot" style="width: 7px; height: 7px; top: 10%; left: 15%;"></div>
+                    <div class="kx-ambient-dot" style="width: 4px; height: 4px; top: 60%; left: 20%;"></div>
+                    <div class="kx-ambient-dot" style="width: 6px; height: 6px; top: 25%; right: 35%;"></div>
+                    <div class="kx-ambient-dot" style="width: 8px; height: 8px; bottom: 20%; right: 10%;"></div>
                 </div>
-                <div class="feature-item fade-in-up">
-                    <div class="checkmark">✓</div>
-                    <div>
-                        <h4>Multi-Domain</h4>
-                        <p>One platform for your tech career and your weekend hobbies.</p>
+
+                <!-- Card 3: Mint -->
+                <div class="kx-feature-card kx-feature--mint fade-in-up">
+                    <div class="kx-illustration-area">
+                        <div class="kx-illustration-bg"></div>
+                        <i data-lucide="layout-grid"
+                            style="width: 48px; height: 48px; position: relative; z-index: 3;"></i>
                     </div>
+                    <div class="kx-content-area">
+                        <h3 class="kx-feature-title">Multi-Domain</h3>
+                        <p class="kx-feature-desc">One platform for your technical career, side projects, and weekend
+                            creative hobbies.</p>
+                        <span class="kx-feature-meta">Covering 12+ industry sectors</span>
+                    </div>
+                    <div class="kx-feature-action"><i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <!-- Ambient Dots -->
+                    <div class="kx-ambient-dot" style="width: 5px; height: 5px; top: 12%; left: 12%;"></div>
+                    <div class="kx-ambient-dot" style="width: 6px; height: 6px; top: 75%; left: 30%;"></div>
+                    <div class="kx-ambient-dot" style="width: 8px; height: 8px; top: 15%; right: 25%;"></div>
+                    <div class="kx-ambient-dot" style="width: 4px; height: 4px; bottom: 25%; right: 20%;"></div>
                 </div>
-                <div class="feature-item fade-in-up">
-                    <div class="checkmark">✓</div>
-                    <div>
-                        <h4>Instant Sync</h4>
-                        <p>Real-time notifications when a team lead accepts your request.</p>
+
+                <!-- Card 4: Soft Blue -->
+                <div class="kx-feature-card kx-feature--blue fade-in-up">
+                    <div class="kx-illustration-area">
+                        <div class="kx-illustration-bg"></div>
+                        <i data-lucide="rocket" style="width: 48px; height: 48px; position: relative; z-index: 3;"></i>
                     </div>
+                    <div class="kx-content-area">
+                        <h3 class="kx-feature-title">Squad Growth</h3>
+                        <p class="kx-feature-desc">Build your roster, track team progress, and level up your leadership
+                            skills through collaboration.</p>
+                        <span class="kx-feature-meta">Scaling 200+ active squads</span>
+                    </div>
+                    <div class="kx-feature-action"><i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <!-- Ambient Dots -->
+                    <div class="kx-ambient-dot" style="width: 7px; height: 7px; top: 20%; left: 18%;"></div>
+                    <div class="kx-ambient-dot" style="width: 5px; height: 5px; top: 65%; left: 22%;"></div>
+                    <div class="kx-ambient-dot" style="width: 4px; height: 4px; top: 10%; right: 40%;"></div>
+                    <div class="kx-ambient-dot" style="width: 6px; height: 6px; bottom: 30%; right: 15%;"></div>
                 </div>
             </div>
         </section>

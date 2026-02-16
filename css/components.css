@@ -10,18 +10,19 @@
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
+    background: var(--maroon-grad);
     color: #fff;
+    transition: opacity 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    opacity: 0.9;
 }
 
 .card {
     border: 1px solid #ddd;
     border-radius: 8px;
-    
+
     margin-left: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
