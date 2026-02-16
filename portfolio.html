@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Resume</title>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/portfolio.css">
+</head>
+
+<body>
+    <header class="portfolio-header">
+        <div class="container header-content">
+            <div class="profile-pic-container">
+                <img id="display-photo" src="https://via.placeholder.com/200" alt="Profile Picture">
+            </div>
+            <div class="header-text">
+                <h1 id="display-name">John Doe</h1>
+                <p class="role" id="display-college">Professional Developer</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- About Section -->
+        <section id="about">
+            <h2><i data-lucide="user"></i> About Me</h2>
+            <div class="card about-grid">
+                <div class="bio-container">
+                    <p class="bio-text" id="display-bio">
+                        Loading bio...
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills & Contact -->
+        <section id="skills-contact">
+            <div class="skills-grid">
+                <div class="skills-card card">
+                    <h2><i data-lucide="zap"></i> Skills</h2>
+                    <div id="skills-list">
+                        <!-- Skills will be populated here -->
+                    </div>
+                </div>
+
+                <div class="contact-card card">
+                    <h2><i data-lucide="mail"></i> Contact Me</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>GitHub</label>
+                            <a id="contact-github" href="#" target="_blank"
+                                style="color: var(--portfolio-primary); font-weight: 600; text-decoration: none;">View
+                                Profile</a>
+                        </div>
+                        <div class="info-item" style="margin-top: 1rem;">
+                            <label>LinkedIn</label>
+                            <a id="contact-linkedin" href="#" target="_blank"
+                                style="color: var(--portfolio-primary); font-weight: 600; text-decoration: none;">Connect
+                                on LinkedIn</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Portfolio Lab. All rights reserved.</p>
+            <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem;">
+                <a id="display-github" href="#" style="color: inherit;"><i data-lucide="github"></i></a>
+                <a id="display-linkedin" href="#" style="color: inherit;"><i data-lucide="linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Load data from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileData = JSON.parse(localStorage.getItem('userProfile'));
+
+            if (profileData) {
+                document.getElementById('display-name').textContent = profileData.fullName || 'John Doe';
+                document.getElementById('display-college').textContent = profileData.college || 'Professional Developer';
+                document.getElementById('display-bio').textContent = profileData.bio || 'Your bio goes here...';
+
+                // Display profile image if exists
+                if (profileData.profileImage) {
+                    document.getElementById('display-photo').src = profileData.profileImage;
+                }
+
+                // Map skills
+                if (profileData.skills) {
+                    const skillsList = document.getElementById('skills-list');
+                    skillsList.innerHTML = '';
+                    const skillsArray = profileData.skills.split(',').map(s => s.trim());
+
+                    skillsArray.forEach(skill => {
+                        if (!skill) return;
+                        const div = document.createElement('div');
+                        div.className = 'skill-item';
+                        // Random percentage for placeholder feel if not provided
+                        const percent = Math.floor(Math.random() * (95 - 70 + 1)) + 70;
+                        div.innerHTML = `
+                            <div class="skill-info"><span>${skill}</span><span>${percent}%</span></div>
+                            <div class="progress-bar-bg"><div class="progress-bar" style="width: ${percent}%"></div></div>
+                        `;
+                        skillsList.appendChild(div);
+                    });
+                }
+
+                // Map social links
+                if (profileData.github) {
+                    document.getElementById('display-github').href = profileData.github;
+                    document.getElementById('contact-github').href = profileData.github;
+                }
+                if (profileData.linkedin) {
+                    document.getElementById('display-linkedin').href = profileData.linkedin;
+                    document.getElementById('contact-linkedin').href = profileData.linkedin;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
