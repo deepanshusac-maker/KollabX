@@ -311,6 +311,16 @@
     transform: translateY(-2px);
 }
 
+/* Applied state */
+.btn-apply[disabled] {
+    background: #dcfce7; /* light green */
+    color: #166534;      /* dark green text */
+    border-color: rgba(22, 101, 52, 0.3);
+    cursor: default;
+    box-shadow: none;
+    transform: none;
+}
+
 /* Empty State for Posted Ideas */
 .empty-state-container {
     display: flex;
