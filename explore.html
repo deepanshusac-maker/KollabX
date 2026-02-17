@@ -454,9 +454,17 @@
                     // Add click handler for Apply button
                     const applyBtn = card.querySelector('.btn-apply');
                     if (applyBtn) {
-                        applyBtn.addEventListener('click', (e) => {
+                        applyBtn.addEventListener('click', async (e) => {
                             e.stopPropagation(); // Prevent card click
-                            handleApply(project.id);
+                            try {
+                                await handleApply(project.id);
+                            } catch (error) {
+                                console.error('Error handling apply:', error);
+                                const friendlyError = (typeof getUserFriendlyError === 'function')
+                                    ? getUserFriendlyError(error)
+                                    : (error?.message || 'Something went wrong. Please try again.');
+                                if (window.toast) window.toast.error(friendlyError);
+                            }
                         });
                     }
 
@@ -767,25 +775,45 @@
 
         // Handle Apply button click
         async function handleApply(projectId) {
-            const user = await window.authHelpers.getCurrentUser();
-            if (!user) {
-                // Redirect to sign in
-                sessionStorage.setItem('redirect_after_login', window.location.pathname);
-                window.location.href = 'signin.html';
-                return;
-            }
+            try {
+                const user = await window.authHelpers.getCurrentUser();
+                if (!user) {
+                    // Redirect to sign in
+                    const redirectTarget = window.location.pathname + window.location.search + window.location.hash;
+                    sessionStorage.setItem('redirect_after_login', redirectTarget);
+                    if (window.toast) window.toast.info('Please sign in to apply.');
+                    setTimeout(() => {
+                        window.location.href = 'signin.html';
+                    }, 300);
+                    return;
+                }
 
-            // Show application modal
-            showApplicationModal(projectId);
+                // Show application modal
+                await showApplicationModal(projectId);
+            } catch (error) {
+                console.error('handleApply error:', error);
+                const friendlyError = (typeof getUserFriendlyError === 'function')
+                    ? getUserFriendlyError(error)
+                    : (error?.message || 'Failed to start application. Please try again.');
+                if (window.toast) window.toast.error(friendlyError);
+                throw error;
+            }
         }
 
         // Show application modal
         async function showApplicationModal(projectId) {
             try {
+                if (!window.projects?.getProjectById) {
+                    throw new Error('Projects module not available.');
+                }
+                if (!window.applications?.applyToProject || !window.applications?.getUserApplications) {
+                    throw new Error('Applications module not available.');
+                }
+
                 // Get project details
                 const projectResult = await window.projects.getProjectById(projectId);
                 if (!projectResult.success || !projectResult.data) {
-                    showFormError('Failed to load project details.');
+                    if (window.toast) window.toast.error('Failed to load project details.');
                     return;
                 }
 
@@ -800,7 +828,7 @@
                 );
 
                 if (existingApp) {
-                    showFormError('You have already applied to this project.');
+                    if (window.toast) window.toast.warning('You have already applied to this project.');
                     return;
                 }
 
@@ -904,7 +932,7 @@
                     
                     const message = messageField.value.trim();
                     if (!message) {
-                        showFormError('Please provide a message explaining why you want to join.');
+                        if (window.toast) window.toast.error('Please write a short message to apply.');
                         return;
                     }
 
@@ -926,17 +954,20 @@
                         } else {
                             hideLoading(submitBtn);
                             const friendlyError = getUserFriendlyError(result.error || new Error('Failed to submit application'));
-                            showFormError(friendlyError);
+                            if (window.toast) window.toast.error(friendlyError);
                         }
                     } catch (error) {
                         hideLoading(submitBtn);
                         const friendlyError = getUserFriendlyError(error);
-                        showFormError(friendlyError);
+                        if (window.toast) window.toast.error(friendlyError);
                     }
                 });
             } catch (error) {
                 console.error('Error showing application modal:', error);
-                showFormError('Failed to load application form.');
+                const friendlyError = (typeof getUserFriendlyError === 'function')
+                    ? getUserFriendlyError(error)
+                    : (error?.message || 'Failed to load application form.');
+                if (window.toast) window.toast.error(friendlyError);
             }
         }
 
