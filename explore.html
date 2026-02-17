@@ -263,6 +263,9 @@
             sort: 'latest'
         };
 
+        // Projects the current user has applied to (by project_id)
+        let appliedProjectIds = new Set();
+
         // Load projects from database
         async function loadProjects() {
             const projectGrid = document.getElementById('project-grid');
@@ -294,6 +297,27 @@
                 console.log('Projects loaded:', result); // Debug log
 
                 if (result.success && result.data && result.data.length > 0) {
+                    // Refresh applied projects set (for current user)
+                    appliedProjectIds = new Set();
+                    try {
+                        if (window.authHelpers?.getCurrentUser && window.applications?.getUserApplications) {
+                            const user = await window.authHelpers.getCurrentUser();
+                            if (user) {
+                                const appsResult = await window.applications.getUserApplications();
+                                if (appsResult.success && Array.isArray(appsResult.data)) {
+                                    appsResult.data.forEach(app => {
+                                        // Treat any non-rejected application as "applied"
+                                        if (app.project_id && app.status !== 'rejected') {
+                                            appliedProjectIds.add(app.project_id);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    } catch (appsError) {
+                        console.warn('Error loading user applications for applied state:', appsError);
+                    }
+
                     // Render projects first
                     try {
                         await renderProjects(result.data);
@@ -403,6 +427,9 @@
                         ? project.description.substring(0, maxDescLength) + '...'
                         : (project.description || '');
 
+                    // Has the current user already applied to this project?
+                    const hasApplied = appliedProjectIds && appliedProjectIds.has(project.id);
+
                 // Create project card
                 const card = document.createElement('div');
                 card.className = 'project-card';
@@ -438,7 +465,13 @@
                             <i data-lucide="users" aria-hidden="true"></i>
                             <span>${project.current_members || 0}/${project.team_size || 1} members</span>
                         </div>
-                        <button type="button" class="btn-apply" data-project-id="${project.id}">Apply</button>
+                        <button 
+                            type="button" 
+                            class="btn-apply" 
+                            data-project-id="${project.id}"
+                            ${hasApplied ? 'disabled' : ''}>
+                            ${hasApplied ? 'Applied' : 'Apply'}
+                        </button>
                     </div>
                 `;
 
