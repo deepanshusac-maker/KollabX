@@ -158,6 +158,20 @@
             box-shadow: 0 0 0 4px rgba(179, 82, 106, 0.1);
         }
 
+        input.error {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: -4px;
+            margin-bottom: 8px;
+            display: block;
+            text-align: left;
+        }
+
         .options-row {
             display: flex;
             width: 100%;
@@ -335,6 +349,46 @@
             cursor: pointer;
             text-decoration: underline;
         }
+
+        /* Google sign-in button */
+        .social-divider {
+            font-size: 13px;
+            color: #666;
+            margin: 20px 0 15px;
+            text-align: center;
+        }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 18px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            background: #fff;
+            color: #333;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-google:hover {
+            background: #f8f9fa;
+            border-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-google:focus {
+            outline: 2px solid var(--primary-maroon);
+            outline-offset: 2px;
+        }
+
+        .btn-google svg {
+            flex-shrink: 0;
+        }
     </style>
 </head>
 
@@ -342,42 +396,42 @@
 
     <div class="container" id="container">
         <div class="form-container sign-up">
-            <form>
+            <form id="signup-form">
                 <h1>Join KollabX</h1>
                 <p class="form-subtitle">Create your account and start collaborating with verified squads today.</p>
-                <input type="text" placeholder="Full Name" style="animation-delay: 0.1s;" />
-                <input type="email" placeholder="Email Address" style="animation-delay: 0.2s;" />
-                <input type="password" placeholder="Choose Password" style="animation-delay: 0.3s;" />
-                <button type="button" class="btn-main" style="animation-delay: 0.4s;">Create Account</button>
-                <div class="social-icons" style="animation-delay: 0.5s;">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-google"></i></a>
-                </div>
+                <input type="text" id="signup-name" placeholder="Full Name" required style="animation-delay: 0.1s;" />
+                <input type="email" id="signup-email" placeholder="Email Address" required style="animation-delay: 0.2s;" />
+                <input type="password" id="signup-password" placeholder="Choose Password" required minlength="8" style="animation-delay: 0.3s;" />
+                <button type="submit" class="btn-main" id="signup-btn" style="animation-delay: 0.4s;">Create Account</button>
+                <p class="social-divider" style="animation-delay: 0.5s;">or continue with</p>
+                <button type="button" class="btn-google" id="signup-google-btn" style="animation-delay: 0.5s;">
+                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    <span>Continue with Google</span>
+                </button>
             </form>
         </div>
 
         <div class="form-container sign-in">
-            <form>
+            <form id="signin-form">
                 <h1>Welcome Back</h1>
                 <p class="form-subtitle">Login to your mission dashboard and track your squad's progress.</p>
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Password" />
+                <input type="email" id="signin-email" placeholder="Email" required />
+                <input type="password" id="signin-password" placeholder="Password" required />
                 <div class="options-row">
                     <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
                         <input type="checkbox" style="width: auto; margin: 0;"> Remember me
                     </label>
-                    <a href="#" style="text-decoration:none; color:var(--primary-maroon); font-weight: 600;">Forgot
+                    <a href="#" id="forgot-password-link" style="text-decoration:none; color:var(--primary-maroon); font-weight: 600;">Forgot
                         Password?</a>
                 </div>
-                <button type="button" class="btn-main">Sign In</button>
+                <button type="submit" class="btn-main" id="signin-btn">Sign In</button>
+                <p class="social-divider">or continue with</p>
+                <button type="button" class="btn-google" id="signin-google-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    <span>Continue with Google</span>
+                </button>
                 <p style="font-size: 13px; color: #555; margin-top: 25px;">New to KollabX? <span class="toggle-link"
                         id="signUpLink">Sign Up</span></p>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-google"></i></a>
-                </div>
             </form>
         </div>
 
@@ -397,6 +451,14 @@
         </div>
     </div>
 
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/form-validation.js"></script>
+    <script src="js/toast.js"></script>
     <script>
         const container = document.getElementById('container');
         const signUpBtn = document.getElementById('signUpBtn');
@@ -406,6 +468,175 @@
         signUpBtn.addEventListener('click', () => container.classList.add("active"));
         signInBtn.addEventListener('click', () => container.classList.remove("active"));
         signUpLink.addEventListener('click', () => container.classList.add("active"));
+
+        // Sign up form validation
+        const signupForm = document.getElementById('signup-form');
+        const signupButton = document.getElementById('signup-btn');
+        
+        if (signupForm) {
+            setupRealTimeValidation(signupForm, {
+                'signup-password': [validators.minLength(8)]
+            });
+
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const fieldRules = {
+                    'signup-password': [validators.minLength(8)]
+                };
+
+                if (!validateForm(signupForm, fieldRules)) {
+                    showFormError('Please fix the errors above.');
+                    return;
+                }
+
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const fullName = document.getElementById('signup-name').value;
+
+                showLoading(signupButton, 'Create Account');
+
+                try {
+                    const result = await window.auth.signUp(email, password, fullName);
+                    
+                    if (result.success) {
+                        // Mark as new user for redirect logic
+                        sessionStorage.setItem('is_new_user', 'true');
+                        window.toast.success('Account created successfully! Redirecting to profile setup...');
+                        // Redirect to profile page for new users
+                        setTimeout(() => {
+                            window.location.href = 'profile.html';
+                        }, 1500);
+                    } else {
+                        hideLoading(signupButton);
+                        const friendlyError = getUserFriendlyError(result.error || new Error('Failed to create account'));
+                        window.toast.error(friendlyError);
+                    }
+                } catch (error) {
+                    hideLoading(signupButton);
+                    const friendlyError = getUserFriendlyError(error);
+                    window.toast.error(friendlyError);
+                    console.error('Signup error:', error);
+                }
+            });
+        }
+
+        // Sign in form validation
+        const signinForm = document.getElementById('signin-form');
+        const signinButton = document.getElementById('signin-btn');
+        
+        if (signinForm) {
+            setupRealTimeValidation(signinForm);
+
+            signinForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm(signinForm)) {
+                    showFormError('Please enter valid credentials.');
+                    return;
+                }
+
+                const email = document.getElementById('signin-email').value;
+                const password = document.getElementById('signin-password').value;
+
+                showLoading(signinButton, 'Sign In');
+
+                try {
+                    const result = await window.auth.signIn(email, password);
+                    
+                    if (result.success) {
+                        window.toast.success('Signed in successfully! Redirecting...');
+                        // Check if profile is complete and redirect accordingly
+                        setTimeout(async () => {
+                            const profileComplete = await window.auth.isProfileComplete();
+                            if (!profileComplete) {
+                                window.location.href = 'profile.html';
+                            } else {
+                                window.location.href = 'index.html';
+                            }
+                        }, 1000);
+                    } else {
+                        hideLoading(signinButton);
+                        const friendlyError = getUserFriendlyError(result.error || new Error('Sign in failed'));
+                        window.toast.error(friendlyError);
+                    }
+                } catch (error) {
+                    hideLoading(signinButton);
+                    const friendlyError = getUserFriendlyError(error);
+                    window.toast.error(friendlyError);
+                    console.error('Signin error:', error);
+                }
+            });
+        }
+
+        // Password reset functionality
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        if (forgotPasswordLink) {
+            forgotPasswordLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('signin-email').value;
+                
+                if (!email) {
+                    showFormError('Please enter your email address first.');
+                    return;
+                }
+
+                try {
+                    const result = await window.auth.resetPassword(email);
+                    if (result.success) {
+                        window.toast.success('Password reset email sent! Check your inbox.');
+                    } else {
+                        const friendlyError = getUserFriendlyError(result.error || new Error('Failed to send reset email'));
+                        window.toast.error(friendlyError);
+                    }
+                } catch (error) {
+                    const friendlyError = getUserFriendlyError(error);
+                    window.toast.error(friendlyError);
+                    console.error('Password reset error:', error);
+                }
+            });
+        }
+
+        // Google sign-in buttons
+        function handleGoogleSignIn() {
+            window.auth.signInWithGoogle().then((result) => {
+                if (!result.success && !result.redirecting) {
+                    window.toast.error(result.error || 'Google sign-in failed. Please try again.');
+                } else if (result.success) {
+                    window.toast.success('Signed in with Google successfully!');
+                }
+            });
+        }
+
+        const signinGoogleBtn = document.getElementById('signin-google-btn');
+        const signupGoogleBtn = document.getElementById('signup-google-btn');
+        if (signinGoogleBtn) signinGoogleBtn.addEventListener('click', handleGoogleSignIn);
+        if (signupGoogleBtn) signupGoogleBtn.addEventListener('click', handleGoogleSignIn);
+
+        // Check if user is already logged in (also handles OAuth callback when returning from Google)
+        window.addEventListener('DOMContentLoaded', async () => {
+            const isAuth = await window.auth.checkAuth();
+            if (isAuth) {
+                // User is already logged in or just returned from OAuth
+                // Check if this was a Google sign-in attempt
+                const googleSigninAttempt = sessionStorage.getItem('google_signin_attempt');
+                sessionStorage.removeItem('google_signin_attempt');
+                
+                // Check if profile is complete and redirect accordingly
+                const profileComplete = await window.auth.isProfileComplete();
+                const sessionResult = await window.auth.getSession();
+                const session = sessionResult.session;
+                const isNew = session && window.auth.isNewUser(session);
+                
+                // If new user (from signup or Google) or profile incomplete -> redirect to profile
+                if (googleSigninAttempt || isNew || !profileComplete) {
+                    window.location.href = 'profile.html';
+                } else {
+                    // Existing user with complete profile -> redirect to landing page
+                    window.location.href = 'index.html';
+                }
+            }
+        });
     </script>
 
 </body>

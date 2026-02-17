@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/toast.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -16,6 +18,12 @@
 <body>
     <nav class="navbar">
         <h1>Kollabx</h1>
+        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="mobile-overlay"></div>
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
@@ -25,14 +33,21 @@
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
-            <div class="notification-icon">
-                <i data-lucide="bell"></i>
-            </div>
+            <a href="notifications.html" class="notification-icon" aria-label="Notifications">
+                <i data-lucide="bell" aria-hidden="true"></i>
+                <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
+            </a>
             <a href="signin.html" class="btn-signin">Sign In</a>
         </div>
     </nav>
 
     <main class="dashboard-container">
+        <!-- Breadcrumbs -->
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Dashboard</span>
+        </nav>
         <!-- Hero Section -->
         <header class="dashboard-hero">
             <div class="hero-text">
@@ -81,11 +96,12 @@
                     <p>Discover projects tailored to your specific skill set and interests.</p>
                     <div class="empty-state">
                         <span class="sub-text">No recommendations yet. Update your profile skills.</span>
+                        <a href="profile.html" class="btn-update-profile" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Update Profile</a>
                     </div>
                 </div>
                 <div class="card-action">
-                    <a href="explore.html" class="btn-arrow">
-                        <i data-lucide="arrow-right"></i>
+                    <a href="explore.html" class="btn-arrow" aria-label="Go to explore page">
+                        <i data-lucide="arrow-right" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
@@ -98,13 +114,16 @@
                 <div class="card-content">
                     <h2>Incoming Requests</h2>
                     <p>Manage project join requests from other talented builders.</p>
-                    <div class="empty-state">
-                        <span class="sub-text">No one has requested to join your projects yet.</span>
+                    <div id="incoming-applications-container" class="applications-container">
+                        <div class="empty-state">
+                            <span class="sub-text">No one has requested to join your projects yet.</span>
+                            <a href="post.html" class="btn-post-project" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Post a Project</a>
+                        </div>
                     </div>
                 </div>
                 <div class="card-action">
-                    <button class="btn-arrow">
-                        <i data-lucide="arrow-right"></i>
+                    <button class="btn-arrow" aria-label="View details" id="toggle-incoming-applications">
+                        <i data-lucide="arrow-right" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -115,15 +134,18 @@
                     <i data-lucide="layout"></i>
                 </div>
                 <div class="card-content">
-                    <h2>My Requests</h2>
+                    <h2>My Applications</h2>
                     <p>Track the status of your applications to join exciting new projects.</p>
-                    <div class="empty-state">
-                        <span class="sub-text">You haven't applied to any projects yet.</span>
+                    <div id="my-applications-container" class="applications-container">
+                        <div class="empty-state">
+                            <span class="sub-text">You haven't applied to any projects yet.</span>
+                            <a href="explore.html" class="btn-explore-projects" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Explore Projects</a>
+                        </div>
                     </div>
                 </div>
                 <div class="card-action">
-                    <button class="btn-arrow">
-                        <i data-lucide="arrow-right"></i>
+                    <button class="btn-arrow" aria-label="View details" id="toggle-my-applications">
+                        <i data-lucide="arrow-right" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -136,13 +158,16 @@
                 <div class="card-content">
                     <h2>My Teams</h2>
                     <p>Collaborate and build with your roster of teammates across all projects.</p>
-                    <div class="empty-state">
-                        <span class="sub-text">You're not in any teams yet. Explore and apply.</span>
+                    <div id="my-teams-container" class="teams-container">
+                        <div class="empty-state">
+                            <span class="sub-text">You're not in any teams yet. Explore and apply.</span>
+                            <a href="explore.html" class="btn-explore-projects" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Explore Projects</a>
+                        </div>
                     </div>
                 </div>
                 <div class="card-action">
-                    <button class="btn-arrow">
-                        <i data-lucide="arrow-right"></i>
+                    <button class="btn-arrow" aria-label="View details" id="toggle-my-teams">
+                        <i data-lucide="arrow-right" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -178,20 +203,20 @@
             <div class="footer-col">
                 <h4>Community</h4>
                 <ul>
-                    <li><a href="#">Campus ambassadors</a></li>
-                    <li><a href="#">Hackathon partners</a></li>
-                    <li><a href="#">Clubs & societies</a></li>
-                    <li><a href="#">Feedback</a></li>
+                    <li><a href="mailto:community@kollabx.com">Campus ambassadors</a></li>
+                    <li><a href="mailto:partners@kollabx.com">Hackathon partners</a></li>
+                    <li><a href="mailto:clubs@kollabx.com">Clubs & societies</a></li>
+                    <li><a href="mailto:feedback@kollabx.com">Feedback</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="#">Privacy & safety</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Report an issue</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="mailto:privacy@kollabx.com">Privacy & safety</a></li>
+                    <li><a href="mailto:legal@kollabx.com">Terms</a></li>
+                    <li><a href="mailto:support@kollabx.com">Report an issue</a></li>
+                    <li><a href="mailto:contact@kollabx.com">Contact</a></li>
                 </ul>
             </div>
 
@@ -220,11 +245,363 @@
         </div>
     </footer>
 
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/applications.js"></script>
+    <script src="js/teams.js"></script>
+    <script src="js/form-validation.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/main.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+        // Initialize auth and protect route
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Check authentication
+            const isAuth = await window.session.requireAuth();
+            if (isAuth) {
+                await window.session.initAuth();
+                await loadDashboardData();
+            }
+            // Initialize Lucide Icons
+            lucide.createIcons();
+        });
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Show loading state
+                const statValues = document.querySelectorAll('.stat-value');
+                statValues.forEach(stat => {
+                    stat.textContent = '...';
+                    stat.style.opacity = '0.5';
+                });
+
+                const user = await window.authHelpers.getCurrentUser();
+                if (!user) {
+                    statValues.forEach(stat => {
+                        stat.textContent = '—';
+                        stat.style.opacity = '1';
+                    });
+                    return;
+                }
+
+                // Load user's projects
+                const projectsResult = await window.projects.getUserProjects(user.id);
+                const userProjects = projectsResult.data || [];
+
+                // Count active teams (projects user is part of)
+                const { data: teamMembers } = await window.supabase
+                    .from('team_members')
+                    .select('project_id')
+                    .eq('user_id', user.id);
+
+                const activeTeamsCount = teamMembers ? teamMembers.length : 0;
+
+                // Count incoming requests (applications to user's projects)
+                const projectIds = userProjects.map(p => p.id);
+                let incomingRequestsCount = 0;
+                if (projectIds.length > 0) {
+                    const { count } = await window.supabase
+                        .from('applications')
+                        .select('*', { count: 'exact', head: true })
+                        .in('project_id', projectIds)
+                        .eq('status', 'pending');
+                    incomingRequestsCount = count || 0;
+                }
+
+                // Count user's applications
+                const { count: myApplicationsCount } = await window.supabase
+                    .from('applications')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('applicant_id', user.id);
+
+                // Update stats display
+                if (statValues.length >= 3) {
+                    statValues[0].textContent = activeTeamsCount;
+                    statValues[1].textContent = incomingRequestsCount;
+                    statValues[2].textContent = myApplicationsCount || 0;
+                    statValues.forEach(stat => {
+                        stat.style.opacity = '1';
+                    });
+                }
+
+                // Load applications
+                await loadIncomingApplications();
+                await loadMyApplications();
+                
+                // Load teams
+                await loadMyTeams();
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                const statValues = document.querySelectorAll('.stat-value');
+                statValues.forEach(stat => {
+                    stat.textContent = '—';
+                    stat.style.opacity = '1';
+                });
+            }
+        }
+
+        // Load my teams
+        async function loadMyTeams() {
+            const container = document.getElementById('my-teams-container');
+            if (!container) return;
+
+            try {
+                const result = await window.teams.getUserTeams();
+                
+                if (!result.success || !result.data || result.data.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="sub-text">You're not in any teams yet. Explore and apply.</span>
+                            <a href="explore.html" class="btn-explore-projects" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Explore Projects</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = result.data.map(team => {
+                    const project = team.project;
+                    const isCreator = project?.creator_id === team.user_id;
+                    const role = team.role || (isCreator ? 'Creator' : 'Member');
+                    
+                    return `
+                        <div class="team-card-item" data-project-id="${project?.id}">
+                            <div class="team-card-header">
+                                <div>
+                                    <div class="team-project-title">${escapeHtml(project?.title || 'Unknown Project')}</div>
+                                    <div class="team-project-meta">
+                                        ${project?.category || ''} • ${project?.current_members || 0}/${project?.team_size || 0} members
+                                        ${isCreator ? '<span class="role-badge creator">Creator</span>' : `<span class="role-badge member">${role}</span>`}
+                                    </div>
+                                </div>
+                                <span class="team-status-badge ${project?.status === 'open' ? 'status-open' : ''}">${project?.status || 'Unknown'}</span>
+                            </div>
+                            ${project?.description ? `<div class="team-project-desc">${escapeHtml(project.description.length > 100 ? project.description.substring(0, 100) + '...' : project.description)}</div>` : ''}
+                            <div class="team-card-actions">
+                                <a href="explore.html#project-${project?.id}" class="btn-view-team-project">View Project</a>
+                                ${!isCreator ? `
+                                    <button class="btn-leave-team-card" data-project-id="${project?.id}">Leave Team</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Add leave team handlers
+                container.querySelectorAll('.btn-leave-team-card').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        const projectId = btn.dataset.projectId;
+                        if (confirm('Are you sure you want to leave this team?')) {
+                            const result = await window.teams.leaveTeam(projectId);
+                            if (result.success) {
+                                window.toast.success('You have left the team.');
+                                await loadDashboardData(); // Reload dashboard
+                            } else {
+                                const friendlyError = getUserFriendlyError(result.error || new Error('Failed to leave team'));
+                                showFormError(friendlyError);
+                            }
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading my teams:', error);
+            }
+        }
+
+        // Load incoming applications
+        async function loadIncomingApplications() {
+            const container = document.getElementById('incoming-applications-container');
+            if (!container) return;
+
+            try {
+                const result = await window.applications.getIncomingApplications();
+                
+                if (!result.success || !result.data || result.data.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="sub-text">No one has requested to join your projects yet.</span>
+                            <a href="post.html" class="btn-post-project" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Post a Project</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = result.data.map(app => {
+                    const applicant = app.applicant;
+                    const project = app.project;
+                    const applicantName = applicant?.full_name || 'Unknown';
+                    const applicantAvatar = applicant?.avatar_url || null;
+                    const avatarDisplay = applicantAvatar 
+                        ? `<img src="${applicantAvatar}" alt="${applicantName}" class="applicant-avatar">`
+                        : `<div class="applicant-avatar-placeholder">${applicantName.charAt(0).toUpperCase()}</div>`;
+                    
+                    return `
+                        <div class="application-item" data-application-id="${app.id}">
+                            <div class="application-header">
+                                <div class="applicant-info">
+                                    ${avatarDisplay}
+                                    <div>
+                                        <div class="applicant-name">${escapeHtml(applicantName)}</div>
+                                        <div class="application-project">Applied to: ${escapeHtml(project?.title || 'Unknown Project')}</div>
+                                    </div>
+                                </div>
+                                <div class="application-status status-pending">Pending</div>
+                            </div>
+                            ${app.message ? `<div class="application-message">${escapeHtml(app.message)}</div>` : ''}
+                            <div class="application-actions">
+                                <button class="btn-accept" data-application-id="${app.id}">Accept</button>
+                                <button class="btn-reject" data-application-id="${app.id}">Reject</button>
+                                <a href="portfolio.html?user=${app.applicant_id}" class="btn-view-profile">View Profile</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Add event listeners
+                container.querySelectorAll('.btn-accept').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        await handleAcceptApplication(btn.dataset.applicationId);
+                    });
+                });
+
+                container.querySelectorAll('.btn-reject').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        await handleRejectApplication(btn.dataset.applicationId);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading incoming applications:', error);
+            }
+        }
+
+        // Load my applications
+        async function loadMyApplications() {
+            const container = document.getElementById('my-applications-container');
+            if (!container) return;
+
+            try {
+                const result = await window.applications.getUserApplications();
+                
+                if (!result.success || !result.data || result.data.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="sub-text">You haven't applied to any projects yet.</span>
+                            <a href="explore.html" class="btn-explore-projects" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Explore Projects</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = result.data.map(app => {
+                    const project = app.project;
+                    const statusClass = app.status === 'accepted' ? 'status-accepted' : 
+                                      app.status === 'rejected' ? 'status-rejected' : 'status-pending';
+                    const statusText = app.status.charAt(0).toUpperCase() + app.status.slice(1);
+                    
+                    return `
+                        <div class="application-item" data-application-id="${app.id}">
+                            <div class="application-header">
+                                <div class="applicant-info">
+                                    <div>
+                                        <div class="applicant-name">${escapeHtml(project?.title || 'Unknown Project')}</div>
+                                        <div class="application-project">${project?.category || ''} • ${project?.current_members || 0}/${project?.team_size || 0} members</div>
+                                    </div>
+                                </div>
+                                <div class="application-status ${statusClass}">${statusText}</div>
+                            </div>
+                            ${app.message ? `<div class="application-message">${escapeHtml(app.message)}</div>` : ''}
+                            <div class="application-actions">
+                                ${app.status === 'pending' ? `<button class="btn-cancel-application" data-application-id="${app.id}">Cancel</button>` : ''}
+                                <a href="explore.html" class="btn-view-project">View Project</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Add cancel event listeners
+                container.querySelectorAll('.btn-cancel-application').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        if (confirm('Are you sure you want to cancel this application?')) {
+                            await handleCancelApplication(btn.dataset.applicationId);
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading my applications:', error);
+            }
+        }
+
+        // Handle accept application
+        async function handleAcceptApplication(applicationId) {
+            try {
+                const result = await window.applications.acceptApplication(applicationId);
+                
+                if (result.success) {
+                    window.toast.success('Application accepted! Team member joined successfully.');
+                    await loadDashboardData(); // Reload to update stats and lists
+                } else {
+                    const friendlyError = getUserFriendlyError(result.error || new Error('Failed to accept application'));
+                    showFormError(friendlyError);
+                }
+            } catch (error) {
+                const friendlyError = getUserFriendlyError(error);
+                showFormError(friendlyError);
+            }
+        }
+
+        // Handle reject application
+        async function handleRejectApplication(applicationId) {
+            if (!confirm('Are you sure you want to reject this application?')) {
+                return;
+            }
+
+            try {
+                const result = await window.applications.rejectApplication(applicationId);
+                
+                if (result.success) {
+                    window.toast.success('Application rejected.');
+                    await loadDashboardData(); // Reload to update stats and lists
+                } else {
+                    const friendlyError = getUserFriendlyError(result.error || new Error('Failed to reject application'));
+                    showFormError(friendlyError);
+                }
+            } catch (error) {
+                const friendlyError = getUserFriendlyError(error);
+                showFormError(friendlyError);
+            }
+        }
+
+        // Handle cancel application
+        async function handleCancelApplication(applicationId) {
+            try {
+                const result = await window.applications.cancelApplication(applicationId);
+                
+                if (result.success) {
+                    window.toast.success('Application cancelled.');
+                    await loadDashboardData(); // Reload to update stats and lists
+                } else {
+                    const friendlyError = getUserFriendlyError(result.error || new Error('Failed to cancel application'));
+                    showFormError(friendlyError);
+                }
+            } catch (error) {
+                const friendlyError = getUserFriendlyError(error);
+                showFormError(friendlyError);
+            }
+        }
+
+        // Escape HTML helper
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 

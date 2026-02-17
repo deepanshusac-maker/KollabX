@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/toast.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -16,6 +19,12 @@
 <body>
     <nav class="navbar">
         <h1>Kollabx</h1>
+        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="mobile-overlay"></div>
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
@@ -25,13 +34,14 @@
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
-            <a href="notifications.html" class="notification-icon">
+            <a href="notifications.html" class="notification-icon" aria-label="Notifications">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
-                <div class="notification-badge">3</div>
+                <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
             </a>
             <a href="signin.html" class="btn-signin">Sign In</a>
         </div>
@@ -39,6 +49,11 @@
 
     <main class="profile-section">
         <div class="profile-container">
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <a href="index.html">Home</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">Profile</span>
+            </nav>
             <div class="profile-header">
                 <div class="avatar-wrapper">
                     <div class="avatar-circle" id="avatar-preview">
@@ -49,8 +64,8 @@
                         <img id="avatar-image-preview" src=""
                             style="display: none; width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <label for="avatar-upload" class="avatar-edit-btn">
-                        <i data-lucide="edit-2"></i>
+                    <label for="avatar-upload" class="avatar-edit-btn" aria-label="Edit profile picture">
+                        <i data-lucide="edit-2" aria-hidden="true"></i>
                     </label>
                     <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
                 </div>
@@ -77,7 +92,10 @@
                     <div class="form-group">
                         <label for="bio">Short Bio</label>
                         <textarea id="bio" class="form-control"
-                            placeholder="Robotics enthusiast | Love building AI projects..." required></textarea>
+                            placeholder="Robotics enthusiast | Love building AI projects..." required maxlength="500"></textarea>
+                        <div class="char-counter">
+                            <span id="bio-char-count">0</span>/500 characters
+                        </div>
                     </div>
                 </div>
 
@@ -105,12 +123,12 @@
                     <div class="form-group-row">
                         <div class="form-group">
                             <label for="github">GitHub</label>
-                            <input type="text" id="github" class="form-control"
+                            <input type="url" id="github" class="form-control"
                                 placeholder="https://github.com/username" required>
                         </div>
                         <div class="form-group">
                             <label for="linkedin">LinkedIn</label>
-                            <input type="text" id="linkedin" class="form-control"
+                            <input type="url" id="linkedin" class="form-control"
                                 placeholder="https://linkedin.com/in/username" required>
                         </div>
                     </div>
@@ -167,20 +185,20 @@
             <div class="footer-col">
                 <h4>Community</h4>
                 <ul>
-                    <li><a href="#">Campus ambassadors</a></li>
-                    <li><a href="#">Hackathon partners</a></li>
-                    <li><a href="#">Clubs & societies</a></li>
-                    <li><a href="#">Feedback</a></li>
+                    <li><a href="mailto:community@kollabx.com">Campus ambassadors</a></li>
+                    <li><a href="mailto:partners@kollabx.com">Hackathon partners</a></li>
+                    <li><a href="mailto:clubs@kollabx.com">Clubs & societies</a></li>
+                    <li><a href="mailto:feedback@kollabx.com">Feedback</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="#">Privacy & safety</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Report an issue</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="mailto:privacy@kollabx.com">Privacy & safety</a></li>
+                    <li><a href="mailto:legal@kollabx.com">Terms</a></li>
+                    <li><a href="mailto:support@kollabx.com">Report an issue</a></li>
+                    <li><a href="mailto:contact@kollabx.com">Contact</a></li>
                 </ul>
             </div>
 
@@ -209,72 +227,306 @@
         </div>
     </footer>
 
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/notifications.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/form-validation.js"></script>
+    <script src="js/toast.js"></script>
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+        // Initialize auth and protect route
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Check authentication
+            const isAuth = await window.session.requireAuth();
+            if (isAuth) {
+                await window.session.initAuth();
+                
+                // Check if profile is already complete - if so, redirect to landing page
+                const profileComplete = await window.auth.isProfileComplete();
+                if (profileComplete) {
+                    // Profile is complete, but user might be editing - don't auto-redirect
+                    // Only redirect if they came from a new signup flow
+                    const isNewUser = sessionStorage.getItem('is_new_user');
+                    if (isNewUser) {
+                        sessionStorage.removeItem('is_new_user');
+                        // Don't redirect - let them edit if they want
+                    }
+                }
+            }
+            // Initialize Lucide Icons
+            lucide.createIcons();
+        });
 
         let profileImageData = '';
+        let avatarFile = null;
+
+        // Compress image before upload
+        function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.8) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Calculate new dimensions
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = (height * maxWidth) / width;
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = (width * maxHeight) / height;
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob(
+                            (blob) => {
+                                resolve(blob);
+                            },
+                            'image/jpeg',
+                            quality
+                        );
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Upload avatar to Supabase Storage
+        async function uploadAvatarToStorage(file, userId) {
+            try {
+                const supabase = window.supabase;
+                if (!supabase) {
+                    throw new Error('Supabase not initialized');
+                }
+
+                // Compress image
+                const compressedFile = await compressImage(file);
+                
+                // Get file extension
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${userId}/avatar.${fileExt}`;
+
+                // Upload to Storage
+                const { data, error } = await supabase.storage
+                    .from('avatars')
+                    .upload(fileName, compressedFile, {
+                        upsert: true, // Replace existing file
+                        contentType: `image/${fileExt === 'jpg' ? 'jpeg' : fileExt}`
+                    });
+
+                if (error) throw error;
+
+                // Get public URL
+                const { data: urlData } = supabase.storage
+                    .from('avatars')
+                    .getPublicUrl(fileName);
+
+                return urlData.publicUrl;
+            } catch (error) {
+                console.error('Error uploading avatar:', error);
+                throw error;
+            }
+        }
 
         // Handle Avatar Upload
         const avatarUpload = document.getElementById('avatar-upload');
         const avatarPreview = document.getElementById('avatar-image-preview');
         const defaultAvatarSvg = document.getElementById('default-avatar-svg');
 
-        // Load existing image if any
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedData = JSON.parse(localStorage.getItem('userProfile'));
-            if (savedData) {
-                // Populate fields
-                if (savedData.fullName) document.getElementById('full-name').value = savedData.fullName;
-                if (savedData.college) document.getElementById('college').value = savedData.college;
-                if (savedData.bio) document.getElementById('bio').value = savedData.bio;
-                if (savedData.skills) document.getElementById('skills').value = savedData.skills;
-                if (savedData.interests) document.getElementById('interests').value = savedData.interests;
-                if (savedData.github) document.getElementById('github').value = savedData.github;
-                if (savedData.linkedin) document.getElementById('linkedin').value = savedData.linkedin;
-                if (savedData.availability) document.getElementById('availability').value = savedData.availability;
+        // Load existing profile from database
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const profile = await window.authHelpers.getCurrentProfile();
+                if (profile) {
+                    // Populate fields from database
+                    if (profile.full_name) document.getElementById('full-name').value = profile.full_name;
+                    if (profile.college) document.getElementById('college').value = profile.college;
+                    if (profile.bio) document.getElementById('bio').value = profile.bio;
+                    if (profile.skills && Array.isArray(profile.skills)) {
+                        document.getElementById('skills').value = profile.skills.join(', ');
+                    }
+                    if (profile.interests && Array.isArray(profile.interests)) {
+                        document.getElementById('interests').value = profile.interests.join(', ');
+                    }
+                    if (profile.github_url) document.getElementById('github').value = profile.github_url;
+                    if (profile.linkedin_url) document.getElementById('linkedin').value = profile.linkedin_url;
+                    if (profile.availability) document.getElementById('availability').value = profile.availability;
 
-                if (savedData.profileImage) {
-                    profileImageData = savedData.profileImage;
-                    avatarPreview.src = profileImageData;
-                    avatarPreview.style.display = 'block';
-                    defaultAvatarSvg.style.display = 'none';
+                    if (profile.avatar_url) {
+                        profileImageData = profile.avatar_url;
+                        avatarPreview.src = profileImageData;
+                        avatarPreview.style.display = 'block';
+                        defaultAvatarSvg.style.display = 'none';
+                    }
                 }
+            } catch (error) {
+                console.error('Error loading profile:', error);
             }
         });
 
-        avatarUpload.addEventListener('change', (e) => {
+        avatarUpload.addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    profileImageData = event.target.result;
-                    avatarPreview.src = profileImageData;
-                    avatarPreview.style.display = 'block';
-                    defaultAvatarSvg.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showFormError('Please select an image file.');
+                return;
             }
+
+            // Validate file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                showFormError('Image size must be less than 5MB.');
+                return;
+            }
+
+            // Show preview immediately
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                avatarPreview.src = event.target.result;
+                avatarPreview.style.display = 'block';
+                defaultAvatarSvg.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+
+            // Store file for upload
+            avatarFile = file;
+            profileImageData = ''; // Clear old base64 data
         });
 
-        document.querySelector('.profile-card').addEventListener('submit', (e) => {
+        const profileForm = document.querySelector('.profile-card');
+        const saveButton = document.getElementById('save-profile');
+        
+        // Setup real-time validation
+        setupRealTimeValidation(profileForm, {
+            'github': [validators.url],
+            'linkedin': [validators.url],
+            'bio': [validators.minLength(10)]
+        });
+
+        // Character counter for bio
+        const bioField = document.getElementById('bio');
+        const bioCharCount = document.getElementById('bio-char-count');
+        if (bioField && bioCharCount) {
+            bioField.addEventListener('input', () => {
+                bioCharCount.textContent = bioField.value.length;
+            });
+            // Initialize count
+            bioCharCount.textContent = bioField.value.length;
+        }
+
+        profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const profileData = {
-                fullName: document.getElementById('full-name').value,
-                college: document.getElementById('college').value,
-                bio: document.getElementById('bio').value,
-                skills: document.getElementById('skills').value,
-                interests: document.getElementById('interests').value,
-                github: document.getElementById('github').value,
-                linkedin: document.getElementById('linkedin').value,
-                availability: document.getElementById('availability').value,
-                profileImage: profileImageData
+            // Validate form
+            const fieldRules = {
+                'github': [validators.url],
+                'linkedin': [validators.url],
+                'bio': [validators.minLength(10)]
             };
 
-            localStorage.setItem('userProfile', JSON.stringify(profileData));
-            window.location.href = 'portfolio.html';
+            if (!validateForm(profileForm, fieldRules)) {
+                showFormError('Please fix the errors above before saving.');
+                return;
+            }
+
+            // Show loading state
+            showLoading(saveButton, 'Save Profile');
+
+            try {
+                // Get current user
+                const user = await window.authHelpers.getCurrentUser();
+                if (!user) {
+                    hideLoading(saveButton);
+                    showFormError('You must be logged in to save your profile.');
+                    return;
+                }
+
+                // Upload avatar to Storage if a new file was selected
+                let avatarUrl = profileImageData; // Keep existing URL if no new file
+                if (avatarFile) {
+                    try {
+                        avatarUrl = await uploadAvatarToStorage(avatarFile, user.id);
+                        profileImageData = avatarUrl; // Update for future reference
+                        avatarFile = null; // Clear file reference
+                    } catch (error) {
+                        hideLoading(saveButton);
+                        const friendlyError = getUserFriendlyError(error);
+                        showFormError(`Failed to upload avatar: ${friendlyError}`);
+                        return;
+                    }
+                }
+
+                // Prepare profile data
+                const skillsArray = document.getElementById('skills').value
+                    .split(',')
+                    .map(s => s.trim())
+                    .filter(s => s.length > 0);
+                
+                const interestsArray = document.getElementById('interests').value
+                    .split(',')
+                    .map(i => i.trim())
+                    .filter(i => i.length > 0);
+
+                const profileData = {
+                    full_name: document.getElementById('full-name').value,
+                    college: document.getElementById('college').value,
+                    bio: document.getElementById('bio').value,
+                    skills: skillsArray,
+                    interests: interestsArray,
+                    github_url: document.getElementById('github').value || null,
+                    linkedin_url: document.getElementById('linkedin').value || null,
+                    availability: document.getElementById('availability').value || null,
+                    avatar_url: avatarUrl || null
+                };
+
+                // Save to database
+                const { data, error } = await window.supabase
+                    .from('profiles')
+                    .upsert({
+                        id: user.id,
+                        ...profileData,
+                        updated_at: new Date().toISOString()
+                    }, {
+                        onConflict: 'id'
+                    });
+
+                if (error) {
+                    throw error;
+                }
+                
+                // Clear localStorage (we're using database now)
+                localStorage.removeItem('userProfile');
+                
+                // Show success message
+                window.toast.success('Profile updated successfully! Redirecting...');
+                
+                // Redirect to landing page after profile completion
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } catch (error) {
+                hideLoading(saveButton);
+                console.error('Profile save error:', error);
+                const friendlyError = getUserFriendlyError(error);
+                showFormError(friendlyError);
+            }
         });
     </script>
 </body>

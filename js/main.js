@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Kollabx Main JS Loaded');
 
-    const navLinks = document.querySelectorAll('.nav-item');
+    const navItems = document.querySelectorAll('.nav-item');
     const indicator = document.querySelector('.nav-indicator');
     const navList = document.querySelector('.nav-links');
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         moveIndicator(activeLink, true);
     }
 
-    navLinks.forEach(link => {
+    navItems.forEach(link => {
         link.addEventListener('click', (e) => {
             // Allow opening in new tab/window without delay
             if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -63,14 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
             link.style.color = 'var(--primary-color)';
 
             // Reset others
-            navLinks.forEach(l => {
+            navItems.forEach(l => {
                 if (l !== link) l.style.color = 'var(--text-color)';
             });
 
-            // Delay navigation to show animation
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 350); // Slightly longer than CSS transition (0.3s)
+            // Navigate immediately - animation happens during navigation
+            window.location.href = targetUrl;
         });
     });
     // Navbar scroll effect
@@ -82,4 +80,71 @@ document.addEventListener('DOMContentLoaded', () => {
             navbar.classList.remove('scrolled');
         }
     });
+
+    // Mobile menu toggle
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navLinksMenu = document.querySelector('.nav-links');
+    const mobileOverlay = document.querySelector('.mobile-overlay');
+
+    if (mobileMenuToggle && navLinksMenu) {
+        mobileMenuToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isActive = navLinksMenu.classList.contains('active');
+            
+            navLinksMenu.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+            if (mobileOverlay) {
+                mobileOverlay.classList.toggle('active');
+            }
+            mobileMenuToggle.setAttribute('aria-expanded', !isActive);
+            
+            // Prevent body scroll when menu is open
+            if (!isActive) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', () => {
+                navLinksMenu.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                mobileOverlay.classList.remove('active');
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            });
+        }
+
+        // Close menu when clicking nav items (on mobile)
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    navLinksMenu.classList.remove('active');
+                    mobileMenuToggle.classList.remove('active');
+                    if (mobileOverlay) {
+                        mobileOverlay.classList.remove('active');
+                    }
+                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Close menu on window resize (if resizing to desktop)
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                navLinksMenu.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                if (mobileOverlay) {
+                    mobileOverlay.classList.remove('active');
+                }
+                mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        });
+    }
 });

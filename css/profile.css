@@ -18,6 +18,34 @@
     align-items: flex-start;
 }
 
+/* Breadcrumbs */
+.breadcrumbs {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-mist);
+}
+
+.breadcrumbs a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumbs a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.breadcrumbs span[aria-current="page"] {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
 .profile-container {
     max-width: 800px;
     width: 100%;

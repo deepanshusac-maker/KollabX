@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/explore.css">
     <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/toast.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -18,6 +20,12 @@
 <body>
     <nav class="navbar">
         <h1>Kollabx</h1>
+        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="mobile-overlay"></div>
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item active">Explore</a></li>
@@ -27,14 +35,21 @@
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
-            <div class="notification-icon">
-                <i data-lucide="bell"></i>
-            </div>
+            <a href="notifications.html" class="notification-icon" aria-label="Notifications">
+                <i data-lucide="bell" aria-hidden="true"></i>
+                <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
+            </a>
             <a href="signin.html" class="btn-signin">Sign In</a>
         </div>
     </nav>
 
     <main class="explore-container">
+        <!-- Breadcrumbs -->
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Explore</span>
+        </nav>
         <!-- Hero Section -->
         <header class="explore-hero">
             <h1>Explore Ideas</h1>
@@ -49,22 +64,22 @@
         <!-- Filter Section -->
         <section class="filter-card">
             <div class="search-bar">
-                <i data-lucide="search"></i>
-                <input type="text" placeholder="Search ideas, skills, keywords...">
+                <i data-lucide="search" aria-hidden="true"></i>
+                <input type="text" id="search-input" placeholder="Search ideas, skills, keywords..." aria-label="Search ideas, skills, keywords">
             </div>
 
             <div class="filter-options">
                 <div class="category-chips">
-                    <button class="chip active">All</button>
-                    <button class="chip">Web</button>
-                    <button class="chip">AI/ML</button>
-                    <button class="chip">Robotics</button>
-                    <button class="chip">Mobile</button>
-                    <button class="chip">Startup</button>
+                    <button class="chip active" data-category="All">All</button>
+                    <button class="chip" data-category="Web">Web</button>
+                    <button class="chip" data-category="AI/ML">AI/ML</button>
+                    <button class="chip" data-category="Robotics">Robotics</button>
+                    <button class="chip" data-category="Mobile">Mobile</button>
+                    <button class="chip" data-category="Startup">Startup</button>
                 </div>
 
                 <div class="sort-dropdown">
-                    <select>
+                    <select id="sort-select">
                         <option value="latest">Latest</option>
                         <option value="oldest">Oldest</option>
                         <option value="popular">Popular</option>
@@ -75,104 +90,26 @@
 
         <!-- Explore View -->
         <div id="explore-view">
+            <!-- Loading State -->
+            <div id="projects-loading" class="projects-loading">
+                <div class="loading-spinner"></div>
+                <p>Loading projects...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="projects-empty" class="projects-empty hidden">
+                <div class="empty-emoji">🔍</div>
+                <h2>No projects found</h2>
+                <p>Try adjusting your filters or be the first to post a project!</p>
+                <div class="empty-actions">
+                    <a href="post.html" class="btn-signin" style="margin-top: 1rem; display: inline-block;">Post Your First Project</a>
+                    <button class="btn-clear-filters" style="margin-top: 0.75rem; display: inline-block; background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 0.6rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600;">Clear Filters</button>
+                </div>
+            </div>
+
             <!-- Project Grid -->
-            <div class="project-grid">
-                <!-- Project Card 1 -->
-                <div class="project-card">
-                    <div class="card-header">
-                        <span class="status-badge status-open">Open</span>
-                        <span class="match-badge">0% match</span>
-                    </div>
-                    <div class="project-info">
-                        <h2>backend builder</h2>
-                        <div class="author-chip">By DEEPANSHU SHARMA</div>
-                        <p class="project-desc">it is quite good project to work on</p>
-                    </div>
-                    <div class="skills-list">
-                        <span class="skill-tag">gvggv</span>
-                    </div>
-                    <div class="card-footer">
-                        <div class="members-count">
-                            <i data-lucide="users"></i>
-                            0/4 members
-                        </div>
-                        <button class="btn-apply">Apply</button>
-                    </div>
-                </div>
-
-                <!-- Project Card 2 -->
-                <div class="project-card">
-                    <div class="card-header">
-                        <span class="status-badge status-open">Open</span>
-                        <span class="match-badge">0% match</span>
-                    </div>
-                    <div class="project-info">
-                        <h2>Idea</h2>
-                        <div class="author-chip">By AYUSH TRIPATHI</div>
-                        <p class="project-desc">Have an idea oF hackathon</p>
-                    </div>
-                    <div class="skills-list">
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">python</span>
-                    </div>
-                    <div class="card-footer">
-                        <div class="members-count">
-                            <i data-lucide="users"></i>
-                            0/5 members
-                        </div>
-                        <button class="btn-apply">Apply</button>
-                    </div>
-                </div>
-
-                <!-- Project Card 3 -->
-                <div class="project-card">
-                    <div class="card-header">
-                        <span class="status-badge status-open">Open</span>
-                        <span class="match-badge">0% match</span>
-                    </div>
-                    <div class="project-info">
-                        <h2>Idea</h2>
-                        <div class="author-chip">By AYUSH TRIPATHI</div>
-                        <p class="project-desc">This idea is for hackathon</p>
-                    </div>
-                    <div class="skills-list">
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">python</span>
-                    </div>
-                    <div class="card-footer">
-                        <div class="members-count">
-                            <i data-lucide="users"></i>
-                            0/5 members
-                        </div>
-                        <button class="btn-apply">Apply</button>
-                    </div>
-                </div>
-
-                <!-- Project Card 4 -->
-                <div class="project-card">
-                    <div class="card-header">
-                        <span class="status-badge status-open">Open</span>
-                        <span class="match-badge">0% match</span>
-                    </div>
-                    <div class="project-info">
-                        <h2>SkillSwap – AI Skill Barter Platform for Students</h2>
-                        <div class="author-chip">By Deepanshu sharma</div>
-                        <p class="project-desc">Problem In college: Someone knows Robotics but wants UI design Someone
-                            knows
-                            Web dev but wants ML help Someone knows CAD but wants Electronics help But: No...</p>
-                    </div>
-                    <div class="skills-list">
-                        <span class="skill-tag">react</span>
-                        <span class="skill-tag">Ai</span>
-                    </div>
-                    <div class="card-footer">
-                        <div class="members-count">
-                            <i data-lucide="users"></i>
-                            0/5 members
-                        </div>
-                        <button class="btn-apply">Apply</button>
-                    </div>
-                </div>
+            <div id="project-grid" class="project-grid">
+                <!-- Projects will be dynamically inserted here -->
             </div>
         </div>
 
@@ -215,20 +152,20 @@
             <div class="footer-col">
                 <h4>Community</h4>
                 <ul>
-                    <li><a href="#">Campus ambassadors</a></li>
-                    <li><a href="#">Hackathon partners</a></li>
-                    <li><a href="#">Clubs & societies</a></li>
-                    <li><a href="#">Feedback</a></li>
+                    <li><a href="mailto:community@kollabx.com">Campus ambassadors</a></li>
+                    <li><a href="mailto:partners@kollabx.com">Hackathon partners</a></li>
+                    <li><a href="mailto:clubs@kollabx.com">Clubs & societies</a></li>
+                    <li><a href="mailto:feedback@kollabx.com">Feedback</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="#">Privacy & safety</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Report an issue</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="mailto:privacy@kollabx.com">Privacy & safety</a></li>
+                    <li><a href="mailto:legal@kollabx.com">Terms</a></li>
+                    <li><a href="mailto:support@kollabx.com">Report an issue</a></li>
+                    <li><a href="mailto:contact@kollabx.com">Contact</a></li>
                 </ul>
             </div>
 
@@ -281,7 +218,783 @@
             exploreView.classList.add('hidden');
         });
     </script>
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/session.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/applications.js"></script>
+    <script src="js/teams.js"></script>
+    <script src="js/form-validation.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // Initialize auth state
+        window.addEventListener('DOMContentLoaded', async () => {
+            await window.session.initAuth();
+            await loadProjects();
+            
+            // Handle hash-based navigation (e.g., from dashboard)
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#project-')) {
+                const projectId = hash.replace('#project-', '');
+                // Wait a bit for projects to load, then show modal
+                setTimeout(async () => {
+                    await showProjectDetail(projectId);
+                }, 500);
+            }
+        });
+        
+        // Also handle hash changes (if user navigates with hash)
+        window.addEventListener('hashchange', async () => {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#project-')) {
+                const projectId = hash.replace('#project-', '');
+                await showProjectDetail(projectId);
+            }
+        });
+
+        // Current filters
+        let currentFilters = {
+            category: 'All',
+            search: '',
+            sort: 'latest'
+        };
+
+        // Load projects from database
+        async function loadProjects() {
+            const projectGrid = document.getElementById('project-grid');
+            const loadingDiv = document.getElementById('projects-loading');
+            const emptyDiv = document.getElementById('projects-empty');
+
+            if (!projectGrid || !loadingDiv || !emptyDiv) {
+                console.error('Required DOM elements not found');
+                return;
+            }
+
+            // Show loading
+            loadingDiv.classList.remove('hidden');
+            emptyDiv.classList.add('hidden');
+            projectGrid.classList.add('hidden'); // Hide grid while loading
+            projectGrid.innerHTML = '';
+
+            // Show skeleton loaders while loading
+            showProjectSkeletons(projectGrid, 6);
+
+            try {
+                // Check if projects module is available
+                if (!window.projects || !window.projects.getAllProjects) {
+                    throw new Error('Projects module not loaded. Make sure projects.js is included.');
+                }
+
+                const result = await window.projects.getAllProjects(currentFilters);
+
+                console.log('Projects loaded:', result); // Debug log
+
+                if (result.success && result.data && result.data.length > 0) {
+                    // Render projects first
+                    try {
+                        await renderProjects(result.data);
+                        console.log('Projects rendered successfully');
+                        
+                        // Hide loading, show grid after successful render
+                        loadingDiv.classList.add('hidden');
+                        emptyDiv.classList.add('hidden');
+                        projectGrid.classList.remove('hidden'); // Show grid
+                    } catch (renderError) {
+                        console.error('Error rendering projects:', renderError);
+                        loadingDiv.classList.add('hidden');
+                        emptyDiv.classList.remove('hidden');
+                        projectGrid.classList.add('hidden'); // Hide grid on error
+                        const errorMsg = emptyDiv.querySelector('p');
+                        if (errorMsg) {
+                            errorMsg.textContent = 'Error displaying projects. Please refresh the page.';
+                        }
+                    }
+                } else {
+                    // Show empty state
+                    loadingDiv.classList.add('hidden');
+                    emptyDiv.classList.remove('hidden');
+                    projectGrid.classList.add('hidden'); // Hide grid when empty
+                    console.log('No projects found');
+                }
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                loadingDiv.classList.add('hidden');
+                emptyDiv.classList.remove('hidden');
+                projectGrid.classList.add('hidden'); // Hide grid on error
+                const errorMsg = emptyDiv.querySelector('p');
+                if (errorMsg) {
+                    errorMsg.textContent = `Error loading projects: ${error.message || 'Please try again.'}`;
+                }
+            }
+        }
+
+        // Show skeleton loaders
+        function showProjectSkeletons(container, count) {
+            container.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const skeleton = document.createElement('div');
+                skeleton.className = 'project-card-skeleton';
+                skeleton.innerHTML = `
+                    <div class="skeleton-line short" style="width: 80px; height: 24px; margin-bottom: 1rem;"></div>
+                    <div class="skeleton-line long" style="height: 28px; margin-bottom: 0.5rem;"></div>
+                    <div class="skeleton-line medium" style="width: 120px; height: 20px; margin-bottom: 1rem;"></div>
+                    <div class="skeleton-line long" style="height: 16px; margin-bottom: 0.5rem;"></div>
+                    <div class="skeleton-line long" style="height: 16px; margin-bottom: 0.5rem;"></div>
+                    <div class="skeleton-line medium" style="width: 200px; height: 16px; margin-bottom: 1.5rem;"></div>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <div class="skeleton-line" style="width: 60px; height: 24px;"></div>
+                        <div class="skeleton-line" style="width: 80px; height: 24px;"></div>
+                        <div class="skeleton-line" style="width: 70px; height: 24px;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05);">
+                        <div class="skeleton-line" style="width: 100px; height: 20px;"></div>
+                        <div class="skeleton-line" style="width: 80px; height: 36px;"></div>
+                    </div>
+                `;
+                container.appendChild(skeleton);
+            }
+        }
+
+        // Render projects
+        async function renderProjects(projects) {
+            const projectGrid = document.getElementById('project-grid');
+            if (!projectGrid) {
+                console.error('Project grid not found');
+                return;
+            }
+
+            if (!projects || !Array.isArray(projects) || projects.length === 0) {
+                console.log('No projects to render');
+                return;
+            }
+
+            projectGrid.innerHTML = '';
+
+            let user = null;
+            try {
+                user = await window.authHelpers.getCurrentUser();
+            } catch (error) {
+                console.warn('Could not get current user:', error);
+            }
+
+            for (const project of projects) {
+                try {
+                    // Calculate match score if user is logged in
+                    let matchScore = 0;
+                    if (user && window.projects && window.projects.calculateMatchScore) {
+                        try {
+                            matchScore = await window.projects.calculateMatchScore(user.id, project.id);
+                        } catch (error) {
+                            console.warn('Error calculating match score:', error);
+                        }
+                    }
+
+                    // Format creator name
+                    const creatorName = project.creator?.full_name || 'Unknown';
+                    const creatorDisplay = creatorName.toUpperCase();
+
+                    // Truncate description
+                    const maxDescLength = 150;
+                    const description = (project.description || '').length > maxDescLength
+                        ? project.description.substring(0, maxDescLength) + '...'
+                        : (project.description || '');
+
+                // Create project card
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.style.cursor = 'pointer';
+                card.setAttribute('data-project-id', project.id);
+                
+                // Format date
+                const postedDate = project.created_at ? formatRelativeTime(new Date(project.created_at)) : '';
+                
+                    card.innerHTML = `
+                    <div class="card-header">
+                        <span class="status-badge status-open">${project.status === 'open' ? 'Open' : (project.status || 'Open')}</span>
+                        ${user ? `<span class="match-badge">${matchScore}% match</span>` : ''}
+                    </div>
+                    <div class="project-info">
+                        <h2>${escapeHtml(project.title || 'Untitled Project')}</h2>
+                        <div class="author-chip">
+                            By ${escapeHtml(creatorDisplay)}
+                            ${postedDate ? `<span class="posted-date"> • ${postedDate}</span>` : ''}
+                        </div>
+                        <p class="project-desc">${escapeHtml(description)}</p>
+                    </div>
+                    <div class="skills-list">
+                        ${project.required_skills && Array.isArray(project.required_skills) && project.required_skills.length > 0
+                            ? project.required_skills.map(skill => 
+                                `<span class="skill-tag">${escapeHtml(String(skill))}</span>`
+                            ).join('')
+                            : '<span class="skill-tag">No skills specified</span>'
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <div class="members-count">
+                            <i data-lucide="users" aria-hidden="true"></i>
+                            <span>${project.current_members || 0}/${project.team_size || 1} members</span>
+                        </div>
+                        <button class="btn-apply" data-project-id="${project.id}">Apply</button>
+                    </div>
+                `;
+
+                // Add click handler for card (opens detail modal)
+                card.addEventListener('click', (e) => {
+                    // Don't open modal if clicking on Apply button
+                    if (e.target.closest('.btn-apply')) {
+                        return;
+                    }
+                    showProjectDetail(project.id);
+                });
+
+                    // Add click handler for Apply button
+                    const applyBtn = card.querySelector('.btn-apply');
+                    if (applyBtn) {
+                        applyBtn.addEventListener('click', (e) => {
+                            e.stopPropagation(); // Prevent card click
+                            handleApply(project.id);
+                        });
+                    }
+
+                    projectGrid.appendChild(card);
+                } catch (error) {
+                    console.error('Error rendering project card:', error, project);
+                    // Continue with next project even if one fails
+                }
+            }
+
+            // Initialize icons after all cards are added
+            if (window.lucide) {
+                try {
+                    lucide.createIcons();
+                } catch (error) {
+                    console.warn('Error initializing icons:', error);
+                }
+            }
+        }
+
+        // Format relative time (e.g., "2 days ago")
+        function formatRelativeTime(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+            if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} week${Math.floor(diffDays / 7) > 1 ? 's' : ''} ago`;
+            if (diffDays < 365) return `${Math.floor(diffDays / 30)} month${Math.floor(diffDays / 30) > 1 ? 's' : ''} ago`;
+            return `${Math.floor(diffDays / 365)} year${Math.floor(diffDays / 365) > 1 ? 's' : ''} ago`;
+        }
+
+        // Show project detail modal
+        async function showProjectDetail(projectId) {
+            // Close any existing modal first
+            const existingModal = document.querySelector('.project-modal');
+            if (existingModal) {
+                existingModal.remove();
+                document.body.style.overflow = '';
+            }
+            
+            // Update URL hash if not already set
+            if (window.location.hash !== `#project-${projectId}`) {
+                window.location.hash = `#project-${projectId}`;
+            }
+            
+            try {
+                // Get current user
+                let user = null;
+                try {
+                    user = await window.authHelpers.getCurrentUser();
+                } catch (error) {
+                    console.warn('Could not get current user:', error);
+                }
+
+                const result = await window.projects.getProjectById(projectId);
+                if (!result.success || !result.data) {
+                    showFormError('Project not found.');
+                    // Clear hash if project not found
+                    if (window.location.hash === `#project-${projectId}`) {
+                        window.history.replaceState(null, '', window.location.pathname);
+                    }
+                    return;
+                }
+
+                const project = result.data;
+                const creatorName = project.creator?.full_name || 'Unknown';
+                const postedDate = project.created_at ? formatRelativeTime(new Date(project.created_at)) : '';
+                
+                // Create modal HTML
+                const modal = document.createElement('div');
+                modal.className = 'project-modal';
+                modal.innerHTML = `
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <button class="modal-close" aria-label="Close modal">
+                            <i data-lucide="x"></i>
+                        </button>
+                        <div class="modal-header">
+                            <div class="modal-header-top">
+                                <span class="status-badge status-open">${project.status === 'open' ? 'Open' : project.status}</span>
+                                ${postedDate ? `<span class="posted-date">Posted ${postedDate}</span>` : ''}
+                            </div>
+                            <h1>${escapeHtml(project.title)}</h1>
+                            <div class="author-chip">By ${escapeHtml(creatorName)}</div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-section">
+                                <h3>Description</h3>
+                                <p>${escapeHtml(project.description)}</p>
+                            </div>
+                            <div class="modal-section">
+                                <h3>Category</h3>
+                                <span class="category-badge">${escapeHtml(project.category || 'Unspecified')}</span>
+                            </div>
+                            <div class="modal-section">
+                                <h3>Required Skills</h3>
+                                <div class="skills-list">
+                                    ${project.required_skills && project.required_skills.length > 0
+                                        ? project.required_skills.map(skill => 
+                                            `<span class="skill-tag">${escapeHtml(skill)}</span>`
+                                        ).join('')
+                                        : '<span class="skill-tag">No skills specified</span>'
+                                    }
+                                </div>
+                            </div>
+                            ${project.roles_needed && project.roles_needed.length > 0 ? `
+                            <div class="modal-section">
+                                <h3>Roles Needed</h3>
+                                <div class="roles-list">
+                                    ${project.roles_needed.map(role => 
+                                        `<span class="role-tag">${escapeHtml(role)}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                            <div class="modal-section">
+                                <h3>Team</h3>
+                                <p>${project.current_members}/${project.team_size} members</p>
+                                <div id="team-members-list-${project.id}" class="team-members-list">
+                                    <div class="team-loading">Loading team members...</div>
+                                </div>
+                            </div>
+                            ${project.timeline ? `
+                            <div class="modal-section">
+                                <h3>Timeline</h3>
+                                <p>${escapeHtml(project.timeline)}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="modal-footer">
+                            ${user && user.id !== project.creator_id ? `
+                                <button class="btn-apply-modal" data-project-id="${project.id}">Apply to Project</button>
+                            ` : user && user.id === project.creator_id ? `
+                                <button class="btn-apply-modal" disabled style="opacity: 0.5; cursor: not-allowed;">Your Project</button>
+                            ` : `
+                                <a href="signin.html" class="btn-apply-modal" style="text-decoration: none; display: inline-block;">Sign In to Apply</a>
+                            `}
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+                document.body.style.overflow = 'hidden';
+
+                // Initialize icons
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+
+                // Load team members
+                await loadTeamMembers(project.id, modal);
+
+                // Close modal handlers
+                const closeBtn = modal.querySelector('.modal-close');
+                const overlay = modal.querySelector('.modal-overlay');
+                
+                const closeModal = () => {
+                    modal.remove();
+                    document.body.style.overflow = '';
+                    // Clear hash when closing modal
+                    if (window.location.hash === `#project-${projectId}`) {
+                        window.history.replaceState(null, '', window.location.pathname);
+                    }
+                };
+
+                closeBtn.addEventListener('click', closeModal);
+                overlay.addEventListener('click', closeModal);
+                modal.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') closeModal();
+                });
+
+                // Apply button handler
+                const applyBtn = modal.querySelector('.btn-apply-modal');
+                if (applyBtn && !applyBtn.disabled && applyBtn.tagName === 'BUTTON') {
+                    applyBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        closeModal();
+                        await handleApply(project.id);
+                    });
+                }
+            } catch (error) {
+                console.error('Error showing project detail:', error);
+                showFormError('Failed to load project details.');
+            }
+        }
+
+        // Load and display team members
+        async function loadTeamMembers(projectId, modal) {
+            const teamListContainer = modal.querySelector(`#team-members-list-${projectId}`);
+            if (!teamListContainer) return;
+
+            try {
+                const result = await window.teams.getTeamMembers(projectId);
+                const user = await window.authHelpers.getCurrentUser();
+                const isCreator = await window.teams.isProjectCreator(projectId);
+                const isMember = await window.teams.isTeamMember(projectId);
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    teamListContainer.innerHTML = '<p style="color: var(--text-mist); font-size: 0.9rem;">No team members yet.</p>';
+                    return;
+                }
+
+                teamListContainer.innerHTML = result.data.map(member => {
+                    const profile = member.profile;
+                    const memberName = profile?.full_name || 'Unknown';
+                    const memberAvatar = profile?.avatar_url || null;
+                    const isCreatorMember = member.role === 'Creator';
+                    const canRemove = isCreator && !isCreatorMember && user && user.id !== member.user_id;
+
+                    const avatarDisplay = memberAvatar
+                        ? `<img src="${memberAvatar}" alt="${memberName}" class="team-member-avatar">`
+                        : `<div class="team-member-avatar-placeholder">${memberName.charAt(0).toUpperCase()}</div>`;
+
+                    return `
+                        <div class="team-member-item" data-user-id="${member.user_id}">
+                            <div class="team-member-info">
+                                ${avatarDisplay}
+                                <div>
+                                    <div class="team-member-name">
+                                        ${escapeHtml(memberName)}
+                                        ${isCreatorMember ? '<span class="creator-badge">Creator</span>' : ''}
+                                    </div>
+                                    ${profile?.skills && profile.skills.length > 0 ? `
+                                        <div class="team-member-skills">
+                                            ${profile.skills.slice(0, 3).map(skill => 
+                                                `<span class="team-skill-tag">${escapeHtml(skill)}</span>`
+                                            ).join('')}
+                                            ${profile.skills.length > 3 ? `<span class="team-skill-more">+${profile.skills.length - 3}</span>` : ''}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            <div class="team-member-actions">
+                                <a href="portfolio.html?user=${member.user_id}" class="btn-view-member-profile" title="View Profile">
+                                    <i data-lucide="user"></i>
+                                </a>
+                                ${canRemove ? `
+                                    <button class="btn-remove-member" data-user-id="${member.user_id}" title="Remove Member">
+                                        <i data-lucide="x"></i>
+                                    </button>
+                                ` : ''}
+                                ${!isCreator && isMember && user && user.id === member.user_id ? `
+                                    <button class="btn-leave-team" title="Leave Team">
+                                        <i data-lucide="log-out"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Initialize icons
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+
+                // Add remove member handlers
+                teamListContainer.querySelectorAll('.btn-remove-member').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        const userIdToRemove = btn.dataset.userId;
+                        const memberItem = btn.closest('.team-member-item');
+                        const memberName = memberItem.querySelector('.team-member-name').textContent.trim().replace('Creator', '').trim();
+                        
+                        if (confirm(`Are you sure you want to remove ${memberName} from the team?`)) {
+                            const result = await window.teams.removeTeamMember(projectId, userIdToRemove);
+                            if (result.success) {
+                                window.toast.success('Team member removed successfully.');
+                                await loadTeamMembers(projectId, modal); // Reload team list
+                            } else {
+                                const friendlyError = getUserFriendlyError(result.error || new Error('Failed to remove member'));
+                                showFormError(friendlyError);
+                            }
+                        }
+                    });
+                });
+
+                // Add leave team handlers
+                teamListContainer.querySelectorAll('.btn-leave-team').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        if (confirm('Are you sure you want to leave this team?')) {
+                            const result = await window.teams.leaveTeam(projectId);
+                            if (result.success) {
+                                window.toast.success('You have left the team.');
+                                // Close modal and reload projects
+                                modal.remove();
+                                document.body.style.overflow = '';
+                                await loadProjects();
+                            } else {
+                                const friendlyError = getUserFriendlyError(result.error || new Error('Failed to leave team'));
+                                showFormError(friendlyError);
+                            }
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading team members:', error);
+                teamListContainer.innerHTML = '<p style="color: var(--text-mist); font-size: 0.9rem;">Error loading team members.</p>';
+            }
+        }
+
+        // Handle Apply button click
+        async function handleApply(projectId) {
+            const user = await window.authHelpers.getCurrentUser();
+            if (!user) {
+                // Redirect to sign in
+                sessionStorage.setItem('redirect_after_login', window.location.pathname);
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            // Show application modal
+            showApplicationModal(projectId);
+        }
+
+        // Show application modal
+        async function showApplicationModal(projectId) {
+            try {
+                // Get project details
+                const projectResult = await window.projects.getProjectById(projectId);
+                if (!projectResult.success || !projectResult.data) {
+                    showFormError('Failed to load project details.');
+                    return;
+                }
+
+                const project = projectResult.data;
+                const user = await window.authHelpers.getCurrentUser();
+                const profile = await window.authHelpers.getCurrentProfile();
+
+                // Check if already applied
+                const applicationsResult = await window.applications.getUserApplications();
+                const existingApp = applicationsResult.data?.find(app => 
+                    app.project_id === projectId && app.status === 'pending'
+                );
+
+                if (existingApp) {
+                    showFormError('You have already applied to this project.');
+                    return;
+                }
+
+                // Create modal HTML
+                const modal = document.createElement('div');
+                modal.className = 'application-modal';
+                modal.innerHTML = `
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content application-modal-content">
+                        <button class="modal-close" aria-label="Close modal">
+                            <i data-lucide="x"></i>
+                        </button>
+                        <div class="modal-header">
+                            <h1>Apply to Project</h1>
+                            <p class="project-title-in-modal">${escapeHtml(project.title)}</p>
+                        </div>
+                        <form id="application-form" class="application-form">
+                            <div class="form-group">
+                                <label for="application-message">Why do you want to join this project? *</label>
+                                <textarea 
+                                    id="application-message" 
+                                    class="form-control" 
+                                    placeholder="Tell us about your interest, relevant experience, and what you can contribute..."
+                                    required
+                                    rows="5"
+                                    maxlength="1000"></textarea>
+                                <div class="char-counter">
+                                    <span id="application-message-count">0</span>/1000 characters
+                                </div>
+                            </div>
+                            ${project.roles_needed && project.roles_needed.length > 0 ? `
+                            <div class="form-group">
+                                <label for="application-role">Preferred Role</label>
+                                <select id="application-role" class="form-control">
+                                    <option value="">Select a role (optional)</option>
+                                    ${project.roles_needed.map(role => 
+                                        `<option value="${escapeHtml(role)}">${escapeHtml(role)}</option>`
+                                    ).join('')}
+                                </select>
+                            </div>
+                            ` : ''}
+                            <div class="form-group">
+                                <label>Your Skills</label>
+                                <div class="skills-display">
+                                    ${profile?.skills && profile.skills.length > 0
+                                        ? profile.skills.map(skill => 
+                                            `<span class="skill-tag">${escapeHtml(skill)}</span>`
+                                        ).join('')
+                                        : '<span class="text-muted">Update your profile to show your skills</span>'
+                                    }
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn-cancel" id="cancel-application">Cancel</button>
+                                <button type="submit" class="btn-submit-application" id="submit-application">Submit Application</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+                document.body.style.overflow = 'hidden';
+
+                // Initialize icons
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+
+                // Character counter
+                const messageField = document.getElementById('application-message');
+                const messageCount = document.getElementById('application-message-count');
+                if (messageField && messageCount) {
+                    messageField.addEventListener('input', () => {
+                        messageCount.textContent = messageField.value.length;
+                    });
+                }
+
+                // Close modal handlers
+                const closeBtn = modal.querySelector('.modal-close');
+                const overlay = modal.querySelector('.modal-overlay');
+                const cancelBtn = document.getElementById('cancel-application');
+                
+                const closeModal = () => {
+                    modal.remove();
+                    document.body.style.overflow = '';
+                };
+
+                closeBtn.addEventListener('click', closeModal);
+                overlay.addEventListener('click', closeModal);
+                cancelBtn.addEventListener('click', closeModal);
+                modal.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') closeModal();
+                });
+
+                // Form submission
+                const form = document.getElementById('application-form');
+                const submitBtn = document.getElementById('submit-application');
+                
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const message = messageField.value.trim();
+                    if (!message) {
+                        showFormError('Please provide a message explaining why you want to join.');
+                        return;
+                    }
+
+                    showLoading(submitBtn, 'Submit Application');
+
+                    try {
+                        const result = await window.applications.applyToProject(projectId, {
+                            message: message,
+                            role: document.getElementById('application-role')?.value || null
+                        });
+
+                        if (result.success) {
+                            window.toast.success('Application sent successfully!');
+                            closeModal();
+                            // Optionally reload projects to update UI
+                            setTimeout(() => {
+                                loadProjects();
+                            }, 1000);
+                        } else {
+                            hideLoading(submitBtn);
+                            const friendlyError = getUserFriendlyError(result.error || new Error('Failed to submit application'));
+                            showFormError(friendlyError);
+                        }
+                    } catch (error) {
+                        hideLoading(submitBtn);
+                        const friendlyError = getUserFriendlyError(error);
+                        showFormError(friendlyError);
+                    }
+                });
+            } catch (error) {
+                console.error('Error showing application modal:', error);
+                showFormError('Failed to load application form.');
+            }
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentFilters.search = e.target.value.trim();
+                loadProjects();
+            }, 500); // Debounce search
+        });
+
+        // Category filter
+        document.querySelectorAll('.category-chips .chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                // Update active state
+                document.querySelectorAll('.category-chips .chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                
+                // Update filter
+                currentFilters.category = chip.dataset.category;
+                loadProjects();
+            });
+        });
+
+        // Sort functionality
+        const sortSelect = document.getElementById('sort-select');
+        sortSelect.addEventListener('change', (e) => {
+            currentFilters.sort = e.target.value;
+            loadProjects();
+        });
+
+        // Clear filters button
+        const clearFiltersBtn = document.querySelector('.btn-clear-filters');
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', () => {
+                currentFilters = {
+                    category: 'All',
+                    search: '',
+                    sort: 'latest'
+                };
+                document.getElementById('search-input').value = '';
+                document.querySelectorAll('.category-chips .chip').forEach(c => c.classList.remove('active'));
+                document.querySelector('.category-chips .chip[data-category="All"]')?.classList.add('active');
+                sortSelect.value = 'latest';
+                loadProjects();
+            });
+        }
+    </script>
 </body>
 
 </html>

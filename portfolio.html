@@ -18,6 +18,12 @@
 <body>
     <nav class="navbar">
         <h1>Kollabx</h1>
+        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="mobile-overlay"></div>
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
@@ -128,20 +134,20 @@
             <div class="footer-col">
                 <h4>Community</h4>
                 <ul>
-                    <li><a href="#">Campus ambassadors</a></li>
-                    <li><a href="#">Hackathon partners</a></li>
-                    <li><a href="#">Clubs & societies</a></li>
-                    <li><a href="#">Feedback</a></li>
+                    <li><a href="mailto:community@kollabx.com">Campus ambassadors</a></li>
+                    <li><a href="mailto:partners@kollabx.com">Hackathon partners</a></li>
+                    <li><a href="mailto:clubs@kollabx.com">Clubs & societies</a></li>
+                    <li><a href="mailto:feedback@kollabx.com">Feedback</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="#">Privacy & safety</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Report an issue</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="mailto:privacy@kollabx.com">Privacy & safety</a></li>
+                    <li><a href="mailto:legal@kollabx.com">Terms</a></li>
+                    <li><a href="mailto:support@kollabx.com">Report an issue</a></li>
+                    <li><a href="mailto:contact@kollabx.com">Contact</a></li>
                 </ul>
             </div>
 
@@ -170,56 +176,113 @@
         </div>
     </footer>
 
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/session.js"></script>
     <script src="js/main.js"></script>
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();
 
-        // Load data from localStorage
-        document.addEventListener('DOMContentLoaded', () => {
-            const profileData = JSON.parse(localStorage.getItem('userProfile'));
+        // Load data from database
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Get user ID from URL parameter or use current user
+                const urlParams = new URLSearchParams(window.location.search);
+                const userIdParam = urlParams.get('user');
+                
+                let userId = userIdParam;
+                if (!userId) {
+                    // Use current user if no parameter
+                    const user = await window.authHelpers.getCurrentUser();
+                    if (user) {
+                        userId = user.id;
+                    } else {
+                        // Not logged in and no user param - show error or redirect
+                        document.getElementById('display-name').textContent = 'Profile Not Found';
+                        document.getElementById('display-college').textContent = 'Please sign in or provide a valid user ID';
+                        return;
+                    }
+                }
 
-            if (profileData) {
-                document.getElementById('display-name').textContent = profileData.fullName || 'John Doe';
-                document.getElementById('display-college').textContent = profileData.college || 'Professional Developer';
-                document.getElementById('display-bio').textContent = profileData.bio || 'Your bio goes here...';
+                // Fetch profile from database
+                const { data: profile, error } = await window.supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+
+                if (error || !profile) {
+                    document.getElementById('display-name').textContent = 'Profile Not Found';
+                    document.getElementById('display-college').textContent = 'This user profile does not exist';
+                    return;
+                }
+
+                // Display profile data
+                document.getElementById('display-name').textContent = profile.full_name || 'User';
+                document.getElementById('display-college').textContent = profile.college || 'Member';
+                document.getElementById('display-bio').textContent = profile.bio || 'No bio available.';
 
                 // Display profile image if exists
-                if (profileData.profileImage) {
-                    document.getElementById('display-photo').src = profileData.profileImage;
+                if (profile.avatar_url) {
+                    document.getElementById('display-photo').src = profile.avatar_url;
                 }
 
                 // Map skills
-                if (profileData.skills) {
+                if (profile.skills && Array.isArray(profile.skills) && profile.skills.length > 0) {
                     const skillsList = document.getElementById('skills-list');
                     skillsList.innerHTML = '';
-                    const skillsArray = profileData.skills.split(',').map(s => s.trim());
-
-                    skillsArray.forEach(skill => {
+                    
+                    profile.skills.forEach(skill => {
                         if (!skill) return;
                         const div = document.createElement('div');
                         div.className = 'skill-item';
-                        // Random percentage for placeholder feel if not provided
-                        const percent = Math.floor(Math.random() * (95 - 70 + 1)) + 70;
+                        // Calculate match percentage based on skill length (placeholder logic)
+                        // In a real app, this could be based on project requirements or experience
+                        const percent = Math.min(70 + (skill.length * 2), 95);
                         div.innerHTML = `
-                            <div class="skill-info"><span>${skill}</span><span>${percent}%</span></div>
+                            <div class="skill-info"><span>${escapeHtml(skill)}</span><span>${percent}%</span></div>
                             <div class="progress-bar-bg"><div class="progress-bar" style="width: ${percent}%"></div></div>
                         `;
                         skillsList.appendChild(div);
                     });
+                } else {
+                    document.getElementById('skills-list').innerHTML = '<p style="color: var(--text-mist);">No skills listed</p>';
                 }
 
                 // Map social links
-                if (profileData.github) {
-                    document.getElementById('display-github').href = profileData.github;
-                    document.getElementById('contact-github').href = profileData.github;
+                if (profile.github_url) {
+                    const githubLinks = document.querySelectorAll('#contact-github, [id*="github"]');
+                    githubLinks.forEach(link => {
+                        if (link.tagName === 'A') {
+                            link.href = profile.github_url;
+                        }
+                    });
                 }
-                if (profileData.linkedin) {
-                    document.getElementById('display-linkedin').href = profileData.linkedin;
-                    document.getElementById('contact-linkedin').href = profileData.linkedin;
+                if (profile.linkedin_url) {
+                    const linkedinLinks = document.querySelectorAll('#contact-linkedin, [id*="linkedin"]');
+                    linkedinLinks.forEach(link => {
+                        if (link.tagName === 'A') {
+                            link.href = profile.linkedin_url;
+                        }
+                    });
                 }
+            } catch (error) {
+                console.error('Error loading portfolio:', error);
+                document.getElementById('display-name').textContent = 'Error Loading Profile';
+                document.getElementById('display-college').textContent = 'Please try again later';
             }
         });
+
+        // Escape HTML helper
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 

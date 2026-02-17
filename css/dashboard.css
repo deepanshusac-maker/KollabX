@@ -6,6 +6,32 @@
     animation: fadeIn 0.8s ease-out;
 }
 
+/* Breadcrumbs */
+.breadcrumbs {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-mist);
+}
+
+.breadcrumbs a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumbs a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.breadcrumbs span[aria-current="page"] {
+    color: var(--text-main);
+    font-weight: 500;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -452,4 +478,291 @@ footer {
     .hero-text h1 {
         font-size: 2.2rem;
     }
+}
+
+/* Applications Styles */
+.applications-container {
+    margin-top: 1.5rem;
+}
+
+.application-item {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.application-item:hover {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.applicant-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.applicant-avatar,
+.applicant-avatar-placeholder {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.applicant-avatar {
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+}
+
+.applicant-avatar-placeholder {
+    background: var(--maroon-grad);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.applicant-name {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.application-project {
+    font-size: 0.85rem;
+    color: var(--text-mist);
+}
+
+.application-status {
+    padding: 0.4rem 0.8rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #d97706;
+}
+
+.status-accepted {
+    background: rgba(52, 211, 153, 0.2);
+    color: #059669;
+}
+
+.status-rejected {
+    background: rgba(239, 68, 68, 0.2);
+    color: #dc2626;
+}
+
+.application-message {
+    color: var(--text-mist);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+}
+
+.application-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.btn-accept,
+.btn-reject,
+.btn-cancel-application,
+.btn-view-profile,
+.btn-view-project {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-accept {
+    background: rgba(52, 211, 153, 0.2);
+    color: #059669;
+}
+
+.btn-accept:hover {
+    background: rgba(52, 211, 153, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-reject {
+    background: rgba(239, 68, 68, 0.2);
+    color: #dc2626;
+}
+
+.btn-reject:hover {
+    background: rgba(239, 68, 68, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-cancel-application {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-main);
+}
+
+.btn-cancel-application:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.btn-view-profile,
+.btn-view-project {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.btn-view-profile:hover,
+.btn-view-project:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Teams Container Styles */
+.teams-container {
+    margin-top: 1.5rem;
+}
+
+.team-card-item {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.team-card-item:hover {
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.team-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.team-project-title {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.team-project-meta {
+    font-size: 0.85rem;
+    color: var(--text-mist);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.role-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.role-badge.creator {
+    background: rgba(179, 82, 106, 0.2);
+    color: var(--primary-color);
+}
+
+.role-badge.member {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-main);
+}
+
+.team-status-badge {
+    padding: 0.3rem 0.7rem;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.team-status-badge.status-open {
+    background: rgba(52, 211, 153, 0.2);
+    color: #059669;
+}
+
+.team-project-desc {
+    color: var(--text-mist);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.team-card-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.btn-view-team-project {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-view-team-project:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-leave-team-card {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-leave-team-card:hover {
+    background: rgba(239, 68, 68, 0.2);
 }
