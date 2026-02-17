@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS applications (
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
   applicant_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   message TEXT,
+  role TEXT,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
@@ -171,14 +172,16 @@ CREATE OR REPLACE FUNCTION notify_application_created()
 RETURNS TRIGGER AS $$
 DECLARE
   project_title TEXT;
-  creator_id UUID;
+  project_creator_id UUID;
 BEGIN
-  SELECT title, creator_id INTO project_title, creator_id
-  FROM projects WHERE id = NEW.project_id;
+  SELECT title, creator_id
+    INTO project_title, project_creator_id
+  FROM projects
+  WHERE id = NEW.project_id;
   
   INSERT INTO notifications (user_id, type, title, message, link)
   VALUES (
-    creator_id,
+    project_creator_id,
     'application_received',
     'New Application',
     'Someone applied to your project: ' || project_title,

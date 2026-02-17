@@ -95,12 +95,10 @@ CREATE POLICY "Applicants can delete own applications"
 CREATE POLICY "Team members can view team"
   ON team_members FOR SELECT
   USING (
+    -- Allow a row if:
+    -- - it's the current user, OR
+    -- - the current user is the creator of the project
     user_id = auth.uid() OR
-    EXISTS (
-      SELECT 1 FROM team_members tm
-      WHERE tm.project_id = team_members.project_id
-      AND tm.user_id = auth.uid()
-    ) OR
     EXISTS (
       SELECT 1 FROM projects
       WHERE projects.id = team_members.project_id

@@ -67,16 +67,45 @@ async function applyToProject(projectId, applicationData) {
       project_id: projectId,
       applicant_id: user.id,
       message: applicationData.message || '',
-      role: applicationData.role || null,
       status: 'pending'
     };
 
-    const { data, error } = await supabase
+    // Optional role field (some DBs may not have this column yet)
+    if (applicationData && applicationData.role) {
+      application.role = applicationData.role;
+    }
+
+    // Insert application (retry without role if schema doesn't have column)
+    let insertResult = await supabase
       .from('applications')
       .insert(application)
       .select()
       .single();
 
+    if (insertResult.error) {
+      const msg = String(insertResult.error.message || '').toLowerCase();
+      const details = String(insertResult.error.details || '').toLowerCase();
+      const hint = String(insertResult.error.hint || '').toLowerCase();
+
+      // PostgREST schema cache error when a column doesn't exist
+      const looksLikeMissingRoleColumn =
+        (msg.includes("could not find") && msg.includes("role")) ||
+        msg.includes("role") && msg.includes("schema cache") ||
+        details.includes("role") ||
+        hint.includes("role");
+
+      if (looksLikeMissingRoleColumn && Object.prototype.hasOwnProperty.call(application, 'role')) {
+        const fallbackApplication = { ...application };
+        delete fallbackApplication.role;
+        insertResult = await supabase
+          .from('applications')
+          .insert(fallbackApplication)
+          .select()
+          .single();
+      }
+    }
+
+    const { data, error } = insertResult;
     if (error) throw error;
 
     return { success: true, data };

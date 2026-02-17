@@ -438,7 +438,7 @@
                             <i data-lucide="users" aria-hidden="true"></i>
                             <span>${project.current_members || 0}/${project.team_size || 1} members</span>
                         </div>
-                        <button class="btn-apply" data-project-id="${project.id}">Apply</button>
+                        <button type="button" class="btn-apply" data-project-id="${project.id}">Apply</button>
                     </div>
                 `;
 
@@ -602,7 +602,7 @@
                         </div>
                         <div class="modal-footer">
                             ${user && user.id !== project.creator_id ? `
-                                <button class="btn-apply-modal" data-project-id="${project.id}">Apply to Project</button>
+                                <button type="button" class="btn-apply-modal" data-project-id="${project.id}">Apply to Project</button>
                             ` : user && user.id === project.creator_id ? `
                                 <button class="btn-apply-modal" disabled style="opacity: 0.5; cursor: not-allowed;">Your Project</button>
                             ` : `
