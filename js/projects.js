@@ -51,14 +51,17 @@ async function createProject(projectData) {
 
     if (error) throw error;
 
-    // Add creator as team member
+    // Add creator as team member (idempotent)
     const { error: teamError } = await supabase
       .from('team_members')
-      .insert({
-        project_id: data.id,
-        user_id: user.id,
-        role: 'Creator'
-      });
+      .upsert(
+        {
+          project_id: data.id,
+          user_id: user.id,
+          role: 'Creator'
+        },
+        { onConflict: 'project_id,user_id', ignoreDuplicates: true }
+      );
 
     if (teamError) {
       console.error('Error adding creator to team:', teamError);

@@ -34,7 +34,7 @@
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
-            <a href="notifications.html" class="notification-icon" aria-label="Notifications">
+            <button type="button" class="notification-icon" aria-label="Notifications">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     aria-hidden="true">
@@ -42,7 +42,7 @@
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
                 <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
-            </a>
+            </button>
             <a href="signin.html" class="btn-signin">Sign In</a>
         </div>
     </nav>
@@ -71,6 +71,47 @@
                 </div>
                 <h1 class="profile-title">Your Profile</h1>
                 <p>Keep your profile updated to get better project matches</p>
+            </div>
+
+            <!-- Onboarding flow (shown when ?onboarding=true) -->
+            <div id="onboarding-flow" class="onboarding hidden">
+                <div class="onboarding-header">
+                    <span class="onboarding-badge">Getting started</span>
+                    <h2>Complete your profile in under 2 minutes</h2>
+                    <p>Finish these steps so project owners see your skills and story before they accept you.</p>
+                </div>
+                <div class="onboarding-progress">
+                    <div class="onboarding-progress-fill"></div>
+                </div>
+                <div class="onboarding-steps">
+                    <div class="onboarding-step" data-onboarding-step="1">
+                        <div class="onboarding-step-index">1</div>
+                        <div class="onboarding-step-body">
+                            <div class="onboarding-step-title">Add skills</div>
+                            <div class="onboarding-step-subtitle">What can you actually ship?</div>
+                        </div>
+                    </div>
+                    <div class="onboarding-step" data-onboarding-step="2">
+                        <div class="onboarding-step-index">2</div>
+                        <div class="onboarding-step-body">
+                            <div class="onboarding-step-title">Add bio</div>
+                            <div class="onboarding-step-subtitle">Help captains understand how you think.</div>
+                        </div>
+                    </div>
+                    <div class="onboarding-step" data-onboarding-step="3">
+                        <div class="onboarding-step-index">3</div>
+                        <div class="onboarding-step-body">
+                            <div class="onboarding-step-title">Explore missions</div>
+                            <div class="onboarding-step-subtitle">Apply only to missions that truly fit.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="onboarding-cta">
+                    <button type="button" id="onboarding-explore-btn" class="btn-signin onboarding-explore-btn" disabled>
+                        Continue to Explore
+                    </button>
+                    <p class="onboarding-hint">Tip: Completing skills + bio makes your applications much more likely to be accepted.</p>
+                </div>
             </div>
 
             <form class="profile-card">
@@ -262,6 +303,7 @@
 
         let profileImageData = '';
         let avatarFile = null;
+        const onboardingMode = new URLSearchParams(window.location.search).get('onboarding') === 'true';
 
         // Compress image before upload
         function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.8) {
@@ -349,6 +391,45 @@
         const avatarPreview = document.getElementById('avatar-image-preview');
         const defaultAvatarSvg = document.getElementById('default-avatar-svg');
 
+        function updateOnboardingProgress() {
+            if (!onboardingMode) return;
+            const container = document.getElementById('onboarding-flow');
+            if (!container) return;
+            container.classList.remove('hidden');
+
+            const skillsVal = (document.getElementById('skills').value || '').trim();
+            const bioVal = (document.getElementById('bio').value || '').trim();
+            const hasSkills = skillsVal.length > 0;
+            const hasBio = bioVal.length >= 10;
+            const steps = Array.from(container.querySelectorAll('.onboarding-step'));
+
+            let currentStep = 1;
+            if (hasSkills && !hasBio) currentStep = 2;
+            if (hasSkills && hasBio) currentStep = 3;
+
+            steps.forEach(step => {
+                const idx = parseInt(step.getAttribute('data-onboarding-step'), 10);
+                step.classList.remove('completed', 'current');
+                if (idx < currentStep) {
+                    step.classList.add('completed');
+                } else if (idx === currentStep) {
+                    step.classList.add('current');
+                }
+            });
+
+            const completedCount = (hasSkills ? 1 : 0) + (hasBio ? 1 : 0) + (hasSkills && hasBio ? 1 : 0);
+            const progressEl = container.querySelector('.onboarding-progress-fill');
+            if (progressEl) {
+                const pct = Math.max(10, Math.min(100, (completedCount / 3) * 100));
+                progressEl.style.width = pct + '%';
+            }
+
+            const exploreBtn = document.getElementById('onboarding-explore-btn');
+            if (exploreBtn) {
+                exploreBtn.disabled = !(hasSkills && hasBio);
+            }
+        }
+
         // Load existing profile from database
         window.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -373,6 +454,16 @@
                         avatarPreview.src = profileImageData;
                         avatarPreview.style.display = 'block';
                         defaultAvatarSvg.style.display = 'none';
+                    }
+                }
+
+                if (onboardingMode) {
+                    updateOnboardingProgress();
+                    const exploreBtn = document.getElementById('onboarding-explore-btn');
+                    if (exploreBtn) {
+                        exploreBtn.addEventListener('click', () => {
+                            window.location.href = 'explore.html';
+                        });
                     }
                 }
             } catch (error) {
@@ -426,9 +517,17 @@
         if (bioField && bioCharCount) {
             bioField.addEventListener('input', () => {
                 bioCharCount.textContent = bioField.value.length;
+                updateOnboardingProgress();
             });
             // Initialize count
             bioCharCount.textContent = bioField.value.length;
+        }
+
+        const skillsField = document.getElementById('skills');
+        if (skillsField) {
+            skillsField.addEventListener('input', () => {
+                updateOnboardingProgress();
+            });
         }
 
         profileForm.addEventListener('submit', async (e) => {
@@ -525,9 +624,13 @@
                 // Show success message
                 window.toast.success('Profile updated successfully! Redirecting...');
                 
-                // Redirect to landing page after profile completion
+                // Redirect after profile completion
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    if (onboardingMode) {
+                        window.location.href = 'explore.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
                 }, 1500);
             } catch (error) {
                 hideLoading(saveButton);

@@ -397,6 +397,43 @@
     transform: none;
 }
 
+/* My Projects actions */
+.my-project-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-my-edit,
+.btn-my-delete {
+    border-radius: 10px;
+    padding: 0.55rem 0.9rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    color: var(--text-main);
+}
+
+.btn-my-edit:hover {
+    border-color: rgba(179, 82, 106, 0.35);
+    color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.btn-my-delete {
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #b91c1c;
+    background: rgba(239, 68, 68, 0.06);
+}
+
+.btn-my-delete:hover {
+    background: rgba(239, 68, 68, 0.12);
+    transform: translateY(-1px);
+}
+
 /* Empty State for Posted Ideas */
 .empty-state-container {
     display: flex;

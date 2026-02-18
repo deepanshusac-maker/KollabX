@@ -34,7 +34,7 @@
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
-            <a href="notifications.html" class="notification-icon" aria-label="Notifications">
+            <button type="button" class="notification-icon" aria-label="Notifications">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     aria-hidden="true">
@@ -42,7 +42,7 @@
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                 </svg>
                 <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
-            </a>
+            </button>
             <a href="signin.html" class="btn-signin">Sign In</a>
         </div>
     </nav>
@@ -55,8 +55,8 @@
                 <span aria-current="page">Post Project</span>
             </nav>
             <div class="profile-header">
-                <h1 class="profile-title">Share Your Idea</h1>
-                <p>Post your project idea and find the perfect collaborators</p>
+                <h1 class="profile-title" id="post-page-title">Share Your Idea</h1>
+                <p id="post-page-subtitle">Post your project idea and find the perfect collaborators</p>
             </div>
 
             <form class="profile-card" id="create-post-form">
@@ -244,6 +244,47 @@
 
             const postForm = document.getElementById('create-post-form');
             const submitButton = document.getElementById('submit-post');
+            const pageTitle = document.getElementById('post-page-title');
+            const pageSubtitle = document.getElementById('post-page-subtitle');
+
+            const params = new URLSearchParams(window.location.search);
+            const editProjectId = params.get('edit');
+
+            // If editing, load the project and prefill the form
+            if (editProjectId) {
+                try {
+                    if (pageTitle) pageTitle.textContent = 'Edit Your Idea';
+                    if (pageSubtitle) pageSubtitle.textContent = 'Update your project details. Only you can edit your idea.';
+                    submitButton.textContent = 'Update Idea';
+
+                    const result = await window.projects.getProjectById(editProjectId);
+                    if (!result.success || !result.data) {
+                        window.toast.error('Could not load your project for editing.');
+                        setTimeout(() => (window.location.href = 'explore.html'), 600);
+                        return;
+                    }
+
+                    const project = result.data;
+
+                    // Prefill fields
+                    document.getElementById('project-title').value = project.title || '';
+                    document.getElementById('category').value = project.category || '';
+                    document.getElementById('description').value = project.description || '';
+                    document.getElementById('required-skills').value = Array.isArray(project.required_skills) ? project.required_skills.join(', ') : '';
+                    document.getElementById('team-size').value = project.team_size || 1;
+                    document.getElementById('roles-needed').value = Array.isArray(project.roles_needed) ? project.roles_needed.join(', ') : '';
+                    document.getElementById('timeline').value = project.timeline || '1-week';
+                    document.getElementById('visibility').value = project.visibility || 'public';
+
+                    // Update counter after fill
+                    if (descriptionField && descriptionCharCount) {
+                        descriptionCharCount.textContent = descriptionField.value.length;
+                    }
+                } catch (err) {
+                    console.error('Edit mode load error:', err);
+                    window.toast.error(getUserFriendlyError ? getUserFriendlyError(err) : 'Could not load project.');
+                }
+            }
             
             // Character counter for description
             const descriptionField = document.getElementById('description');
@@ -292,20 +333,22 @@
                         visibility: document.getElementById('visibility').value || 'public'
                     };
 
-                    // Create project in database
-                    const result = await window.projects.createProject(postData);
+                    // Create/update project in database
+                    const result = editProjectId
+                        ? await window.projects.updateProject(editProjectId, postData)
+                        : await window.projects.createProject(postData);
 
                     if (result.success) {
                         // Show success message
-                        window.toast.success('Idea posted successfully! Redirecting...');
+                        window.toast.success(editProjectId ? 'Idea updated successfully! Redirecting...' : 'Idea posted successfully! Redirecting...');
                         
                         // Redirect after short delay
                         setTimeout(() => {
-                            window.location.href = 'index.html';
+                            window.location.href = editProjectId ? 'explore.html' : 'index.html';
                         }, 1500);
                     } else {
                         hideLoading(submitButton);
-                        const friendlyError = getUserFriendlyError(result.error || new Error('Failed to post project'));
+                        const friendlyError = getUserFriendlyError(result.error || new Error(editProjectId ? 'Failed to update project' : 'Failed to post project'));
                         showFormError(friendlyError);
                     }
                 } catch (error) {

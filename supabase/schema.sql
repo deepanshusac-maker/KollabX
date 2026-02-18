@@ -147,16 +147,21 @@ CREATE TRIGGER on_auth_user_created
 -- Function to update project member count
 CREATE OR REPLACE FUNCTION update_project_member_count()
 RETURNS TRIGGER AS $$
+DECLARE
+  pid UUID;
 BEGIN
-  IF TG_OP = 'INSERT' THEN
-    UPDATE projects 
-    SET current_members = current_members + 1 
-    WHERE id = NEW.project_id;
-  ELSIF TG_OP = 'DELETE' THEN
-    UPDATE projects 
-    SET current_members = GREATEST(0, current_members - 1) 
-    WHERE id = OLD.project_id;
-  END IF;
+  -- Recalculate member count from source of truth (team_members)
+  -- This prevents drift and fixes the "2 members" bug when a project is created
+  pid := COALESCE(NEW.project_id, OLD.project_id);
+
+  UPDATE projects
+  SET current_members = (
+    SELECT COUNT(*)
+    FROM team_members
+    WHERE project_id = pid
+  )
+  WHERE id = pid;
+
   RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;

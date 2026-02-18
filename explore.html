@@ -35,10 +35,10 @@
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
-            <a href="notifications.html" class="notification-icon" aria-label="Notifications">
+            <button type="button" class="notification-icon" aria-label="Notifications">
                 <i data-lucide="bell" aria-hidden="true"></i>
                 <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
-            </a>
+            </button>
             <a href="signin.html" class="btn-signin">Sign In</a>
         </div>
     </nav>
@@ -142,11 +142,21 @@
 
         <!-- Posted Ideas View -->
         <div id="posted-ideas-view" class="hidden">
-            <div class="empty-state-container">
+            <div id="my-projects-loading" class="projects-loading hidden">
+                <div class="loading-spinner"></div>
+                <p>Loading your projects...</p>
+            </div>
+
+            <div id="my-projects-empty" class="projects-empty hidden">
                 <div class="empty-emoji">😳</div>
                 <h2>No ideas posted</h2>
-                <p>Check back later or post your own idea</p>
+                <p>Post your first idea and start building with a team.</p>
+                <div class="empty-actions">
+                    <a href="post.html" class="btn-signin" style="margin-top: 1rem; display: inline-block;">Post an Idea</a>
+                </div>
             </div>
+
+            <div id="my-projects-grid" class="project-grid hidden"></div>
         </div>
     </main>
 
@@ -238,11 +248,16 @@
             postedView.classList.add('hidden');
         });
 
-        btnPosted.addEventListener('click', () => {
+        btnPosted.addEventListener('click', async () => {
             btnPosted.classList.add('active');
             btnExplore.classList.remove('active');
             postedView.classList.remove('hidden');
             exploreView.classList.add('hidden');
+
+            // Load current user's posted projects
+            if (typeof loadMyProjects === 'function') {
+                await loadMyProjects();
+            }
         });
     </script>
     <!-- Supabase Client -->
@@ -383,6 +398,150 @@
                 if (errorMsg) {
                     errorMsg.textContent = `Error loading projects: ${error.message || 'Please try again.'}`;
                 }
+            }
+        }
+
+        // Load current user's posted projects (My Projects view)
+        async function loadMyProjects() {
+            const grid = document.getElementById('my-projects-grid');
+            const loadingDiv = document.getElementById('my-projects-loading');
+            const emptyDiv = document.getElementById('my-projects-empty');
+
+            if (!grid || !loadingDiv || !emptyDiv) return;
+
+            loadingDiv.classList.remove('hidden');
+            emptyDiv.classList.add('hidden');
+            grid.classList.add('hidden');
+            grid.innerHTML = '';
+
+            try {
+                const user = await window.authHelpers.getCurrentUser();
+                if (!user) {
+                    loadingDiv.classList.add('hidden');
+                    emptyDiv.classList.remove('hidden');
+                    const p = emptyDiv.querySelector('p');
+                    if (p) p.textContent = 'Sign in to view your posted projects.';
+                    return;
+                }
+
+                const result = await window.projects.getUserProjects(user.id);
+                if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
+                    loadingDiv.classList.add('hidden');
+                    emptyDiv.classList.remove('hidden');
+                    grid.classList.add('hidden');
+                    return;
+                }
+
+                await renderMyProjects(result.data);
+                loadingDiv.classList.add('hidden');
+                emptyDiv.classList.add('hidden');
+                grid.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading my projects:', error);
+                loadingDiv.classList.add('hidden');
+                emptyDiv.classList.remove('hidden');
+                const p = emptyDiv.querySelector('p');
+                if (p) p.textContent = 'Could not load your projects. Please try again.';
+            }
+        }
+
+        async function renderMyProjects(projects) {
+            const grid = document.getElementById('my-projects-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            for (const project of projects) {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.style.cursor = 'pointer';
+                card.setAttribute('data-project-id', project.id);
+
+                const postedDate = project.created_at ? formatRelativeTime(new Date(project.created_at)) : '';
+                const description = (project.description || '').length > 150
+                    ? project.description.substring(0, 150) + '...'
+                    : (project.description || '');
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="status-badge status-open">${project.status === 'open' ? 'Open' : (project.status || 'Open')}</span>
+                        ${postedDate ? `<span class="posted-date">${postedDate}</span>` : ''}
+                    </div>
+                    <div class="project-info">
+                        <h2>${escapeHtml(project.title || 'Untitled Project')}</h2>
+                        <div class="author-chip">My Project</div>
+                        <p class="project-desc">${escapeHtml(description)}</p>
+                    </div>
+                    <div class="skills-list">
+                        ${project.required_skills && Array.isArray(project.required_skills) && project.required_skills.length > 0
+                            ? project.required_skills.slice(0, 6).map(skill => 
+                                `<span class="skill-tag">${escapeHtml(String(skill))}</span>`
+                            ).join('')
+                            : '<span class="skill-tag">No skills specified</span>'
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-footer-left">
+                            <div class="members-count">
+                                <i data-lucide="users" aria-hidden="true"></i>
+                                <span>${project.current_members || 0}/${project.team_size || 1} members</span>
+                            </div>
+                            ${project.timeline ? `
+                                <div class="timeline-badge" title="Timeline">
+                                    <i data-lucide="clock" aria-hidden="true"></i>
+                                    <span>${escapeHtml(project.timeline)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="my-project-actions">
+                            <button type="button" class="btn-my-edit" data-project-id="${project.id}">Edit</button>
+                            <button type="button" class="btn-my-delete" data-project-id="${project.id}">Delete</button>
+                        </div>
+                    </div>
+                `;
+
+                // Click to open detail modal
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.my-project-actions')) return;
+                    showProjectDetail(project.id);
+                });
+
+                // Edit
+                const editBtn = card.querySelector('.btn-my-edit');
+                if (editBtn) {
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        window.location.href = `post.html?edit=${project.id}`;
+                    });
+                }
+
+                // Delete
+                const delBtn = card.querySelector('.btn-my-delete');
+                if (delBtn) {
+                    delBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        if (!confirm('Delete this idea? This cannot be undone.')) return;
+
+                        try {
+                            const res = await window.projects.deleteProject(project.id);
+                            if (res.success) {
+                                if (window.toast) window.toast.success('Idea deleted.');
+                                await loadMyProjects();
+                                // also refresh Explore list if user switches back
+                                loadProjects().catch(() => {});
+                            } else {
+                                if (window.toast) window.toast.error(res.error || 'Failed to delete idea.');
+                            }
+                        } catch (err) {
+                            if (window.toast) window.toast.error(getUserFriendlyError ? getUserFriendlyError(err) : 'Failed to delete idea.');
+                        }
+                    });
+                }
+
+                grid.appendChild(card);
+            }
+
+            if (window.lucide) {
+                try { lucide.createIcons(); } catch (_) {}
             }
         }
 

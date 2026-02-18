@@ -504,9 +504,9 @@
                         // Mark as new user for redirect logic
                         sessionStorage.setItem('is_new_user', 'true');
                         window.toast.success('Account created successfully! Redirecting to profile setup...');
-                        // Redirect to profile page for new users
+                        // Redirect to profile onboarding for new users
                         setTimeout(() => {
-                            window.location.href = 'profile.html';
+                            window.location.href = 'profile.html?onboarding=true';
                         }, 1500);
                     } else {
                         hideLoading(signupButton);
@@ -551,7 +551,7 @@
                         setTimeout(async () => {
                             const profileComplete = await window.auth.isProfileComplete();
                             if (!profileComplete) {
-                                window.location.href = 'profile.html';
+                                window.location.href = 'profile.html?onboarding=true';
                             } else {
                                 window.location.href = 'index.html';
                             }
@@ -631,7 +631,7 @@
                 
                 // If new user (from signup or Google) or profile incomplete -> redirect to profile
                 if (googleSigninAttempt || isNew || !profileComplete) {
-                    window.location.href = 'profile.html';
+                    window.location.href = 'profile.html?onboarding=true';
                 } else {
                     // Existing user with complete profile -> redirect to landing page
                     window.location.href = 'index.html';
