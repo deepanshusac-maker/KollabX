@@ -71,7 +71,7 @@ section h2 {
 .bento-grid {
     display: flex;
     justify-content: space-around;
-    /* 3 cards in a single row */
+    flex-wrap: wrap;
     gap: 2rem;
     margin: 0 auto;
     position: relative;
@@ -94,7 +94,9 @@ section h2 {
 .problem-card {
     position: relative;
     width: 25%;
+    min-width: 250px;
     height: 320px;
+    flex: 1 1 250px;
 
     background-size: cover;
     background-position: center;
@@ -106,13 +108,10 @@ section h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* font-size: 25px; Removed as content is now flexed */
-    /* font-weight: bold; Removed as content is now flexed */
     border-radius: 20px;
     cursor: pointer;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, background 0.5s ease;
-    /* Added background to transition */
     overflow: hidden;
 }
 
@@ -966,15 +965,107 @@ section h2 {
 /* Responsive */
 @media (max-width: 768px) {
     section {
-        padding: 3rem 1.5rem;
+        padding: 3rem 1rem;
+    }
+
+    section h2 {
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        margin-bottom: 2rem;
     }
 
     .bento-grid {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .problem-card {
+        width: 100%;
+        min-width: unset;
+        max-width: 400px;
+        height: 260px;
+    }
+
+    .card-question {
+        font-size: 1.2rem;
+        padding: 1.5rem;
+    }
+
+    .card-solution {
+        font-size: 0.9rem;
+        padding: 1.5rem;
     }
 
     .feature-cards {
         grid-template-columns: 1fr;
+    }
+
+    .kx-card {
+        aspect-ratio: unset;
+        min-width: unset;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .kx-card-container {
+        padding: 10px;
+    }
+
+    .why-section {
+        padding: 60px 0;
+    }
+
+    .faq-section {
+        padding: 60px 0;
+    }
+
+    .faq-question {
+        padding: 18px 20px;
+        font-size: 14px;
+    }
+
+    .faq-answer {
+        padding: 0 20px 18px;
+    }
+
+    .transition-blur {
+        height: 80px;
+        margin-top: -80px;
+    }
+}
+
+@media (max-width: 480px) {
+    section {
+        padding: 2.5rem 0.75rem;
+    }
+
+    .problem-card {
+        height: 220px;
+    }
+
+    .card-question {
+        font-size: 1.1rem;
+    }
+
+    .card-solution {
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-brand,
+    .footer-newsletter {
+        grid-column: span 1;
+    }
+
+    .main-footer {
+        padding: 3rem 5% 1.5rem;
+    }
+
+    .footer-bottom {
+        font-size: 0.8rem;
     }
 }
 

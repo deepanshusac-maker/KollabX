@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kollabx - Home</title>
+    <title>KollabX - Home</title>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/hero.css">
@@ -16,7 +16,7 @@
 
 <body>
     <nav class="navbar">
-        <h1>Kollabx</h1>
+        <h1>KollabX</h1>
         <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
             <span></span>
             <span></span>
@@ -26,9 +26,12 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item active">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html" class="nav-item">Dashboard</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post Idea</a>
+            </li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
+                    class="nav-item">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a>
+            </li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -49,7 +52,7 @@
             <canvas id="smokeCanvas"></canvas>
 
             <div class="hero-content">
-                <p class="tagline">A student-only platform to form reliable  teams fast</p>
+                <p class="tagline">A student-only platform to form reliable teams fast</p>
 
                 <h1 class="hero-title">
                     <span class="split-text-heading">Find your next</span>
@@ -59,7 +62,7 @@
                                 <span class="word">Collaboration</span>
                                 <span class="word">Teammate</span>
                                 <span class="word">Co-creator</span>
-                               
+                                <span class="word">Collaboration</span>
                             </div>
                         </div>
                     </div>
@@ -346,7 +349,7 @@
                     <span>KollabX</span>
                 </div>
                 <p>Connecting builders, one idea at a time. Find teammates by skills, not spam.</p>
-                
+
             </div>
 
             <div class="footer-col">
@@ -416,7 +419,7 @@
         // Initialize auth state
         window.addEventListener('DOMContentLoaded', async () => {
             await window.session.initAuth();
-            
+
             // Load dynamic social proof numbers
             loadSocialProofNumbers();
         });

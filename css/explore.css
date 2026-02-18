@@ -389,8 +389,10 @@
 
 /* Applied state */
 .btn-apply[disabled] {
-    background: #dcfce7; /* light green */
-    color: #166534;      /* dark green text */
+    background: #dcfce7;
+    /* light green */
+    color: #166534;
+    /* dark green text */
     border-color: rgba(22, 101, 52, 0.3);
     cursor: default;
     box-shadow: none;
@@ -489,7 +491,9 @@
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .projects-loading p {
@@ -508,9 +512,12 @@
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.6;
     }
@@ -944,6 +951,7 @@
         transform: scale(0);
         opacity: 0;
     }
+
     to {
         transform: scale(1);
         opacity: 1;
@@ -1196,4 +1204,185 @@
 /* Utility Classes */
 .hidden {
     display: none !important;
+}
+
+/* ========================================
+   Explore Responsive
+   ======================================== */
+@media (max-width: 768px) {
+    .explore-container {
+        padding: 100px 4% 60px;
+    }
+
+    .explore-hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .explore-hero p {
+        font-size: 1rem;
+    }
+
+    .filter-card {
+        padding: 1.5rem;
+        border-radius: 20px;
+        margin-bottom: 2.5rem;
+    }
+
+    .search-bar input {
+        padding: 1rem 1.2rem 1rem 3rem;
+        font-size: 0.95rem;
+    }
+
+    .filter-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .filter-group {
+        min-width: unset;
+    }
+
+    .filter-options-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .category-chips {
+        gap: 0.5rem;
+    }
+
+    .chip {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .project-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .project-card {
+        padding: 1.5rem;
+        border-radius: 20px;
+    }
+
+    .project-info h2 {
+        font-size: 1.2rem;
+    }
+
+    .card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-apply {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Modals */
+    .project-modal,
+    .application-modal {
+        padding: 0;
+    }
+
+    .modal-content,
+    .application-modal-content {
+        border-radius: 16px 16px 0 0;
+        max-height: 95vh;
+        align-self: flex-end;
+    }
+
+    .modal-header {
+        padding: 2rem 1.5rem 1rem;
+    }
+
+    .modal-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-footer {
+        padding: 1rem 1.5rem 1.5rem;
+    }
+
+    .application-form {
+        padding: 1.5rem;
+    }
+
+    .view-toggle {
+        gap: 0.5rem;
+    }
+
+    .toggle-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    /* My Project Actions */
+    .my-project-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .btn-my-edit,
+    .btn-my-delete {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .explore-container {
+        padding: 90px 3% 40px;
+    }
+
+    .explore-hero {
+        margin-bottom: 2.5rem;
+    }
+
+    .explore-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .filter-card {
+        padding: 1.25rem;
+    }
+
+    .project-card {
+        padding: 1.25rem;
+    }
+
+    .project-desc {
+        font-size: 0.9rem;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+
+    .members-count {
+        font-size: 0.8rem;
+    }
+
+    .modal-content,
+    .application-modal-content {
+        border-radius: 12px 12px 0 0;
+    }
+
+    .empty-state-container,
+    .projects-empty,
+    .notifications-empty {
+        padding: 3rem 1.5rem;
+        border-radius: 20px;
+    }
+
+    .empty-state-container h2,
+    .projects-empty h2,
+    .notifications-empty h2 {
+        font-size: 1.5rem;
+    }
 }

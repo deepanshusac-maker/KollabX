@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kollabx - Explore Ideas</title>
+    <title>KollabX - Explore Ideas</title>
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -19,7 +19,7 @@
 
 <body>
     <nav class="navbar">
-        <h1>Kollabx</h1>
+        <h1>KollabX</h1>
         <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
             <span></span>
             <span></span>
@@ -29,9 +29,12 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item active">Explore</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html" class="nav-item">Dashboard</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post Idea</a>
+            </li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
+                    class="nav-item">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a>
+            </li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -65,7 +68,8 @@
         <section class="filter-card">
             <div class="search-bar">
                 <i data-lucide="search" aria-hidden="true"></i>
-                <input type="text" id="search-input" placeholder="Search ideas, skills, keywords..." aria-label="Search ideas, skills, keywords">
+                <input type="text" id="search-input" placeholder="Search ideas, skills, keywords..."
+                    aria-label="Search ideas, skills, keywords">
             </div>
 
             <div class="filter-options">
@@ -129,8 +133,11 @@
                 <h2>No projects found</h2>
                 <p>Try adjusting your filters or be the first to post a project!</p>
                 <div class="empty-actions">
-                    <a href="post.html" class="btn-signin" style="margin-top: 1rem; display: inline-block;">Post Your First Project</a>
-                    <button class="btn-clear-filters" style="margin-top: 0.75rem; display: inline-block; background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 0.6rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600;">Clear Filters</button>
+                    <a href="post.html" class="btn-signin" style="margin-top: 1rem; display: inline-block;">Post Your
+                        First Project</a>
+                    <button class="btn-clear-filters"
+                        style="margin-top: 0.75rem; display: inline-block; background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 0.6rem 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600;">Clear
+                        Filters</button>
                 </div>
             </div>
 
@@ -152,7 +159,8 @@
                 <h2>No ideas posted</h2>
                 <p>Post your first idea and start building with a team.</p>
                 <div class="empty-actions">
-                    <a href="post.html" class="btn-signin" style="margin-top: 1rem; display: inline-block;">Post an Idea</a>
+                    <a href="post.html" class="btn-signin" style="margin-top: 1rem; display: inline-block;">Post an
+                        Idea</a>
                 </div>
             </div>
 
@@ -277,7 +285,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             await window.session.initAuth();
             await loadProjects();
-            
+
             // Handle hash-based navigation (e.g., from dashboard)
             const hash = window.location.hash;
             if (hash && hash.startsWith('#project-')) {
@@ -288,7 +296,7 @@
                 }, 500);
             }
         });
-        
+
         // Also handle hash changes (if user navigates with hash)
         window.addEventListener('hashchange', async () => {
             const hash = window.location.hash;
@@ -367,7 +375,7 @@
                     try {
                         await renderProjects(result.data);
                         console.log('Projects rendered successfully');
-                        
+
                         // Hide loading, show grid after successful render
                         loadingDiv.classList.add('hidden');
                         emptyDiv.classList.add('hidden');
@@ -473,11 +481,11 @@
                     </div>
                     <div class="skills-list">
                         ${project.required_skills && Array.isArray(project.required_skills) && project.required_skills.length > 0
-                            ? project.required_skills.slice(0, 6).map(skill => 
-                                `<span class="skill-tag">${escapeHtml(String(skill))}</span>`
-                            ).join('')
-                            : '<span class="skill-tag">No skills specified</span>'
-                        }
+                        ? project.required_skills.slice(0, 6).map(skill =>
+                            `<span class="skill-tag">${escapeHtml(String(skill))}</span>`
+                        ).join('')
+                        : '<span class="skill-tag">No skills specified</span>'
+                    }
                     </div>
                     <div class="card-footer">
                         <div class="card-footer-left">
@@ -527,7 +535,7 @@
                                 if (window.toast) window.toast.success('Idea deleted.');
                                 await loadMyProjects();
                                 // also refresh Explore list if user switches back
-                                loadProjects().catch(() => {});
+                                loadProjects().catch(() => { });
                             } else {
                                 if (window.toast) window.toast.error(res.error || 'Failed to delete idea.');
                             }
@@ -541,7 +549,7 @@
             }
 
             if (window.lucide) {
-                try { lucide.createIcons(); } catch (_) {}
+                try { lucide.createIcons(); } catch (_) { }
             }
         }
 
@@ -619,15 +627,15 @@
                     // Has the current user already applied to this project?
                     const hasApplied = appliedProjectIds && appliedProjectIds.has(project.id);
 
-                // Create project card
-                const card = document.createElement('div');
-                card.className = 'project-card';
-                card.style.cursor = 'pointer';
-                card.setAttribute('data-project-id', project.id);
-                
-                // Format date
-                const postedDate = project.created_at ? formatRelativeTime(new Date(project.created_at)) : '';
-                
+                    // Create project card
+                    const card = document.createElement('div');
+                    card.className = 'project-card';
+                    card.style.cursor = 'pointer';
+                    card.setAttribute('data-project-id', project.id);
+
+                    // Format date
+                    const postedDate = project.created_at ? formatRelativeTime(new Date(project.created_at)) : '';
+
                     card.innerHTML = `
                     <div class="card-header">
                         <span class="status-badge status-open">${project.status === 'open' ? 'Open' : (project.status || 'Open')}</span>
@@ -643,7 +651,7 @@
                     </div>
                     <div class="skills-list">
                         ${project.required_skills && Array.isArray(project.required_skills) && project.required_skills.length > 0
-                            ? project.required_skills.map(skill => 
+                            ? project.required_skills.map(skill =>
                                 `<span class="skill-tag">${escapeHtml(String(skill))}</span>`
                             ).join('')
                             : '<span class="skill-tag">No skills specified</span>'
@@ -672,14 +680,14 @@
                     </div>
                 `;
 
-                // Add click handler for card (opens detail modal)
-                card.addEventListener('click', (e) => {
-                    // Don't open modal if clicking on Apply button
-                    if (e.target.closest('.btn-apply')) {
-                        return;
-                    }
-                    showProjectDetail(project.id);
-                });
+                    // Add click handler for card (opens detail modal)
+                    card.addEventListener('click', (e) => {
+                        // Don't open modal if clicking on Apply button
+                        if (e.target.closest('.btn-apply')) {
+                            return;
+                        }
+                        showProjectDetail(project.id);
+                    });
 
                     // Add click handler for Apply button
                     const applyBtn = card.querySelector('.btn-apply');
@@ -722,7 +730,7 @@
             const diffMins = Math.floor(diffMs / 60000);
             const diffHours = Math.floor(diffMs / 3600000);
             const diffDays = Math.floor(diffMs / 86400000);
-            
+
             if (diffMins < 1) return 'Just now';
             if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
             if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
@@ -736,12 +744,12 @@
         function showApplicationSuccess(modal, project, closeModalFn) {
             const form = modal.querySelector('.application-form');
             const modalContent = modal.querySelector('.application-modal-content');
-            
+
             if (!form || !modalContent) return;
 
             // Replace form with success screen
             form.style.display = 'none';
-            
+
             const successScreen = document.createElement('div');
             successScreen.className = 'application-success-screen';
             successScreen.innerHTML = `
@@ -772,14 +780,14 @@
                     <button class="btn-secondary" id="continue-exploring">Continue Exploring</button>
                 </div>
             `;
-            
+
             modalContent.appendChild(successScreen);
-            
+
             // Initialize icons
             if (window.lucide) {
                 lucide.createIcons();
             }
-            
+
             // Handle continue exploring button
             const continueBtn = successScreen.querySelector('#continue-exploring');
             if (continueBtn) {
@@ -801,12 +809,12 @@
                 existingModal.remove();
                 document.body.style.overflow = '';
             }
-            
+
             // Update URL hash if not already set
             if (window.location.hash !== `#project-${projectId}`) {
                 window.location.hash = `#project-${projectId}`;
             }
-            
+
             try {
                 // Get current user
                 let user = null;
@@ -829,7 +837,7 @@
                 const project = result.data;
                 const creatorName = project.creator?.full_name || 'Unknown';
                 const postedDate = project.created_at ? formatRelativeTime(new Date(project.created_at)) : '';
-                
+
                 // Create modal HTML
                 const modal = document.createElement('div');
                 modal.className = 'project-modal';
@@ -860,20 +868,20 @@
                                 <h3>Required Skills</h3>
                                 <div class="skills-list">
                                     ${project.required_skills && project.required_skills.length > 0
-                                        ? project.required_skills.map(skill => 
-                                            `<span class="skill-tag">${escapeHtml(skill)}</span>`
-                                        ).join('')
-                                        : '<span class="skill-tag">No skills specified</span>'
-                                    }
+                        ? project.required_skills.map(skill =>
+                            `<span class="skill-tag">${escapeHtml(skill)}</span>`
+                        ).join('')
+                        : '<span class="skill-tag">No skills specified</span>'
+                    }
                                 </div>
                             </div>
                             ${project.roles_needed && project.roles_needed.length > 0 ? `
                             <div class="modal-section">
                                 <h3>Roles Needed</h3>
                                 <div class="roles-list">
-                                    ${project.roles_needed.map(role => 
-                                        `<span class="role-tag">${escapeHtml(role)}</span>`
-                                    ).join('')}
+                                    ${project.roles_needed.map(role =>
+                        `<span class="role-tag">${escapeHtml(role)}</span>`
+                    ).join('')}
                                 </div>
                             </div>
                             ` : ''}
@@ -917,7 +925,7 @@
                 // Close modal handlers
                 const closeBtn = modal.querySelector('.modal-close');
                 const overlay = modal.querySelector('.modal-overlay');
-                
+
                 const closeModal = () => {
                     modal.remove();
                     document.body.style.overflow = '';
@@ -986,9 +994,9 @@
                                     </div>
                                     ${profile?.skills && profile.skills.length > 0 ? `
                                         <div class="team-member-skills">
-                                            ${profile.skills.slice(0, 3).map(skill => 
-                                                `<span class="team-skill-tag">${escapeHtml(skill)}</span>`
-                                            ).join('')}
+                                            ${profile.skills.slice(0, 3).map(skill =>
+                        `<span class="team-skill-tag">${escapeHtml(skill)}</span>`
+                    ).join('')}
                                             ${profile.skills.length > 3 ? `<span class="team-skill-more">+${profile.skills.length - 3}</span>` : ''}
                                         </div>
                                     ` : ''}
@@ -1025,7 +1033,7 @@
                         const userIdToRemove = btn.dataset.userId;
                         const memberItem = btn.closest('.team-member-item');
                         const memberName = memberItem.querySelector('.team-member-name').textContent.trim().replace('Creator', '').trim();
-                        
+
                         if (confirm(`Are you sure you want to remove ${memberName} from the team?`)) {
                             const result = await window.teams.removeTeamMember(projectId, userIdToRemove);
                             if (result.success) {
@@ -1114,7 +1122,7 @@
 
                 // Check if already applied
                 const applicationsResult = await window.applications.getUserApplications();
-                const existingApp = applicationsResult.data?.find(app => 
+                const existingApp = applicationsResult.data?.find(app =>
                     app.project_id === projectId && app.status === 'pending'
                 );
 
@@ -1155,9 +1163,9 @@
                                 <label for="application-role">Preferred Role</label>
                                 <select id="application-role" class="form-control">
                                     <option value="">Select a role (optional)</option>
-                                    ${project.roles_needed.map(role => 
-                                        `<option value="${escapeHtml(role)}">${escapeHtml(role)}</option>`
-                                    ).join('')}
+                                    ${project.roles_needed.map(role =>
+                    `<option value="${escapeHtml(role)}">${escapeHtml(role)}</option>`
+                ).join('')}
                                 </select>
                             </div>
                             ` : ''}
@@ -1165,11 +1173,11 @@
                                 <label>Your Skills</label>
                                 <div class="skills-display">
                                     ${profile?.skills && profile.skills.length > 0
-                                        ? profile.skills.map(skill => 
-                                            `<span class="skill-tag">${escapeHtml(skill)}</span>`
-                                        ).join('')
-                                        : '<span class="text-muted">Update your profile to show your skills</span>'
-                                    }
+                        ? profile.skills.map(skill =>
+                            `<span class="skill-tag">${escapeHtml(skill)}</span>`
+                        ).join('')
+                        : '<span class="text-muted">Update your profile to show your skills</span>'
+                    }
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -1201,7 +1209,7 @@
                 const closeBtn = modal.querySelector('.modal-close');
                 const overlay = modal.querySelector('.modal-overlay');
                 const cancelBtn = document.getElementById('cancel-application');
-                
+
                 const closeModal = () => {
                     modal.remove();
                     document.body.style.overflow = '';
@@ -1217,10 +1225,10 @@
                 // Form submission
                 const form = document.getElementById('application-form');
                 const submitBtn = document.getElementById('submit-application');
-                
+
                 form.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    
+
                     const message = messageField.value.trim();
                     if (!message) {
                         if (window.toast) window.toast.error('Please write a short message to apply.');
@@ -1286,7 +1294,7 @@
                 // Update active state
                 document.querySelectorAll('.category-chips .chip').forEach(c => c.classList.remove('active'));
                 chip.classList.add('active');
-                
+
                 // Update filter
                 currentFilters.category = chip.dataset.category;
                 loadProjects();

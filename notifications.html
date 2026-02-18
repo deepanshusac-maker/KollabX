@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kollabx - Notifications</title>
+    <title>KollabX - Notifications</title>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/sections.css">
@@ -14,7 +14,7 @@
 
 <body>
     <nav class="navbar">
-        <h1 style="color: var(--primary-color);">Kollabx</h1>
+        <h1 style="color: var(--primary-color);">KollabX</h1>
         <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
             <span></span>
             <span></span>
@@ -24,7 +24,7 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li><a href="post.html" class="nav-item">Post</a></li>
+            <li><a href="post.html" class="nav-item">Post Idea</a></li>
             <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
             <li><a href="profile.html" class="nav-item">Profile</a></li>
             <div class="nav-indicator"></div>
@@ -42,9 +42,11 @@
         <section class="why-section" style="padding: 2rem 0;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                 <h2 class="fade-in-up">Your Notifications</h2>
-                <button id="mark-all-read-btn" class="btn-mark-all-read" style="display: none; padding: 0.6rem 1.2rem; background: var(--primary-color); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem;">Mark All as Read</button>
+                <button id="mark-all-read-btn" class="btn-mark-all-read"
+                    style="display: none; padding: 0.6rem 1.2rem; background: var(--primary-color); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.9rem;">Mark
+                    All as Read</button>
             </div>
-            
+
             <!-- Loading State -->
             <div id="notifications-loading" class="notifications-loading">
                 <div class="loading-spinner"></div>
@@ -55,7 +57,8 @@
             <div id="notifications-empty" class="notifications-empty hidden">
                 <div class="empty-emoji">🔔</div>
                 <h2>No notifications yet</h2>
-                <p>You'll see notifications here when someone applies to your projects or when your applications are reviewed.</p>
+                <p>You'll see notifications here when someone applies to your projects or when your applications are
+                    reviewed.</p>
             </div>
 
             <!-- Notifications Container -->
@@ -162,7 +165,7 @@
             const diffMins = Math.floor(diffMs / 60000);
             const diffHours = Math.floor(diffMs / 3600000);
             const diffDays = Math.floor(diffMs / 86400000);
-            
+
             if (diffMins < 1) return 'Just now';
             if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
             if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
@@ -277,7 +280,7 @@
                             await window.notifications.markNotificationAsRead(notificationId);
                             item.classList.remove('notification-unread');
                             item.querySelector('.notification-dot')?.remove();
-                            
+
                             // Hide mark all button if no unread left
                             const hasUnread = container.querySelector('.notification-unread');
                             if (!hasUnread) {

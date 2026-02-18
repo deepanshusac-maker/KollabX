@@ -17,7 +17,7 @@
 
 <body>
     <nav class="navbar">
-        <h1>Kollabx</h1>
+        <h1>KollabX</h1>
         <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
             <span></span>
             <span></span>
@@ -27,7 +27,7 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li><a href="post.html" class="nav-item">Post</a></li>
+            <li><a href="post.html" class="nav-item">Post Idea</a></li>
             <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
             <li><a href="profile.html" class="nav-item">Profile</a></li>
             <div class="nav-indicator"></div>
@@ -194,7 +194,7 @@
                 // Get user ID from URL parameter or use current user
                 const urlParams = new URLSearchParams(window.location.search);
                 const userIdParam = urlParams.get('user');
-                
+
                 let userId = userIdParam;
                 if (!userId) {
                     // Use current user if no parameter
@@ -236,7 +236,7 @@
                 if (profile.skills && Array.isArray(profile.skills) && profile.skills.length > 0) {
                     const skillsList = document.getElementById('skills-list');
                     skillsList.innerHTML = '';
-                    
+
                     profile.skills.forEach(skill => {
                         if (!skill) return;
                         const div = document.createElement('div');
