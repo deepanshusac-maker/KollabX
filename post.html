@@ -28,9 +28,12 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item active">Post</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html" class="nav-item">Dashboard</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item active">Post</a>
+            </li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
+                    class="nav-item">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a>
+            </li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -88,8 +91,8 @@
                     <h3>Description</h3>
                     <div class="form-group">
                         <textarea id="description" class="form-control"
-                            placeholder="Explain your idea, features, goals and what you want to build..."
-                            required maxlength="2000"></textarea>
+                            placeholder="Explain your idea, features, goals and what you want to build..." required
+                            maxlength="2000"></textarea>
                         <div class="char-counter">
                             <span id="description-char-count">0</span>/2000 characters
                         </div>
@@ -250,6 +253,17 @@
             const params = new URLSearchParams(window.location.search);
             const editProjectId = params.get('edit');
 
+            // Character counter for description
+            const descriptionField = document.getElementById('description');
+            const descriptionCharCount = document.getElementById('description-char-count');
+            if (descriptionField && descriptionCharCount) {
+                descriptionField.addEventListener('input', () => {
+                    descriptionCharCount.textContent = descriptionField.value.length;
+                });
+                // Initialize count
+                descriptionCharCount.textContent = descriptionField.value.length;
+            }
+
             // If editing, load the project and prefill the form
             if (editProjectId) {
                 try {
@@ -285,18 +299,7 @@
                     window.toast.error(getUserFriendlyError ? getUserFriendlyError(err) : 'Could not load project.');
                 }
             }
-            
-            // Character counter for description
-            const descriptionField = document.getElementById('description');
-            const descriptionCharCount = document.getElementById('description-char-count');
-            if (descriptionField && descriptionCharCount) {
-                descriptionField.addEventListener('input', () => {
-                    descriptionCharCount.textContent = descriptionField.value.length;
-                });
-                // Initialize count
-                descriptionCharCount.textContent = descriptionField.value.length;
-            }
-            
+
             // Setup real-time validation
             setupRealTimeValidation(postForm, {
                 'description': [validators.minLength(20)],
@@ -305,7 +308,7 @@
 
             postForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
+
                 // Validate form
                 const fieldRules = {
                     'description': [validators.minLength(20)],
@@ -341,7 +344,7 @@
                     if (result.success) {
                         // Show success message
                         window.toast.success(editProjectId ? 'Idea updated successfully! Redirecting...' : 'Idea posted successfully! Redirecting...');
-                        
+
                         // Redirect after short delay
                         setTimeout(() => {
                             window.location.href = editProjectId ? 'explore.html' : 'index.html';

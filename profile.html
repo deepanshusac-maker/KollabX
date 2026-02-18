@@ -29,8 +29,10 @@
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
             <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html" class="nav-item">Dashboard</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item active">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
+                    class="nav-item">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html"
+                    class="nav-item active">Profile</a></li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -107,10 +109,12 @@
                     </div>
                 </div>
                 <div class="onboarding-cta">
-                    <button type="button" id="onboarding-explore-btn" class="btn-signin onboarding-explore-btn" disabled>
+                    <button type="button" id="onboarding-explore-btn" class="btn-signin onboarding-explore-btn"
+                        disabled>
                         Continue to Explore
                     </button>
-                    <p class="onboarding-hint">Tip: Completing skills + bio makes your applications much more likely to be accepted.</p>
+                    <p class="onboarding-hint">Tip: Completing skills + bio makes your applications much more likely to
+                        be accepted.</p>
                 </div>
             </div>
 
@@ -133,7 +137,8 @@
                     <div class="form-group">
                         <label for="bio">Short Bio</label>
                         <textarea id="bio" class="form-control"
-                            placeholder="Robotics enthusiast | Love building AI projects..." required maxlength="500"></textarea>
+                            placeholder="Robotics enthusiast | Love building AI projects..." required
+                            maxlength="500"></textarea>
                         <div class="char-counter">
                             <span id="bio-char-count">0</span>/500 characters
                         </div>
@@ -164,8 +169,8 @@
                     <div class="form-group-row">
                         <div class="form-group">
                             <label for="github">GitHub</label>
-                            <input type="url" id="github" class="form-control"
-                                placeholder="https://github.com/username" required>
+                            <input type="url" id="github" class="form-control" placeholder="https://github.com/username"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="linkedin">LinkedIn</label>
@@ -284,7 +289,7 @@
             const isAuth = await window.session.requireAuth();
             if (isAuth) {
                 await window.session.initAuth();
-                
+
                 // Check if profile is already complete - if so, redirect to landing page
                 const profileComplete = await window.auth.isProfileComplete();
                 if (profileComplete) {
@@ -359,7 +364,7 @@
 
                 // Compress image
                 const compressedFile = await compressImage(file);
-                
+
                 // Get file extension
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${userId}/avatar.${fileExt}`;
@@ -503,7 +508,7 @@
 
         const profileForm = document.querySelector('.profile-card');
         const saveButton = document.getElementById('save-profile');
-        
+
         // Setup real-time validation
         setupRealTimeValidation(profileForm, {
             'github': [validators.url],
@@ -577,7 +582,7 @@
                     .split(',')
                     .map(s => s.trim())
                     .filter(s => s.length > 0);
-                
+
                 const interestsArray = document.getElementById('interests').value
                     .split(',')
                     .map(i => i.trim())
@@ -609,21 +614,20 @@
                 if (error) {
                     throw error;
                 }
-                
+
                 // Clear localStorage (we're using database now)
                 localStorage.removeItem('userProfile');
-                
+
                 // Update match scores in background (skills may have changed)
-                const user = await window.authHelpers.getCurrentUser();
                 if (user && window.projects && window.projects.updateUserMatchScores) {
                     window.projects.updateUserMatchScores(user.id).catch(err => {
                         console.warn('Error updating match scores after profile update:', err);
                     });
                 }
-                
+
                 // Show success message
                 window.toast.success('Profile updated successfully! Redirecting...');
-                
+
                 // Redirect after profile completion
                 setTimeout(() => {
                     if (onboardingMode) {
