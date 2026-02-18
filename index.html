@@ -26,9 +26,9 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item active">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li><a href="post.html" class="nav-item">Post</a></li>
-            <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
-            <li><a href="profile.html" class="nav-item">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html" class="nav-item">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a></li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -49,7 +49,7 @@
             <canvas id="smokeCanvas"></canvas>
 
             <div class="hero-content">
-                <p class="tagline">A student-only platform to form reliable project teams fast</p>
+                <p class="tagline">A student-only platform to form reliable  teams fast</p>
 
                 <h1 class="hero-title">
                     <span class="split-text-heading">Find your next</span>
@@ -230,7 +230,7 @@
                         <h3 class="kx-feature-title">Verified Talent</h3>
                         <p class="kx-feature-desc">No more bots. Browse through real portfolios, verified skill sets,
                             and past project stats.</p>
-                        <span class="kx-feature-meta">Trusted by 500+ builders</span>
+                        <span class="kx-feature-meta" id="verified-builders-count">Verified student profiles</span>
                     </div>
 
                     <!-- Ambient Dots -->
@@ -291,7 +291,7 @@
                         <h3 class="kx-feature-title">Squad Growth</h3>
                         <p class="kx-feature-desc">Build your roster, track team progress, and level up your leadership
                             skills through collaboration.</p>
-                        <span class="kx-feature-meta">Scaling 200+ active squads</span>
+                        <span class="kx-feature-meta" id="active-teams-count">Active project teams</span>
                     </div>
 
                     <!-- Ambient Dots -->
@@ -422,7 +422,44 @@
         // Initialize auth state
         window.addEventListener('DOMContentLoaded', async () => {
             await window.session.initAuth();
+            
+            // Load dynamic social proof numbers
+            loadSocialProofNumbers();
         });
+
+        // Load real social proof numbers from database
+        async function loadSocialProofNumbers() {
+            try {
+                if (!window.supabase) return;
+
+                // Get total user count
+                const { count: userCount } = await window.supabase
+                    .from('profiles')
+                    .select('*', { count: 'exact', head: true });
+
+                // Get total active teams (projects with 2+ members)
+                const { count: teamCount } = await window.supabase
+                    .from('projects')
+                    .select('*', { count: 'exact', head: true })
+                    .gte('current_members', 2)
+                    .eq('status', 'open');
+
+                // Update UI if counts exist
+                const buildersEl = document.getElementById('verified-builders-count');
+                const teamsEl = document.getElementById('active-teams-count');
+
+                if (buildersEl && userCount && userCount > 0) {
+                    buildersEl.textContent = `${userCount}+ verified builders`;
+                }
+
+                if (teamsEl && teamCount && teamCount > 0) {
+                    teamsEl.textContent = `${teamCount}+ active teams`;
+                }
+            } catch (error) {
+                console.warn('Error loading social proof numbers:', error);
+                // Keep default text if query fails
+            }
+        }
     </script>
 </body>
 

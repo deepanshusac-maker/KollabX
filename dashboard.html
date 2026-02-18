@@ -27,9 +27,9 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li><a href="post.html" class="nav-item">Post</a></li>
-            <li><a href="dashboard.html" class="nav-item active">Dashboard</a></li>
-            <li><a href="profile.html" class="nav-item">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html" class="nav-item active">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a></li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -94,15 +94,16 @@
                 <div class="card-content">
                     <h2>Recommended for You</h2>
                     <p>Discover projects tailored to your specific skill set and interests.</p>
-                    <div class="empty-state">
-                        <span class="sub-text">No recommendations yet. Update your profile skills.</span>
-                        <a href="profile.html" class="btn-update-profile" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Update Profile</a>
+                    <div id="recommended-projects-container" class="recommended-projects-container">
+                        <div class="empty-state">
+                            <span class="sub-text">Calculating recommendations...</span>
+                        </div>
                     </div>
                 </div>
                 <div class="card-action">
-                    <a href="explore.html" class="btn-arrow" aria-label="Go to explore page">
+                    <button class="btn-arrow" aria-label="View details" id="toggle-recommended-projects">
                         <i data-lucide="arrow-right" aria-hidden="true"></i>
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -266,10 +267,60 @@
             if (isAuth) {
                 await window.session.initAuth();
                 await loadDashboardData();
+                
+                // Add toggle handlers for expandable sections
+                setupToggleHandlers();
             }
             // Initialize Lucide Icons
             lucide.createIcons();
         });
+
+        // Setup toggle handlers for expandable sections
+        function setupToggleHandlers() {
+            // Toggle recommended projects
+            const toggleRecommended = document.getElementById('toggle-recommended-projects');
+            if (toggleRecommended) {
+                toggleRecommended.addEventListener('click', () => {
+                    const container = document.getElementById('recommended-projects-container');
+                    if (container) {
+                        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+                    }
+                });
+            }
+
+            // Toggle incoming applications
+            const toggleIncoming = document.getElementById('toggle-incoming-applications');
+            if (toggleIncoming) {
+                toggleIncoming.addEventListener('click', () => {
+                    const container = document.getElementById('incoming-applications-container');
+                    if (container) {
+                        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+                    }
+                });
+            }
+
+            // Toggle my applications
+            const toggleMyApps = document.getElementById('toggle-my-applications');
+            if (toggleMyApps) {
+                toggleMyApps.addEventListener('click', () => {
+                    const container = document.getElementById('my-applications-container');
+                    if (container) {
+                        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+                    }
+                });
+            }
+
+            // Toggle my teams
+            const toggleMyTeams = document.getElementById('toggle-my-teams');
+            if (toggleMyTeams) {
+                toggleMyTeams.addEventListener('click', () => {
+                    const container = document.getElementById('my-teams-container');
+                    if (container) {
+                        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+                    }
+                });
+            }
+        }
 
         // Load dashboard data
         async function loadDashboardData() {
@@ -336,6 +387,9 @@
                 
                 // Load teams
                 await loadMyTeams();
+                
+                // Load recommendations
+                await loadRecommendedProjects();
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
                 const statValues = document.querySelectorAll('.stat-value');
@@ -592,6 +646,130 @@
             } catch (error) {
                 const friendlyError = getUserFriendlyError(error);
                 showFormError(friendlyError);
+            }
+        }
+
+        // Load recommended projects
+        async function loadRecommendedProjects() {
+            const container = document.getElementById('recommended-projects-container');
+            if (!container) return;
+
+            try {
+                const user = await window.authHelpers.getCurrentUser();
+                if (!user) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="sub-text">Sign in to see personalized recommendations.</span>
+                            <a href="signin.html" class="btn-signin" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Sign In</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Check if user has skills in profile
+                const { data: profile } = await window.supabase
+                    .from('profiles')
+                    .select('skills')
+                    .eq('id', user.id)
+                    .single();
+
+                if (!profile || !profile.skills || profile.skills.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="sub-text">No recommendations yet. Update your profile skills to get personalized matches.</span>
+                            <a href="profile.html" class="btn-update-profile" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Update Profile</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Update match scores periodically (every 5 minutes or on first load)
+                const lastUpdateKey = `match_scores_updated_${user.id}`;
+                const lastUpdate = localStorage.getItem(lastUpdateKey);
+                const now = Date.now();
+                const fiveMinutes = 5 * 60 * 1000;
+
+                // Check if we need to update (first time or > 5 minutes)
+                if (!lastUpdate || (now - parseInt(lastUpdate)) > fiveMinutes) {
+                    // Show loading state
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="sub-text">Calculating your personalized recommendations...</span>
+                        </div>
+                    `;
+
+                    // Update match scores (await to ensure it completes before loading)
+                    try {
+                        const updateResult = await window.projects.updateUserMatchScores(user.id);
+                        if (updateResult.success) {
+                            localStorage.setItem(lastUpdateKey, now.toString());
+                            console.log(`Updated ${updateResult.data?.updated || 0} match scores`);
+                        }
+                    } catch (err) {
+                        console.warn('Error updating match scores:', err);
+                        // Continue anyway to show existing recommendations
+                    }
+                }
+
+                // Get recommended projects
+                const result = await window.projects.getRecommendedProjects(user.id, 6);
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="sub-text">No recommendations found. Try updating your skills or explore all projects.</span>
+                            <a href="explore.html" class="btn-explore-projects" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Explore Projects</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Render recommended projects
+                container.innerHTML = result.data.map(project => {
+                    const creatorName = project.creator?.full_name || 'Unknown';
+                    const matchScore = project.match_score || 0;
+                    const description = (project.description || '').length > 100
+                        ? project.description.substring(0, 100) + '...'
+                        : (project.description || '');
+
+                    return `
+                        <div class="recommended-project-item" data-project-id="${project.id}">
+                            <div class="recommended-project-header">
+                                <div>
+                                    <div class="recommended-project-title">${escapeHtml(project.title || 'Untitled Project')}</div>
+                                    <div class="recommended-project-meta">
+                                        ${project.category || ''} • ${project.current_members || 0}/${project.team_size || 1} members
+                                        <span class="match-score-badge">${matchScore}% match</span>
+                                    </div>
+                                </div>
+                            </div>
+                            ${description ? `<div class="recommended-project-desc">${escapeHtml(description)}</div>` : ''}
+                            ${project.required_skills && project.required_skills.length > 0 ? `
+                                <div class="recommended-project-skills">
+                                    ${project.required_skills.slice(0, 3).map(skill => 
+                                        `<span class="skill-tag-small">${escapeHtml(String(skill))}</span>`
+                                    ).join('')}
+                                    ${project.required_skills.length > 3 ? `<span class="skill-more">+${project.required_skills.length - 3}</span>` : ''}
+                                </div>
+                            ` : ''}
+                            <div class="recommended-project-actions">
+                                <a href="explore.html#project-${project.id}" class="btn-view-recommended">View Project</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Initialize icons
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+            } catch (error) {
+                console.error('Error loading recommended projects:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="sub-text">Error loading recommendations. Please try again later.</span>
+                    </div>
+                `;
             }
         }
 

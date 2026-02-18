@@ -98,7 +98,14 @@ async function updateAuthUI(session) {
       btn.remove();
     });
 
+    // Show/hide auth-only nav items
+    const authOnlyNavItems = document.querySelectorAll('.nav-item-auth-only');
     if (session && session.user) {
+      // User is logged in - show auth-only nav items
+      authOnlyNavItems.forEach(item => {
+        item.style.display = 'list-item';
+      });
+      
       // User is logged in - show user menu
       try {
         const profile = await window.authHelpers.getCurrentProfile();
@@ -114,6 +121,11 @@ async function updateAuthUI(session) {
         navRight.insertBefore(logoutBtn, navRight.firstChild);
       }
     } else {
+      // User is not logged in - hide auth-only nav items
+      authOnlyNavItems.forEach(item => {
+        item.style.display = 'none';
+      });
+      
       // User is not logged in - show sign in button
       const signInBtn = document.createElement('a');
       signInBtn.href = 'signin.html';

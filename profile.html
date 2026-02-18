@@ -28,9 +28,9 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li><a href="post.html" class="nav-item">Post</a></li>
-            <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
-            <li><a href="profile.html" class="nav-item active">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html" class="nav-item">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item active">Profile</a></li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -513,6 +513,14 @@
                 
                 // Clear localStorage (we're using database now)
                 localStorage.removeItem('userProfile');
+                
+                // Update match scores in background (skills may have changed)
+                const user = await window.authHelpers.getCurrentUser();
+                if (user && window.projects && window.projects.updateUserMatchScores) {
+                    window.projects.updateUserMatchScores(user.id).catch(err => {
+                        console.warn('Error updating match scores after profile update:', err);
+                    });
+                }
                 
                 // Show success message
                 window.toast.success('Profile updated successfully! Redirecting...');

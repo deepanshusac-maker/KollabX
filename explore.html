@@ -29,9 +29,9 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item active">Explore</a></li>
-            <li><a href="post.html" class="nav-item">Post</a></li>
-            <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
-            <li><a href="profile.html" class="nav-item">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html" class="nav-item">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a></li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -56,8 +56,8 @@
             <p>Find projects that match your skills and interests</p>
 
             <div class="view-toggle">
-                <button class="toggle-btn active" id="btn-explore">Explore</button>
-                <button class="toggle-btn" id="btn-posted">Posted Ideas</button>
+                <button class="toggle-btn active" id="btn-explore">All Projects</button>
+                <button class="toggle-btn" id="btn-posted">My Projects</button>
             </div>
         </header>
 
@@ -69,21 +69,48 @@
             </div>
 
             <div class="filter-options">
-                <div class="category-chips">
-                    <button class="chip active" data-category="All">All</button>
-                    <button class="chip" data-category="Web">Web</button>
-                    <button class="chip" data-category="AI/ML">AI/ML</button>
-                    <button class="chip" data-category="Robotics">Robotics</button>
-                    <button class="chip" data-category="Mobile">Mobile</button>
-                    <button class="chip" data-category="Startup">Startup</button>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="skill-filter" class="filter-label">Skills</label>
+                        <input type="text" id="skill-filter" placeholder="e.g., React, Python" class="filter-input" />
+                    </div>
+                    <div class="filter-group">
+                        <label for="commitment-filter" class="filter-label">Commitment</label>
+                        <select id="commitment-filter" class="filter-select">
+                            <option value="">Any</option>
+                            <option value="low">Low (1-5 hrs/week)</option>
+                            <option value="medium">Medium (5-10 hrs/week)</option>
+                            <option value="high">High (10+ hrs/week)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="team-size-filter" class="filter-label">Team Size</label>
+                        <select id="team-size-filter" class="filter-select">
+                            <option value="">Any</option>
+                            <option value="small">Small (2-3)</option>
+                            <option value="medium">Medium (4-6)</option>
+                            <option value="large">Large (7+)</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="sort-dropdown">
-                    <select id="sort-select">
-                        <option value="latest">Latest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="popular">Popular</option>
-                    </select>
+                <div class="filter-options-bottom">
+                    <div class="category-chips">
+                        <button class="chip active" data-category="All">All</button>
+                        <button class="chip" data-category="Web">Web</button>
+                        <button class="chip" data-category="AI/ML">AI/ML</button>
+                        <button class="chip" data-category="Robotics">Robotics</button>
+                        <button class="chip" data-category="Mobile">Mobile</button>
+                        <button class="chip" data-category="Startup">Startup</button>
+                    </div>
+
+                    <div class="sort-dropdown">
+                        <select id="sort-select">
+                            <option value="latest">Latest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="popular">Popular</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </section>
@@ -260,6 +287,9 @@
         let currentFilters = {
             category: 'All',
             search: '',
+            skills: [],
+            commitment: '',
+            teamSize: '',
             sort: 'latest'
         };
 
@@ -461,9 +491,17 @@
                         }
                     </div>
                     <div class="card-footer">
-                        <div class="members-count">
-                            <i data-lucide="users" aria-hidden="true"></i>
-                            <span>${project.current_members || 0}/${project.team_size || 1} members</span>
+                        <div class="card-footer-left">
+                            <div class="members-count">
+                                <i data-lucide="users" aria-hidden="true"></i>
+                                <span>${project.current_members || 0}/${project.team_size || 1} members</span>
+                            </div>
+                            ${project.timeline ? `
+                                <div class="timeline-badge" title="Timeline">
+                                    <i data-lucide="clock" aria-hidden="true"></i>
+                                    <span>${escapeHtml(project.timeline)}</span>
+                                </div>
+                            ` : ''}
                         </div>
                         <button 
                             type="button" 
@@ -533,6 +571,67 @@
             if (diffDays < 30) return `${Math.floor(diffDays / 7)} week${Math.floor(diffDays / 7) > 1 ? 's' : ''} ago`;
             if (diffDays < 365) return `${Math.floor(diffDays / 30)} month${Math.floor(diffDays / 30) > 1 ? 's' : ''} ago`;
             return `${Math.floor(diffDays / 365)} year${Math.floor(diffDays / 365) > 1 ? 's' : ''} ago`;
+        }
+
+        // Show application success screen
+        function showApplicationSuccess(modal, project, closeModalFn) {
+            const form = modal.querySelector('.application-form');
+            const modalContent = modal.querySelector('.application-modal-content');
+            
+            if (!form || !modalContent) return;
+
+            // Replace form with success screen
+            form.style.display = 'none';
+            
+            const successScreen = document.createElement('div');
+            successScreen.className = 'application-success-screen';
+            successScreen.innerHTML = `
+                <div class="success-icon">
+                    <i data-lucide="check-circle-2" style="width: 64px; height: 64px; color: #10b981;"></i>
+                </div>
+                <h2>Application Sent!</h2>
+                <p class="success-message">Your application to <strong>${escapeHtml(project.title)}</strong> has been submitted successfully.</p>
+                <div class="success-next-steps">
+                    <h3>What's Next?</h3>
+                    <ul>
+                        <li>
+                            <i data-lucide="bell"></i>
+                            <span>You'll receive a notification when the project creator reviews your application</span>
+                        </li>
+                        <li>
+                            <i data-lucide="clock"></i>
+                            <span>Check your Dashboard to track the status of your application</span>
+                        </li>
+                        <li>
+                            <i data-lucide="search"></i>
+                            <span>Continue exploring other projects while you wait</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="success-actions">
+                    <button class="btn-primary" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+                    <button class="btn-secondary" id="continue-exploring">Continue Exploring</button>
+                </div>
+            `;
+            
+            modalContent.appendChild(successScreen);
+            
+            // Initialize icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+            
+            // Handle continue exploring button
+            const continueBtn = successScreen.querySelector('#continue-exploring');
+            if (continueBtn) {
+                continueBtn.addEventListener('click', () => {
+                    closeModalFn();
+                    // Reload projects to update UI
+                    setTimeout(() => {
+                        loadProjects();
+                    }, 300);
+                });
+            }
         }
 
         // Show project detail modal
@@ -978,12 +1077,8 @@
                         });
 
                         if (result.success) {
-                            window.toast.success('Application sent successfully!');
-                            closeModal();
-                            // Optionally reload projects to update UI
-                            setTimeout(() => {
-                                loadProjects();
-                            }, 1000);
+                            // Show success screen instead of closing immediately
+                            showApplicationSuccess(modal, project, closeModal);
                         } else {
                             hideLoading(submitBtn);
                             const friendlyError = getUserFriendlyError(result.error || new Error('Failed to submit application'));
@@ -1012,7 +1107,11 @@
         }
 
         // Search functionality
+        // Filter event handlers
         const searchInput = document.getElementById('search-input');
+        const skillFilter = document.getElementById('skill-filter');
+        const commitmentFilter = document.getElementById('commitment-filter');
+        const teamSizeFilter = document.getElementById('team-size-filter');
         let searchTimeout;
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
@@ -1035,6 +1134,35 @@
             });
         });
 
+        // Skill filter
+        if (skillFilter) {
+            let skillTimeout;
+            skillFilter.addEventListener('input', (e) => {
+                clearTimeout(skillTimeout);
+                skillTimeout = setTimeout(() => {
+                    const skillText = e.target.value.trim();
+                    currentFilters.skills = skillText ? skillText.split(',').map(s => s.trim()).filter(s => s) : [];
+                    loadProjects();
+                }, 500);
+            });
+        }
+
+        // Commitment filter
+        if (commitmentFilter) {
+            commitmentFilter.addEventListener('change', (e) => {
+                currentFilters.commitment = e.target.value;
+                loadProjects();
+            });
+        }
+
+        // Team size filter
+        if (teamSizeFilter) {
+            teamSizeFilter.addEventListener('change', (e) => {
+                currentFilters.teamSize = e.target.value;
+                loadProjects();
+            });
+        }
+
         // Sort functionality
         const sortSelect = document.getElementById('sort-select');
         sortSelect.addEventListener('change', (e) => {
@@ -1049,9 +1177,15 @@
                 currentFilters = {
                     category: 'All',
                     search: '',
+                    skills: [],
+                    commitment: '',
+                    teamSize: '',
                     sort: 'latest'
                 };
                 document.getElementById('search-input').value = '';
+                if (skillFilter) skillFilter.value = '';
+                if (commitmentFilter) commitmentFilter.value = '';
+                if (teamSizeFilter) teamSizeFilter.value = '';
                 document.querySelectorAll('.category-chips .chip').forEach(c => c.classList.remove('active'));
                 document.querySelector('.category-chips .chip[data-category="All"]')?.classList.add('active');
                 sortSelect.value = 'latest';
