@@ -41,7 +41,7 @@ async function updateNotificationBadge() {
   if (badges.length === 0) return;
 
   const count = await getNotificationCount();
-  
+
   badges.forEach(badge => {
     if (count > 0) {
       badge.textContent = count > 99 ? '99+' : count;
@@ -268,6 +268,10 @@ async function setupNotificationSubscription() {
       await supabase.removeChannel(notificationSubscription);
     }
 
+    // Record when we subscribed — ignore any INSERT events from before this time
+    // (Supabase real-time may replay recent events when the subscription first connects)
+    const subscriptionSetupTime = Date.now();
+
     // Subscribe to notifications for this user
     notificationSubscription = supabase
       .channel('notifications-channel')
@@ -284,10 +288,13 @@ async function setupNotificationSubscription() {
           // Update badge when notifications change
           updateNotificationBadge();
 
-          // If a new notification arrives, optionally show a toast and refresh dropdown
+          // Only show toast for genuinely new notifications (created after subscription started)
           if (payload.eventType === 'INSERT' && payload.new) {
             const n = payload.new;
-            if (window.toast) {
+            const notifCreatedAt = n.created_at ? new Date(n.created_at).getTime() : 0;
+            const isGenuinelyNew = notifCreatedAt > subscriptionSetupTime - 3000;
+
+            if (isGenuinelyNew && window.toast) {
               const title = n.title || 'New notification';
               window.toast.info(title);
             }

@@ -76,8 +76,8 @@
                 </p>
 
                 <div class="hero-buttons">
-                    <a href="signin.html" class="btn-hero btn-primary">Get Started Now</a>
-                    <a href="explore.html" class="btn-hero btn-secondary">See Projects</a>
+                    <a href="signin.html" id="get-started-btn" class="btn-hero btn-primary">Get Started Now</a>
+                    <a href="explore.html" class="btn-hero btn-secondary">Explore Projects</a>
                 </div>
             </div>
         </section>
@@ -422,6 +422,15 @@
         // Initialize auth state
         window.addEventListener('DOMContentLoaded', async () => {
             await window.session.initAuth();
+
+            // Smart redirect for Get Started button: post idea if logged in, sign in if not
+            const getStartedBtn = document.getElementById('get-started-btn');
+            if (getStartedBtn) {
+                const isLoggedIn = await window.auth.checkAuth();
+                if (isLoggedIn) {
+                    getStartedBtn.href = 'post.html';
+                }
+            }
 
             // Show reminder if profile is incomplete (set during sign-in)
             if (sessionStorage.getItem('profile_incomplete') === 'true') {

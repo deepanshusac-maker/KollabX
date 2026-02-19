@@ -72,16 +72,20 @@
 
 /* Rotating Text Animation - CSS Only */
 .card {
-    --bg-color: #111;
-    background-color: var(--bg-color);
+    --bg-color: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 0.5rem 1.5rem;
     border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 24px rgba(120, 80, 200, 0.12), 0 1px 4px rgba(0, 0, 0, 0.06);
     display: inline-block;
     vertical-align: middle;
 }
 
 .loader {
-    color: rgb(124, 124, 124);
+    color: #333;
     font-family: "Poppins", sans-serif;
     font-weight: 500;
     font-size: clamp(1.2rem, 3vw, 1.8rem);
@@ -102,10 +106,10 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(var(--bg-color) 10%,
+    background: linear-gradient(rgba(255, 255, 255, 0.82) 10%,
             transparent 30%,
             transparent 70%,
-            var(--bg-color) 90%);
+            rgba(255, 255, 255, 0.82) 90%);
     z-index: 20;
 }
 

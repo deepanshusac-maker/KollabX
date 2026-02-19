@@ -50,27 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
         moveIndicator(activeLink, true);
     }
 
-    navItems.forEach(link => {
-        link.addEventListener('click', (e) => {
-            // Allow opening in new tab/window without delay
-            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    // We only set the indicator once based on the current URL.
+    // Clicks no longer animate the indicator, avoiding the brief “jump” before navigation.
 
-            e.preventDefault();
-            const targetUrl = link.getAttribute('href');
-
-            // Animate to clicked link
-            moveIndicator(e.target);
-            link.style.color = 'var(--primary-color)';
-
-            // Reset others
-            navItems.forEach(l => {
-                if (l !== link) l.style.color = 'var(--text-color)';
-            });
-
-            // Navigate immediately - animation happens during navigation
-            window.location.href = targetUrl;
-        });
-    });
     // Navbar scroll effect
     const navbar = document.querySelector('.navbar');
     window.addEventListener('scroll', () => {
@@ -90,16 +72,16 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileMenuToggle.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
+
             const isActive = navLinksMenu.classList.contains('active');
-            
+
             navLinksMenu.classList.toggle('active');
             mobileMenuToggle.classList.toggle('active');
             if (mobileOverlay) {
                 mobileOverlay.classList.toggle('active');
             }
             mobileMenuToggle.setAttribute('aria-expanded', !isActive);
-            
+
             // Prevent body scroll when menu is open
             if (!isActive) {
                 document.body.style.overflow = 'hidden';
@@ -119,20 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Close menu when clicking nav items (on mobile)
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    navLinksMenu.classList.remove('active');
-                    mobileMenuToggle.classList.remove('active');
-                    if (mobileOverlay) {
-                        mobileOverlay.classList.remove('active');
-                    }
-                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
-                    document.body.style.overflow = '';
-                }
-            });
-        });
+
 
         // Close menu on window resize (if resizing to desktop)
         window.addEventListener('resize', () => {

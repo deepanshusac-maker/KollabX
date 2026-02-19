@@ -55,21 +55,19 @@ async function initAuth() {
   }
 }
 
-// Show loading state in navigation
+// Show loading state in navigation (hide existing auth UI without removing it)
 function showAuthLoading() {
   const navRight = document.querySelector('.nav-right');
   if (!navRight) return;
 
-  // Remove ALL existing auth buttons (use querySelectorAll to get all instances)
-  const existingAuthBtns = navRight.querySelectorAll('.btn-signin, .btn-logout, .user-menu, .auth-loading');
-  existingAuthBtns.forEach(btn => btn.remove());
-
-  // Create loading indicator
-  const loadingDiv = document.createElement('div');
-  loadingDiv.className = 'auth-loading';
-  loadingDiv.innerHTML = '<div class="auth-spinner"></div>';
-  loadingDiv.setAttribute('aria-label', 'Loading authentication state');
-  navRight.appendChild(loadingDiv);
+  // Instead of removing elements (which causes layout shift),
+  // just hide them visually — preserving their space in the layout
+  const existingAuthBtns = navRight.querySelectorAll('.btn-signin, .btn-logout, .user-menu');
+  existingAuthBtns.forEach(btn => {
+    btn.style.opacity = '0';
+    btn.style.pointerEvents = 'none';
+    btn.dataset.authHidden = 'true';
+  });
 }
 
 // Track if updateAuthUI is currently running to prevent duplicate calls
@@ -87,54 +85,64 @@ async function updateAuthUI(session) {
   isUpdatingAuthUI = true;
 
   try {
-    // Remove ALL existing auth buttons and loading state (use querySelectorAll)
-    const existingAuthBtns = navRight.querySelectorAll('.btn-signin, .btn-logout, .user-menu, .auth-loading');
-    existingAuthBtns.forEach(btn => {
-      // Remove event listeners if they exist (for user menu dropdown)
-      if (btn._closeHandler) {
-        document.removeEventListener('click', btn._closeHandler);
-        delete btn._closeHandler;
-      }
-      btn.remove();
-    });
-
     // Show/hide auth-only nav items
     const authOnlyNavItems = document.querySelectorAll('.nav-item-auth-only');
+
     if (session && session.user) {
-      // User is logged in - show auth-only nav items
-      authOnlyNavItems.forEach(item => {
-        item.style.display = 'list-item';
+      // User is logged in
+      authOnlyNavItems.forEach(item => { item.style.display = 'list-item'; });
+
+      // Remove the hidden Sign In btn (it will be replaced by user menu)
+      const existingSignIn = navRight.querySelectorAll('.btn-signin, .btn-logout, .user-menu, .auth-loading');
+      existingSignIn.forEach(btn => {
+        if (btn._closeHandler) {
+          document.removeEventListener('click', btn._closeHandler);
+          delete btn._closeHandler;
+        }
+        btn.remove();
       });
 
-      // User is logged in - show user menu
+      // Insert user menu
       try {
         const profile = await window.authHelpers.getCurrentProfile();
         const userName = profile?.full_name || session.user.email?.split('@')[0] || 'User';
         const avatarUrl = profile?.avatar_url || null;
-
         const userMenu = createUserMenu(userName, avatarUrl);
         navRight.insertBefore(userMenu, navRight.firstChild);
       } catch (error) {
         console.error('Error loading user profile:', error);
-        // Fallback to simple logout button
         const logoutBtn = createLogoutButton();
         navRight.insertBefore(logoutBtn, navRight.firstChild);
       }
     } else {
-      // User is not logged in - hide auth-only nav items
-      authOnlyNavItems.forEach(item => {
-        item.style.display = 'none';
-      });
+      // User is not logged in
+      authOnlyNavItems.forEach(item => { item.style.display = 'none'; });
 
-      // User is not logged in - show sign in button
-      const signInBtn = document.createElement('a');
-      signInBtn.href = 'signin.html';
-      signInBtn.className = 'btn-signin';
-      signInBtn.textContent = 'Sign In';
-      navRight.appendChild(signInBtn);
+      // Try to restore any hidden btn-signin (from showAuthLoading) without DOM removal
+      const existingSignIn = navRight.querySelector('.btn-signin[data-auth-hidden]');
+      if (existingSignIn) {
+        existingSignIn.style.opacity = '';
+        existingSignIn.style.pointerEvents = '';
+        delete existingSignIn.dataset.authHidden;
+      } else {
+        // Only create a new one if none exists
+        const alreadyExists = navRight.querySelector('.btn-signin');
+        if (!alreadyExists) {
+          // Remove any stale user menus first
+          navRight.querySelectorAll('.btn-logout, .user-menu, .auth-loading').forEach(el => el.remove());
+          const signInBtn = document.createElement('a');
+          signInBtn.href = 'signin.html';
+          signInBtn.className = 'btn-signin';
+          signInBtn.textContent = 'Sign In';
+          navRight.appendChild(signInBtn);
+        } else {
+          // Restore any hidden sign-in button
+          alreadyExists.style.opacity = '';
+          alreadyExists.style.pointerEvents = '';
+        }
+      }
     }
   } finally {
-    // Reset the flag
     isUpdatingAuthUI = false;
   }
 }
