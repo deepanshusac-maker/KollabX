@@ -92,11 +92,25 @@ body {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
 }
 
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+}
+
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
 .navbar h1 {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--nav-text);
     letter-spacing: -0.02em;
+    margin: 0;
 }
 
 .nav-links {
@@ -111,6 +125,11 @@ body {
 @media (max-width: 768px) {
     .mobile-menu-toggle {
         display: flex !important;
+    }
+
+    .nav-right .mobile-menu-toggle {
+        margin-left: 0.25rem;
+        order: 99;
     }
 
     .navbar {

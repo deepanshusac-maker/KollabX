@@ -58,7 +58,7 @@
         .container {
             width: 850px;
             max-width: 95%;
-            min-height: 600px;
+            min-height: 650px;
             background: rgba(255, 255, 255, 0.14);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -122,34 +122,36 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            padding: 0 45px;
+            padding: 0 40px;
             height: 100%;
             text-align: center;
+            overflow-y: auto;
         }
 
         h1 {
-            font-size: 30px;
-            margin-bottom: 10px;
+            font-size: 28px;
+            margin-bottom: 6px;
             color: #1a1a1a;
             font-weight: 800;
         }
 
         .form-subtitle {
             color: #555;
-            font-size: 14px;
-            margin-bottom: 25px;
+            font-size: 13px;
+            margin-bottom: 16px;
             line-height: 1.4;
         }
 
         input:not([type="checkbox"]) {
             background: rgba(255, 255, 255, 0.7);
             border: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 14px 18px;
-            margin: 8px 0;
+            padding: 12px 16px;
+            margin: 5px 0;
             width: 100%;
             border-radius: 12px;
             outline: none;
             transition: 0.3s;
+            font-size: 14px;
         }
 
         input:focus {
@@ -187,11 +189,11 @@
             border: none;
             background: var(--maroon-grad);
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            padding: 14px 60px;
+            padding: 12px 50px;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 10px;
             transition: all 0.3s ease;
             box-shadow: 0 10px 20px -5px rgba(179, 82, 106, 0.4);
         }
@@ -239,6 +241,68 @@
             background-color: white;
             color: var(--primary-maroon);
             transform: scale(1.1);
+        }
+
+        /* Form Group (wraps password fields to isolate error messages) */
+        .form-group {
+            width: 100%;
+            position: relative;
+        }
+
+        /* Password Input Wrapper */
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .password-wrapper input {
+            padding-right: 45px;
+            margin: 0;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #888;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-maroon);
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease, background 0.3s ease;
+            width: 0;
+        }
+
+        .password-strength-text {
+            font-size: 11px;
+            text-align: left;
+            margin-bottom: 4px;
+            font-weight: 600;
         }
 
         /* --- TRAPEZIUM WITH MESH BACKGROUND --- */
@@ -354,7 +418,7 @@
         .social-divider {
             font-size: 13px;
             color: #666;
-            margin: 20px 0 15px;
+            margin: 10px 0 8px;
             text-align: center;
         }
 
@@ -389,6 +453,100 @@
         .btn-google svg {
             flex-shrink: 0;
         }
+
+        /* ========================================
+           Mobile Responsive
+           ======================================== */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow: auto;
+                padding: 1rem;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 450px;
+                min-height: auto;
+                border-radius: 20px;
+            }
+
+            .form-container {
+                position: relative;
+                width: 100% !important;
+                left: 0 !important;
+                transform: none !important;
+                opacity: 1 !important;
+            }
+
+            .sign-up {
+                display: none;
+            }
+
+            .container.active .sign-in {
+                display: none;
+                transform: none;
+                opacity: 1;
+            }
+
+            .container.active .sign-up {
+                display: block;
+                transform: none;
+                opacity: 1;
+                z-index: 5;
+            }
+
+            .overlay-container {
+                display: none;
+            }
+
+            form {
+                padding: 2.5rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .btn-main {
+                padding: 12px 40px;
+                width: 100%;
+            }
+
+            .btn-google {
+                font-size: 14px;
+            }
+
+            /* Show toggle links on mobile */
+            .mobile-toggle {
+                display: block !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 2rem 1.25rem;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            input:not([type="checkbox"]) {
+                padding: 12px 14px;
+            }
+        }
+
+        .auth-logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            object-fit: contain;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 </head>
 
@@ -397,38 +555,102 @@
     <div class="container" id="container">
         <div class="form-container sign-up">
             <form id="signup-form">
+                <img src="images/logo.png" alt="KollabX Logo" class="auth-logo">
                 <h1>Join KollabX</h1>
                 <p class="form-subtitle">Create your account and start collaborating with verified squads today.</p>
                 <input type="text" id="signup-name" placeholder="Full Name" required style="animation-delay: 0.1s;" />
-                <input type="email" id="signup-email" placeholder="NITP Email Address" required style="animation-delay: 0.2s;" />
-                <input type="password" id="signup-password" placeholder="Create Password" required minlength="8" style="animation-delay: 0.3s;" />
-                <input type="password" id="signup-password" placeholder="Confirm Password" required minlength="8" style="animation-delay: 0.3s;" />
-                <button type="submit" class="btn-main" id="signup-btn" style="animation-delay: 0.4s;">Create Account</button>
+                <input type="email" id="signup-email" placeholder="NITP Email Address" required
+                    style="animation-delay: 0.2s;" />
+                <div class="form-group">
+                    <div class="password-wrapper" style="animation-delay: 0.3s;">
+                        <input type="password" id="signup-password" placeholder="Create Password" required
+                            minlength="8" />
+                        <button type="button" class="toggle-password" aria-label="Show password">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="strength-bar"></div>
+                </div>
+                <div class="password-strength-text" id="strength-text"></div>
+                <div class="form-group">
+                    <div class="password-wrapper" style="animation-delay: 0.35s;">
+                        <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required
+                            minlength="8" />
+                        <button type="button" class="toggle-password" aria-label="Show password">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-main" id="signup-btn" style="animation-delay: 0.4s;">Create
+                    Account</button>
                 <p class="social-divider" style="animation-delay: 0.5s;">or continue with</p>
                 <button type="button" class="btn-google" id="signup-google-btn" style="animation-delay: 0.5s;">
-                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4"
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="#34A853"
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05"
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#EA4335"
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
                     <span>Continue with Google</span>
                 </button>
+                <p class="mobile-toggle" style="display: none; font-size: 13px; color: #555; margin-top: 20px;">Already
+                    a member? <span class="toggle-link" id="signInLinkMobile">Sign In</span></p>
             </form>
         </div>
 
         <div class="form-container sign-in">
             <form id="signin-form">
+                <img src="images/logo.png" alt="KollabX Logo" class="auth-logo">
                 <h1>Welcome Back</h1>
                 <p class="form-subtitle">Login to your mission dashboard and track your squad's progress.</p>
                 <input type="email" id="signin-email" placeholder="Email" required />
-                <input type="password" id="signin-password" placeholder="Password" required />
+                <div class="form-group">
+                    <div class="password-wrapper">
+                        <input type="password" id="signin-password" placeholder="Password" required />
+                        <button type="button" class="toggle-password" aria-label="Show password">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
                 <div class="options-row">
                     <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" style="width: auto; margin: 0;"> Remember me
+                        <input type="checkbox" id="remember-me" style="width: auto; margin: 0;"> Remember me
                     </label>
-                    <a href="#" id="forgot-password-link" style="text-decoration:none; color:var(--primary-maroon); font-weight: 600;">Forgot
+                    <a href="#" id="forgot-password-link"
+                        style="text-decoration:none; color:var(--primary-maroon); font-weight: 600;">Forgot
                         Password?</a>
                 </div>
                 <button type="submit" class="btn-main" id="signin-btn">Sign In</button>
                 <p class="social-divider">or continue with</p>
                 <button type="button" class="btn-google" id="signin-google-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4"
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="#34A853"
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05"
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#EA4335"
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
                     <span>Continue with Google</span>
                 </button>
                 <p style="font-size: 13px; color: #555; margin-top: 25px;">New to KollabX? <span class="toggle-link"
@@ -465,25 +687,94 @@
         const signUpBtn = document.getElementById('signUpBtn');
         const signInBtn = document.getElementById('signInBtn');
         const signUpLink = document.getElementById('signUpLink');
+        const signInLinkMobile = document.getElementById('signInLinkMobile');
 
         signUpBtn.addEventListener('click', () => container.classList.add("active"));
         signInBtn.addEventListener('click', () => container.classList.remove("active"));
         signUpLink.addEventListener('click', () => container.classList.add("active"));
+        if (signInLinkMobile) signInLinkMobile.addEventListener('click', () => container.classList.remove("active"));
+
+        // Password visibility toggles
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = btn.previousElementSibling;
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                btn.innerHTML = isPassword
+                    ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>'
+                    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            });
+        });
+
+        // Password strength indicator
+        const signupPasswordField = document.getElementById('signup-password');
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthText = document.getElementById('strength-text');
+
+        function getPasswordStrength(password) {
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (password.length >= 12) score++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+            if (/\d/.test(password)) score++;
+            if (/[^a-zA-Z0-9]/.test(password)) score++;
+            return score;
+        }
+
+        if (signupPasswordField) {
+            signupPasswordField.addEventListener('input', () => {
+                const val = signupPasswordField.value;
+                if (!val) {
+                    strengthBar.style.width = '0';
+                    strengthText.textContent = '';
+                    return;
+                }
+                const score = getPasswordStrength(val);
+                const levels = [
+                    { width: '20%', color: '#dc3545', label: 'Very weak', labelColor: '#dc3545' },
+                    { width: '40%', color: '#fd7e14', label: 'Weak', labelColor: '#fd7e14' },
+                    { width: '60%', color: '#ffc107', label: 'Fair', labelColor: '#c89e0a' },
+                    { width: '80%', color: '#20c997', label: 'Strong', labelColor: '#20c997' },
+                    { width: '100%', color: '#198754', label: 'Very strong', labelColor: '#198754' }
+                ];
+                const level = levels[Math.min(score, 4)];
+                strengthBar.style.width = level.width;
+                strengthBar.style.background = level.color;
+                strengthText.textContent = level.label;
+                strengthText.style.color = level.labelColor;
+            });
+        }
+
+        // Confirm password real-time validation
+        const confirmPasswordField = document.getElementById('signup-confirm-password');
+        if (confirmPasswordField) {
+            confirmPasswordField.addEventListener('input', () => {
+                if (confirmPasswordField.value && confirmPasswordField.value !== signupPasswordField.value) {
+                    confirmPasswordField.classList.add('error');
+                    confirmPasswordField.style.borderColor = '#dc3545';
+                } else {
+                    confirmPasswordField.classList.remove('error');
+                    confirmPasswordField.style.borderColor = '';
+                }
+            });
+        }
 
         // Sign up form validation
         const signupForm = document.getElementById('signup-form');
         const signupButton = document.getElementById('signup-btn');
-        
+
         if (signupForm) {
             setupRealTimeValidation(signupForm, {
-                'signup-password': [validators.minLength(8)]
+                'signup-password': [validators.minLength(8)],
+                'signup-confirm-password': [validators.minLength(8), validators.matchField('signup-password', 'Passwords do not match')]
             });
 
             signupForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
+
                 const fieldRules = {
-                    'signup-password': [validators.minLength(8)]
+                    'signup-password': [validators.minLength(8)],
+                    'signup-confirm-password': [validators.minLength(8), validators.matchField('signup-password', 'Passwords do not match')]
                 };
 
                 if (!validateForm(signupForm, fieldRules)) {
@@ -491,15 +782,22 @@
                     return;
                 }
 
-                const email = document.getElementById('signup-email').value;
+                // Extra explicit check
                 const password = document.getElementById('signup-password').value;
+                const confirmPassword = document.getElementById('signup-confirm-password').value;
+                if (password !== confirmPassword) {
+                    showFormError('Passwords do not match.');
+                    return;
+                }
+
+                const email = document.getElementById('signup-email').value;
                 const fullName = document.getElementById('signup-name').value;
 
                 showLoading(signupButton, 'Create Account');
 
                 try {
                     const result = await window.auth.signUp(email, password, fullName);
-                    
+
                     if (result.success) {
                         // Mark as new user for redirect logic
                         sessionStorage.setItem('is_new_user', 'true');
@@ -525,13 +823,13 @@
         // Sign in form validation
         const signinForm = document.getElementById('signin-form');
         const signinButton = document.getElementById('signin-btn');
-        
+
         if (signinForm) {
             setupRealTimeValidation(signinForm);
 
             signinForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
+
                 if (!validateForm(signinForm)) {
                     showFormError('Please enter valid credentials.');
                     return;
@@ -544,17 +842,26 @@
 
                 try {
                     const result = await window.auth.signIn(email, password);
-                    
+
                     if (result.success) {
+                        // Handle "Remember Me"
+                        const rememberMe = document.getElementById('remember-me').checked;
+                        if (!rememberMe) {
+                            // Clear session when the browser/tab is closed
+                            window.addEventListener('beforeunload', () => {
+                                window.auth.signOut();
+                            });
+                        }
+
                         window.toast.success('Signed in successfully! Redirecting...');
-                        // Check if profile is complete and redirect accordingly
+                        // Always go to home; nudge if profile is incomplete
                         setTimeout(async () => {
                             const profileComplete = await window.auth.isProfileComplete();
                             if (!profileComplete) {
-                                window.location.href = 'profile.html?onboarding=true';
-                            } else {
-                                window.location.href = 'index.html';
+                                // Store flag so index.html can show the reminder
+                                sessionStorage.setItem('profile_incomplete', 'true');
                             }
+                            window.location.href = 'index.html';
                         }, 1000);
                     } else {
                         hideLoading(signinButton);
@@ -576,7 +883,7 @@
             forgotPasswordLink.addEventListener('click', async (e) => {
                 e.preventDefault();
                 const email = document.getElementById('signin-email').value;
-                
+
                 if (!email) {
                     showFormError('Please enter your email address first.');
                     return;
@@ -619,21 +926,24 @@
             const isAuth = await window.auth.checkAuth();
             if (isAuth) {
                 // User is already logged in or just returned from OAuth
-                // Check if this was a Google sign-in attempt
                 const googleSigninAttempt = sessionStorage.getItem('google_signin_attempt');
                 sessionStorage.removeItem('google_signin_attempt');
-                
-                // Check if profile is complete and redirect accordingly
-                const profileComplete = await window.auth.isProfileComplete();
+
                 const sessionResult = await window.auth.getSession();
                 const session = sessionResult.session;
                 const isNew = session && window.auth.isNewUser(session);
-                
-                // If new user (from signup or Google) or profile incomplete -> redirect to profile
-                if (googleSigninAttempt || isNew || !profileComplete) {
+                const isNewSignup = sessionStorage.getItem('is_new_user') === 'true';
+
+                // Only redirect to profile for truly new users (first-time signup or first-time Google)
+                if (isNewSignup || (googleSigninAttempt && isNew)) {
+                    sessionStorage.removeItem('is_new_user');
                     window.location.href = 'profile.html?onboarding=true';
                 } else {
-                    // Existing user with complete profile -> redirect to landing page
+                    // Returning user — go to home, nudge if profile is incomplete
+                    const profileComplete = await window.auth.isProfileComplete();
+                    if (!profileComplete) {
+                        sessionStorage.setItem('profile_incomplete', 'true');
+                    }
                     window.location.href = 'index.html';
                 }
             }

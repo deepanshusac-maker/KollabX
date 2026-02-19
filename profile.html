@@ -18,12 +18,10 @@
 
 <body>
     <nav class="navbar">
-        <h1>KollabX</h1>
-        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+        <a href="index.html" class="navbar-brand">
+            <img src="images/logo.png" alt="KollabX Logo" class="navbar-logo">
+            <h1>KollabX</h1>
+        </a>
         <div class="mobile-overlay"></div>
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
@@ -47,6 +45,11 @@
                 <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
             </button>
             <a href="signin.html" class="btn-signin">Sign In</a>
+            <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
@@ -203,76 +206,7 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <div class="logo">
-                    <i data-lucide="rocket"></i>
-                    <span>KollabX</span>
-                </div>
-                <p>Connecting builders, one idea at a time. Find teammates by skills, not spam.</p>
-                <div class="footer-badges">
-                    <span class="f-badge">Student-first</span>
-                    <span class="f-badge">Skill matching</span>
-                    <span class="f-badge">Private chat</span>
-                </div>
-            </div>
 
-            <div class="footer-col">
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="explore.html">Features</a></li>
-                    <li><a href="index.html#how-it-works">How it works</a></li>
-                    <li><a href="index.html#faq">FAQ</a></li>
-                    <li><a href="explore.html">Explore ideas</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Community</h4>
-                <ul>
-                    <li><a href="mailto:community@kollabx.com">Campus ambassadors</a></li>
-                    <li><a href="mailto:partners@kollabx.com">Hackathon partners</a></li>
-                    <li><a href="mailto:clubs@kollabx.com">Clubs & societies</a></li>
-                    <li><a href="mailto:feedback@kollabx.com">Feedback</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="mailto:privacy@kollabx.com">Privacy & safety</a></li>
-                    <li><a href="mailto:legal@kollabx.com">Terms</a></li>
-                    <li><a href="mailto:support@kollabx.com">Report an issue</a></li>
-                    <li><a href="mailto:contact@kollabx.com">Contact</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-newsletter">
-                <h4>Get updates</h4>
-                <p>New features, campus launches, and hackathon-ready updates.</p>
-                <form class="subscribe-form">
-                    <input type="email" placeholder="you@college.edu" required>
-                    <button type="submit" class="btn-subscribe">Subscribe</button>
-                </form>
-                <div class="footer-socials">
-                    <a href="#" class="social-btn"><i data-lucide="mail"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="link"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="instagram"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="github"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>© 2026 KollabX • Made with 🔥 for problem solvers</p>
-            <div class="status-indicator">
-                <div class="dot"></div>
-                <span>Status: Beta</span>
-            </div>
-        </div>
-    </footer>
 
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

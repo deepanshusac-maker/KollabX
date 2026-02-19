@@ -22,10 +22,10 @@ async function initAuth() {
     if (!window.supabase._authStateChangeListenerSet) {
       window.supabase.auth.onAuthStateChange((event, session) => {
         console.log('Auth state changed:', event, session ? 'User logged in' : 'User logged out');
-        
+
         // Update UI based on auth state
         updateAuthUI(session);
-        
+
         // Store session info
         if (session) {
           localStorage.setItem('auth_session', JSON.stringify({
@@ -45,7 +45,7 @@ async function initAuth() {
       console.error('Error getting session:', error);
     }
     updateAuthUI(session);
-    
+
     return session;
   } catch (error) {
     console.error('Error initializing auth:', error);
@@ -105,7 +105,7 @@ async function updateAuthUI(session) {
       authOnlyNavItems.forEach(item => {
         item.style.display = 'list-item';
       });
-      
+
       // User is logged in - show user menu
       try {
         const profile = await window.authHelpers.getCurrentProfile();
@@ -125,7 +125,7 @@ async function updateAuthUI(session) {
       authOnlyNavItems.forEach(item => {
         item.style.display = 'none';
       });
-      
+
       // User is not logged in - show sign in button
       const signInBtn = document.createElement('a');
       signInBtn.href = 'signin.html';
@@ -173,7 +173,7 @@ function createUserMenu(userName, avatarUrl) {
   // Add click handler for dropdown toggle
   const menuBtn = userMenu.querySelector('.user-menu-btn');
   const dropdown = userMenu.querySelector('.user-menu-dropdown');
-  
+
   menuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
@@ -188,7 +188,7 @@ function createUserMenu(userName, avatarUrl) {
       dropdown.classList.remove('active');
     }
   };
-  
+
   // Store handler on the menu element so we can remove it later if needed
   userMenu._closeHandler = closeHandler;
   document.addEventListener('click', closeHandler);
@@ -253,23 +253,14 @@ async function getRedirectAfterLogin(defaultPath = 'dashboard.html') {
     sessionStorage.removeItem('redirect_after_login');
     return redirect;
   }
-  
-  // Check if user is new or profile is incomplete
-  try {
-    const { session } = await window.auth.getSession();
-    if (session && session.session) {
-      const isNew = window.auth.isNewUser(session.session);
-      const profileComplete = await window.auth.isProfileComplete();
-      
-      // If new user or profile incomplete, redirect to profile
-      if (isNew || !profileComplete) {
-        return 'profile.html';
-      }
-    }
-  } catch (error) {
-    console.error('Error checking redirect:', error);
+
+  // Only redirect to profile for brand-new sign-ups
+  const isNewUser = sessionStorage.getItem('is_new_user');
+  if (isNewUser === 'true') {
+    sessionStorage.removeItem('is_new_user');
+    return 'profile.html?onboarding=true';
   }
-  
+
   return defaultPath;
 }
 

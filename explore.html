@@ -19,12 +19,10 @@
 
 <body>
     <nav class="navbar">
-        <h1>KollabX</h1>
-        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+        <a href="index.html" class="navbar-brand">
+            <img src="images/logo.png" alt="KollabX Logo" class="navbar-logo">
+            <h1>KollabX</h1>
+        </a>
         <div class="mobile-overlay"></div>
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
@@ -43,6 +41,11 @@
                 <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
             </button>
             <a href="signin.html" class="btn-signin">Sign In</a>
+            <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
@@ -67,7 +70,12 @@
         <!-- Filter Section -->
         <section class="filter-card">
             <div class="search-bar">
-                <i data-lucide="search" aria-hidden="true"></i>
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
                 <input type="text" id="search-input" placeholder="Search ideas, skills, keywords..."
                     aria-label="Search ideas, skills, keywords">
             </div>
@@ -173,7 +181,7 @@
         <div class="footer-container">
             <div class="footer-brand">
                 <div class="logo">
-                    <i data-lucide="rocket"></i>
+                    <img src="images/logo.png" alt="KollabX Logo">
                     <span>KollabX</span>
                 </div>
                 <p>Connecting builders, one idea at a time. Find teammates by skills, not spam.</p>
@@ -471,7 +479,7 @@
 
                 card.innerHTML = `
                     <div class="card-header">
-                        <span class="status-badge status-open">${project.status === 'open' ? 'Open' : (project.status || 'Open')}</span>
+                        <span class="status-badge ${(project.current_members || 0) >= (project.team_size || 1) ? 'status-full' : 'status-open'}">${(project.current_members || 0) >= (project.team_size || 1) ? 'Full' : (project.status === 'open' ? 'Open' : (project.status || 'Open'))}</span>
                         ${postedDate ? `<span class="posted-date">${postedDate}</span>` : ''}
                     </div>
                     <div class="project-info">
@@ -626,6 +634,8 @@
 
                     // Has the current user already applied to this project?
                     const hasApplied = appliedProjectIds && appliedProjectIds.has(project.id);
+                    const isOwnProject = user && user.id === project.creator_id;
+                    const isFull = (project.current_members || 0) >= (project.team_size || 1);
 
                     // Create project card
                     const card = document.createElement('div');
@@ -638,7 +648,7 @@
 
                     card.innerHTML = `
                     <div class="card-header">
-                        <span class="status-badge status-open">${project.status === 'open' ? 'Open' : (project.status || 'Open')}</span>
+                        <span class="status-badge ${(project.current_members || 0) >= (project.team_size || 1) ? 'status-full' : 'status-open'}">${(project.current_members || 0) >= (project.team_size || 1) ? 'Full' : (project.status === 'open' ? 'Open' : (project.status || 'Open'))}</span>
                         ${user ? `<span class="match-badge">${matchScore}% match</span>` : ''}
                     </div>
                     <div class="project-info">
@@ -672,10 +682,10 @@
                         </div>
                         <button 
                             type="button" 
-                            class="btn-apply" 
+                            class="btn-apply${isFull ? ' btn-team-full' : ''}${isOwnProject ? ' btn-own-project' : ''}" 
                             data-project-id="${project.id}"
-                            ${hasApplied ? 'disabled' : ''}>
-                            ${hasApplied ? 'Applied' : 'Apply'}
+                            ${hasApplied || isFull || isOwnProject ? 'disabled' : ''}>
+                            ${isOwnProject ? 'Your Project' : (isFull ? 'Team Full' : (hasApplied ? 'Applied' : 'Apply'))}
                         </button>
                     </div>
                 `;
@@ -849,7 +859,7 @@
                         </button>
                         <div class="modal-header">
                             <div class="modal-header-top">
-                                <span class="status-badge status-open">${project.status === 'open' ? 'Open' : project.status}</span>
+                                <span class="status-badge ${(project.current_members || 0) >= (project.team_size || 1) ? 'status-full' : 'status-open'}">${(project.current_members || 0) >= (project.team_size || 1) ? 'Full' : (project.status === 'open' ? 'Open' : project.status)}</span>
                                 ${postedDate ? `<span class="posted-date">Posted ${postedDate}</span>` : ''}
                             </div>
                             <h1>${escapeHtml(project.title)}</h1>
@@ -900,7 +910,9 @@
                             ` : ''}
                         </div>
                         <div class="modal-footer">
-                            ${user && user.id !== project.creator_id ? `
+                            ${(project.current_members || 0) >= (project.team_size || 1) ? `
+                                <button class="btn-apply-modal btn-team-full" disabled>Team Full</button>
+                            ` : user && user.id !== project.creator_id ? `
                                 <button type="button" class="btn-apply-modal" data-project-id="${project.id}">Apply to Project</button>
                             ` : user && user.id === project.creator_id ? `
                                 <button class="btn-apply-modal" disabled style="opacity: 0.5; cursor: not-allowed;">Your Project</button>
@@ -1087,6 +1099,13 @@
                     return;
                 }
 
+                // Block self-apply
+                const projectResult = await window.projects.getProjectById(projectId);
+                if (projectResult.success && projectResult.data?.creator_id === user.id) {
+                    if (window.toast) window.toast.warning('You cannot apply to your own project.');
+                    return;
+                }
+
                 // Show application modal
                 await showApplicationModal(projectId);
             } catch (error) {
@@ -1131,6 +1150,16 @@
                     return;
                 }
 
+                // Calculate matching skills
+                const projectSkills = project.required_skills || [];
+                const userSkills = profile?.skills || [];
+                const matchingSkills = userSkills.filter(s =>
+                    projectSkills.some(ps => ps.toLowerCase() === s.toLowerCase())
+                );
+                const skillMatchPercent = projectSkills.length > 0
+                    ? Math.round((matchingSkills.length / projectSkills.length) * 100)
+                    : 0;
+
                 // Create modal HTML
                 const modal = document.createElement('div');
                 modal.className = 'application-modal';
@@ -1140,27 +1169,69 @@
                         <button class="modal-close" aria-label="Close modal">
                             <i data-lucide="x"></i>
                         </button>
-                        <div class="modal-header">
-                            <h1>Apply to Project</h1>
-                            <p class="project-title-in-modal">${escapeHtml(project.title)}</p>
+
+                        <!-- Project Info Header -->
+                        <div class="apply-modal-hero">
+                            <div class="apply-modal-hero-bg"></div>
+                            <div class="apply-modal-hero-content">
+                                <span class="apply-modal-category">${escapeHtml(project.category || 'Project')}</span>
+                                <h1 class="apply-modal-title">${escapeHtml(project.title)}</h1>
+                                <div class="apply-modal-meta">
+                                    <span><i data-lucide="user" style="width:14px;height:14px"></i> ${escapeHtml(project.creator?.full_name || 'Unknown')}</span>
+                                    <span><i data-lucide="users" style="width:14px;height:14px"></i> ${project.current_members || 0}/${project.team_size || 1} members</span>
+                                    ${project.timeline ? `<span><i data-lucide="clock" style="width:14px;height:14px"></i> ${escapeHtml(project.timeline)}</span>` : ''}
+                                </div>
+                            </div>
                         </div>
+
                         <form id="application-form" class="application-form">
+                            <!-- Skills Match Section -->
+                            ${projectSkills.length > 0 ? `
+                            <div class="apply-skills-match">
+                                <div class="apply-skills-match-header">
+                                    <span class="apply-skills-label">Skill Match</span>
+                                    <span class="apply-skills-percent ${skillMatchPercent >= 70 ? 'match-high' : skillMatchPercent >= 40 ? 'match-mid' : 'match-low'}">${skillMatchPercent}%</span>
+                                </div>
+                                <div class="apply-skills-bar">
+                                    <div class="apply-skills-bar-fill ${skillMatchPercent >= 70 ? 'match-high' : skillMatchPercent >= 40 ? 'match-mid' : 'match-low'}" style="width: ${skillMatchPercent}%"></div>
+                                </div>
+                                <div class="apply-skills-tags">
+                                    ${projectSkills.map(skill => {
+                    const isMatch = matchingSkills.some(ms => ms.toLowerCase() === skill.toLowerCase());
+                    return `<span class="apply-skill-tag ${isMatch ? 'skill-matched' : 'skill-unmatched'}">
+                                            ${isMatch ? '<i data-lucide="check" style="width:12px;height:12px"></i>' : ''}
+                                            ${escapeHtml(String(skill))}
+                                        </span>`;
+                }).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+
+                            <!-- Message -->
                             <div class="form-group">
-                                <label for="application-message">Why do you want to join this project? *</label>
+                                <label for="application-message">
+                                    <i data-lucide="message-square" style="width:16px;height:16px;vertical-align:-2px"></i>
+                                    Why do you want to join? <span class="required-star">*</span>
+                                </label>
                                 <textarea 
                                     id="application-message" 
                                     class="form-control" 
-                                    placeholder="Tell us about your interest, relevant experience, and what you can contribute..."
+                                    placeholder="Share your interest in the project, relevant experience, and what you can bring to the team..."
                                     required
                                     rows="5"
                                     maxlength="1000"></textarea>
                                 <div class="char-counter">
-                                    <span id="application-message-count">0</span>/1000 characters
+                                    <span id="application-message-count">0</span>/1000
                                 </div>
                             </div>
+
+                            <!-- Role Selection -->
                             ${project.roles_needed && project.roles_needed.length > 0 ? `
                             <div class="form-group">
-                                <label for="application-role">Preferred Role</label>
+                                <label for="application-role">
+                                    <i data-lucide="briefcase" style="width:16px;height:16px;vertical-align:-2px"></i>
+                                    Preferred Role
+                                </label>
                                 <select id="application-role" class="form-control">
                                     <option value="">Select a role (optional)</option>
                                     ${project.roles_needed.map(role =>
@@ -1169,20 +1240,33 @@
                                 </select>
                             </div>
                             ` : ''}
-                            <div class="form-group">
-                                <label>Your Skills</label>
-                                <div class="skills-display">
-                                    ${profile?.skills && profile.skills.length > 0
-                        ? profile.skills.map(skill =>
-                            `<span class="skill-tag">${escapeHtml(skill)}</span>`
-                        ).join('')
-                        : '<span class="text-muted">Update your profile to show your skills</span>'
-                    }
+
+                            <!-- Your Profile Snapshot -->
+                            <div class="apply-profile-snapshot">
+                                <div class="apply-profile-header">
+                                    <div class="apply-profile-avatar">${(profile?.full_name || 'U').charAt(0).toUpperCase()}</div>
+                                    <div>
+                                        <div class="apply-profile-name">${escapeHtml(profile?.full_name || 'Your Profile')}</div>
+                                        <div class="apply-profile-sub">${escapeHtml(profile?.college || profile?.headline || 'Update your profile for better chances')}</div>
+                                    </div>
                                 </div>
+                                ${userSkills.length > 0 ? `
+                                <div class="apply-profile-skills">
+                                    ${userSkills.slice(0, 6).map(skill =>
+                    `<span class="skill-tag">${escapeHtml(skill)}</span>`
+                ).join('')}
+                                    ${userSkills.length > 6 ? `<span class="skill-more">+${userSkills.length - 6}</span>` : ''}
+                                </div>
+                                ` : `<a href="profile.html" class="apply-update-profile">Add skills to your profile →</a>`}
                             </div>
+
+                            <!-- Footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn-cancel" id="cancel-application">Cancel</button>
-                                <button type="submit" class="btn-submit-application" id="submit-application">Submit Application</button>
+                                <button type="submit" class="btn-submit-application" id="submit-application">
+                                    <i data-lucide="send" style="width:16px;height:16px"></i>
+                                    Submit Application
+                                </button>
                             </div>
                         </form>
                     </div>

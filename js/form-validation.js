@@ -38,6 +38,14 @@ const validators = {
             return 'Please enter a valid positive number';
         }
         return null;
+    },
+    matchField: (targetId, message) => (value) => {
+        if (!value) return null;
+        const targetField = document.getElementById(targetId);
+        if (targetField && value !== targetField.value) {
+            return message || 'Fields do not match';
+        }
+        return null;
     }
 };
 

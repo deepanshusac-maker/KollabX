@@ -696,6 +696,12 @@ section h2 {
     color: #EFA7A7;
 }
 
+.footer-brand .logo img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
 .footer-brand p {
     color: rgba(255, 255, 255, 0.7);
     line-height: 1.6;
