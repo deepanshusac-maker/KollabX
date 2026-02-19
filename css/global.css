@@ -252,6 +252,13 @@ body {
     color: var(--primary-color);
 }
 
+/* Remove click/focus background box on navbar links */
+.nav-item:focus,
+.nav-item:active {
+    outline: none;
+    background: transparent;
+}
+
 /* Right Side Nav Items */
 .nav-right {
     display: flex;

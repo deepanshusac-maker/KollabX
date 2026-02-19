@@ -105,9 +105,12 @@ async function updateAuthUI(session) {
       // Insert user menu
       try {
         const profile = await window.authHelpers.getCurrentProfile();
-        const userName = profile?.full_name || session.user.email?.split('@')[0] || 'User';
+        const rawName = profile?.full_name || session.user.email?.split('@')[0] || 'User';
+        // Use first name only and trim length so navbar stays clean
+        const firstName = rawName.split(' ')[0] || rawName;
+        const displayName = firstName.length > 12 ? firstName.slice(0, 11) + '…' : firstName;
         const avatarUrl = profile?.avatar_url || null;
-        const userMenu = createUserMenu(userName, avatarUrl);
+        const userMenu = createUserMenu(displayName, avatarUrl);
         navRight.insertBefore(userMenu, navRight.firstChild);
       } catch (error) {
         console.error('Error loading user profile:', error);
