@@ -109,7 +109,7 @@ async function updateAuthUI(session) {
         // Use first name only and trim length so navbar stays clean
         const firstName = rawName.split(' ')[0] || rawName;
         const displayName = firstName.length > 12 ? firstName.slice(0, 11) + '…' : firstName;
-        const avatarUrl = profile?.avatar_url || null;
+        const avatarUrl = profile?.avatar_url ? `${profile.avatar_url}?t=${new Date().getTime()}` : null;
         const userMenu = createUserMenu(displayName, avatarUrl);
         navRight.insertBefore(userMenu, navRight.firstChild);
       } catch (error) {
@@ -156,7 +156,7 @@ function createUserMenu(userName, avatarUrl) {
   userMenu.className = 'user-menu';
   userMenu.innerHTML = `
     <button class="user-menu-btn" aria-label="User menu" aria-expanded="false">
-      ${avatarUrl ? `<img src="${avatarUrl}" alt="${userName}" class="user-avatar">` : `<div class="user-avatar-placeholder">${userName.charAt(0).toUpperCase()}</div>`}
+      ${avatarUrl ? `<img src="${avatarUrl}" alt="${userName}" class="user-avatar" crossorigin="anonymous">` : `<div class="user-avatar-placeholder">${userName.charAt(0).toUpperCase()}</div>`}
       <span class="user-name">${userName}</span>
       <i data-lucide="chevron-down" class="chevron-icon"></i>
     </button>

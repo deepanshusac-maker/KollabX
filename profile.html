@@ -62,12 +62,12 @@
             </nav>
             <div class="profile-header">
                 <div class="avatar-wrapper">
-                    <div class="avatar-circle" id="avatar-preview">
+                    <div class="avatar-circle">
                         <svg viewBox="0 0 24 24" id="default-avatar-svg">
                             <path
                                 d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                         </svg>
-                        <img id="avatar-image-preview" src=""
+                        <img id="avatar-image-preview" src="" crossorigin="anonymous"
                             style="display: none; width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <label for="avatar-upload" class="avatar-edit-btn" aria-label="Edit profile picture">
@@ -173,13 +173,13 @@
                     <div class="form-group-row">
                         <div class="form-group">
                             <label for="github">GitHub</label>
-                            <input type="url" id="github" class="form-control" placeholder="https://github.com/username"
-                                >
+                            <input type="url" id="github" class="form-control"
+                                placeholder="https://github.com/username">
                         </div>
                         <div class="form-group">
                             <label for="linkedin">LinkedIn</label>
                             <input type="url" id="linkedin" class="form-control"
-                                placeholder="https://linkedin.com/in/username" >
+                                placeholder="https://linkedin.com/in/username">
                         </div>
                     </div>
                 </div>
@@ -297,19 +297,22 @@
                     throw new Error('Supabase not initialized');
                 }
 
-                // Compress image
+                // Secondary size check (2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    throw new Error('File size exceeds 2MB limit');
+                }
+
+                // Compress image (always returns image/jpeg)
                 const compressedFile = await compressImage(file);
 
-                // Get file extension
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${userId}/avatar.${fileExt}`;
+                const fileName = `${userId}/avatar.jpg`;
 
                 // Upload to Storage
                 const { data, error } = await supabase.storage
                     .from('avatars')
                     .upload(fileName, compressedFile, {
                         upsert: true, // Replace existing file
-                        contentType: `image/${fileExt === 'jpg' ? 'jpeg' : fileExt}`
+                        contentType: 'image/jpeg'
                     });
 
                 if (error) throw error;
@@ -328,51 +331,117 @@
 
         // Handle Avatar Upload
         const avatarUpload = document.getElementById('avatar-upload');
-        const avatarPreview = document.getElementById('avatar-image-preview');
+        const avatarImagePreview = document.getElementById('avatar-image-preview');
         const defaultAvatarSvg = document.getElementById('default-avatar-svg');
 
-        function updateOnboardingProgress() {
-            if (!onboardingMode) return;
+        // Centralized function to update avatar preview
+        function setAvatarPreview(url) {
+            console.log('Setting avatar preview:', url ? (url.startsWith('data:') ? 'Data URL' : url) : 'None');
+            if (url) {
+                // Only add cache-buster to non-data URLs that don't already have a query string
+                const isDataUrl = url.startsWith('data:');
+                const finalUrl = (isDataUrl || url.includes('?')) ? url : `${url}?t=${new Date().getTime()}`;
+
+                avatarImagePreview.src = finalUrl;
+                avatarImagePreview.style.display = 'block';
+                defaultAvatarSvg.style.display = 'none';
+            } else {
+                avatarImagePreview.src = '';
+                avatarImagePreview.style.display = 'none';
+                defaultAvatarSvg.style.display = 'block';
+            }
+        }
+
+        function updateProfileProgress() {
             const container = document.getElementById('onboarding-flow');
             if (!container) return;
-            container.classList.remove('hidden');
 
-            const skillsVal = (document.getElementById('skills').value || '').trim();
-            const bioVal = (document.getElementById('bio').value || '').trim();
-            const hasSkills = skillsVal.length > 0;
-            const hasBio = bioVal.length >= 10;
-            const steps = Array.from(container.querySelectorAll('.onboarding-step'));
+            const fields = {
+                fullName: (document.getElementById('full-name').value || '').trim(),
+                college: (document.getElementById('college').value || '').trim(),
+                bio: (document.getElementById('bio').value || '').trim(),
+                skills: (document.getElementById('skills').value || '').trim(),
+                interests: (document.getElementById('interests').value || '').trim(),
+                github: (document.getElementById('github').value || '').trim(),
+                linkedin: (document.getElementById('linkedin').value || '').trim(),
+                availability: document.getElementById('availability').value
+            };
 
-            let currentStep = 1;
-            if (hasSkills && !hasBio) currentStep = 2;
-            if (hasSkills && hasBio) currentStep = 3;
+            const hasAvatar = profileImageData || avatarFile;
 
+            // Define weights (total 100)
+            const weights = {
+                fullName: 15,
+                college: 15,
+                bio: 15,
+                skills: 15,
+                interests: 10,
+                socials: 10, // at least one social
+                availability: 10,
+                avatar: 10
+            };
+
+            let score = 0;
+            if (fields.fullName.length >= 3) score += weights.fullName;
+            if (fields.college.length >= 3) score += weights.college;
+            if (fields.bio.length >= 10) score += weights.bio;
+            if (fields.skills.length > 0) score += weights.skills;
+            if (fields.interests.length > 0) score += weights.interests;
+            if (fields.github.length > 0 || fields.linkedin.length > 0) score += weights.socials;
+            if (fields.availability) score += weights.availability;
+            if (hasAvatar) score += weights.avatar;
+
+            // Show container if on-boarding OR just show it as a general completion tracker
+            if (onboardingMode || score < 100) {
+                container.classList.remove('hidden');
+            }
+
+            // Update progress bar
+            const progressFill = container.querySelector('.onboarding-progress-fill');
+            if (progressFill) {
+                progressFill.style.width = score + '%';
+            }
+
+            // Update steps in onboarding UI
+            const steps = container.querySelectorAll('.onboarding-step');
             steps.forEach(step => {
-                const idx = parseInt(step.getAttribute('data-onboarding-step'), 10);
+                const idx = step.getAttribute('data-onboarding-step');
                 step.classList.remove('completed', 'current');
-                if (idx < currentStep) {
-                    step.classList.add('completed');
-                } else if (idx === currentStep) {
-                    step.classList.add('current');
+
+                if (idx === '1') { // Skills
+                    if (fields.skills.length > 0) step.classList.add('completed');
+                    else step.classList.add('current');
+                } else if (idx === '2') { // Bio
+                    if (fields.bio.length >= 10) step.classList.add('completed');
+                    else if (fields.skills.length > 0) step.classList.add('current');
+                } else if (idx === '3') { // Final
+                    if (score >= 80) step.classList.add('completed');
+                    else if (fields.bio.length >= 10) step.classList.add('current');
                 }
             });
 
-            const completedCount = (hasSkills ? 1 : 0) + (hasBio ? 1 : 0) + (hasSkills && hasBio ? 1 : 0);
-            const progressEl = container.querySelector('.onboarding-progress-fill');
-            if (progressEl) {
-                const pct = Math.max(10, Math.min(100, (completedCount / 3) * 100));
-                progressEl.style.width = pct + '%';
-            }
-
             const exploreBtn = document.getElementById('onboarding-explore-btn');
             if (exploreBtn) {
-                exploreBtn.disabled = !(hasSkills && hasBio);
+                // Allow proceeding if basic profile is filled (e.g. 60%)
+                exploreBtn.disabled = score < 60;
             }
         }
 
         // Load existing profile from database
         window.addEventListener('DOMContentLoaded', async () => {
             try {
+                // Wait a moment for other scripts (supabase.js) to initialize authHelpers
+                let retryCount = 0;
+                while (!window.authHelpers && retryCount < 10) {
+                    await new Promise(r => setTimeout(r, 100));
+                    retryCount++;
+                }
+
+                if (!window.authHelpers) {
+                    console.error('Auth helpers not initialized');
+                    return;
+                }
+
                 const profile = await window.authHelpers.getCurrentProfile();
                 if (profile) {
                     // Populate fields from database
@@ -391,14 +460,12 @@
 
                     if (profile.avatar_url) {
                         profileImageData = profile.avatar_url;
-                        avatarPreview.src = profileImageData;
-                        avatarPreview.style.display = 'block';
-                        defaultAvatarSvg.style.display = 'none';
+                        setAvatarPreview(profileImageData);
                     }
                 }
 
-                if (onboardingMode) {
-                    updateOnboardingProgress();
+                if (onboardingMode || true) {
+                    updateProfileProgress();
                     const exploreBtn = document.getElementById('onboarding-explore-btn');
                     if (exploreBtn) {
                         exploreBtn.addEventListener('click', () => {
@@ -421,24 +488,23 @@
                 return;
             }
 
-            // Validate file size (5MB max)
-            if (file.size > 5 * 1024 * 1024) {
-                showFormError('Image size must be less than 5MB.');
+            // Validate file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                showFormError('Image size must be less than 2MB.');
                 return;
             }
 
             // Show preview immediately
             const reader = new FileReader();
             reader.onload = (event) => {
-                avatarPreview.src = event.target.result;
-                avatarPreview.style.display = 'block';
-                defaultAvatarSvg.style.display = 'none';
+                setAvatarPreview(event.target.result);
             };
             reader.readAsDataURL(file);
 
             // Store file for upload
             avatarFile = file;
             profileImageData = ''; // Clear old base64 data
+            updateProfileProgress();
         });
 
         const profileForm = document.querySelector('.profile-card');
@@ -457,7 +523,7 @@
         if (bioField && bioCharCount) {
             bioField.addEventListener('input', () => {
                 bioCharCount.textContent = bioField.value.length;
-                updateOnboardingProgress();
+                updateProfileProgress();
             });
             // Initialize count
             bioCharCount.textContent = bioField.value.length;
@@ -466,9 +532,18 @@
         const skillsField = document.getElementById('skills');
         if (skillsField) {
             skillsField.addEventListener('input', () => {
-                updateOnboardingProgress();
+                updateProfileProgress();
             });
         }
+
+        // Add listeners to all other fields
+        ['full-name', 'college', 'interests', 'github', 'linkedin', 'availability'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', updateProfileProgress);
+                if (el.tagName === 'SELECT') el.addEventListener('change', updateProfileProgress);
+            }
+        });
 
         profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -501,9 +576,15 @@
                 let avatarUrl = profileImageData; // Keep existing URL if no new file
                 if (avatarFile) {
                     try {
+                        // Show specific loading for avatar
+                        if (window.toast) window.toast.info('Uploading avatar...', 2000);
+
                         avatarUrl = await uploadAvatarToStorage(avatarFile, user.id);
                         profileImageData = avatarUrl; // Update for future reference
                         avatarFile = null; // Clear file reference
+
+                        // Update preview with final storage URL
+                        setAvatarPreview(avatarUrl);
                     } catch (error) {
                         hideLoading(saveButton);
                         const friendlyError = getUserFriendlyError(error);
@@ -534,6 +615,8 @@
                     availability: document.getElementById('availability').value || null,
                     avatar_url: avatarUrl || null
                 };
+
+                console.log('Upserting profile data:', profileData);
 
                 // Save to database
                 const { data, error } = await window.supabase
