@@ -29,6 +29,7 @@
             </li>
             <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
                     class="nav-item active">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="chat.html" class="nav-item">Chat</a></li>
             <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a>
             </li>
             <div class="nav-indicator"></div>
@@ -382,6 +383,7 @@
                             ${project?.description ? `<div class="team-project-desc">${escapeHtml(project.description.length > 100 ? project.description.substring(0, 100) + '...' : project.description)}</div>` : ''}
                             <div class="team-card-actions">
                                 <a href="explore.html#project-${project?.id}" class="btn-view-team-project">View Project</a>
+                                <a href="chat.html?project=${project?.id}" class="btn-chat-team-project" style="padding: 0.6rem 1.2rem; background: var(--primary-bg); color: var(--primary-color); border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: all 0.2s ease;">Open Chat</a>
                                 ${!isCreator ? `
                                     <button class="btn-leave-team-card" data-project-id="${project?.id}">Leave Team</button>
                                 ` : ''}
