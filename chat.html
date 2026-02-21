@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CollabX — Team Chat</title>
   <meta name="description" content="CollabX — where student teams collaborate, plan projects, and build together." />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/global.css" />
   <link rel="stylesheet" href="css/chat.css" />
   <link rel="stylesheet" href="css/toast.css" />
   <!-- Supabase Client -->
@@ -43,7 +43,7 @@
       </div>
 
       <!-- Channels -->
-      <div class="sidebar-section">
+      <div class="sidebar-section" id="channelListContainer">
         <div class="sidebar-section-title">Channels</div>
         <div class="channel-list" id="channelList"></div>
       </div>
@@ -95,6 +95,22 @@
       </div>
 
     </main>
+  </div>
+
+  <!-- Create Channel Modal (team leader only) -->
+  <div class="chat-modal-overlay" id="createChannelModal" aria-hidden="true">
+    <div class="chat-modal">
+      <h2 class="chat-modal-title">Create channel</h2>
+      <p class="chat-modal-hint">You can create up to 2 custom channels (plus #general).</p>
+      <label class="chat-modal-label" for="newChannelName">Name</label>
+      <input type="text" id="newChannelName" class="chat-modal-input" placeholder="e.g. dev, ideas" maxlength="80" />
+      <label class="chat-modal-label" for="newChannelDesc">Description (optional)</label>
+      <input type="text" id="newChannelDesc" class="chat-modal-input" placeholder="Short description" />
+      <div class="chat-modal-actions">
+        <button type="button" class="chat-modal-btn secondary" onclick="closeCreateChannelModal()">Cancel</button>
+        <button type="button" class="chat-modal-btn primary" id="createChannelSubmit">Create</button>
+      </div>
+    </div>
   </div>
 
   <script src="js/supabase.js"></script>

@@ -24,10 +24,17 @@ if (typeof supabase !== 'undefined') {
   });
 }
 
+// Use client from window if our ref is not set yet (script load order)
+function getSupabase() {
+  return window.supabase || supabaseClient;
+}
+
 // Helper function to check if user is authenticated
 const isAuthenticated = async () => {
   try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    const client = getSupabase();
+    if (!client) return false;
+    const { data: { session } } = await client.auth.getSession();
     return !!session;
   } catch (error) {
     console.error('Error checking authentication:', error);
@@ -38,7 +45,9 @@ const isAuthenticated = async () => {
 // Helper function to get current user
 const getCurrentUser = async () => {
   try {
-    const { data: { user }, error } = await supabaseClient.auth.getUser();
+    const client = getSupabase();
+    if (!client) return null;
+    const { data: { user }, error } = await client.auth.getUser();
     if (error) throw error;
     return user;
   } catch (error) {
@@ -52,8 +61,9 @@ const getCurrentProfile = async () => {
   try {
     const user = await getCurrentUser();
     if (!user) return null;
-    
-    const { data, error } = await supabaseClient
+    const client = getSupabase();
+    if (!client) return null;
+    const { data, error } = await client
       .from('profiles')
       .select('*')
       .eq('id', user.id)
