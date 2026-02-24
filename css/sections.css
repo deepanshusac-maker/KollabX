@@ -484,51 +484,81 @@ section h2 {
     --node-glow: rgba(143, 177, 227, 0.4);
 }
 
-/* Scroll Animations */
+/* Scroll Animations - Horizontal Slide */
 .kx-timeline-item {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
+    will-change: transform, opacity;
 }
 
+.kx-timeline-item:nth-child(odd) {
+    transform: translateX(100px);
+}
+
+.kx-timeline-item:nth-child(even) {
+    transform: translateX(-100px);
+}
+
+.kx-timeline-item.animate,
 .kx-timeline-item.active {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 1 !important;
+    transform: translateX(0) !important;
 }
 
-.kx-timeline-item:nth-child(odd).active,
-.kx-timeline-item:nth-child(even).active {
-    transform: translateX(0) translateY(0);
+/* Responsive adjustment for animation */
+@media (max-width: 900px) {
+
+    .kx-timeline-item:nth-child(odd),
+    .kx-timeline-item:nth-child(even) {
+        transform: translateX(50px);
+        /* All from right on mobile */
+    }
+
+    .kx-timeline-item.animate,
+    .kx-timeline-item.active {
+        transform: translateX(0) !important;
+    }
 }
 
 /* Responsive */
 @media (max-width: 900px) {
     .kx-timeline::before {
-        left: 30px;
+        left: 20px;
     }
 
     .kx-timeline-node {
-        left: 30px;
+        left: 20px;
+        top: 28px;
     }
 
     .kx-timeline-pill {
-        left: 30px;
-        transform: translateX(20px) !important;
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        display: inline-block;
+        margin-bottom: 15px;
+        margin-left: 0;
+        z-index: 5;
     }
 
     .kx-timeline-item {
         justify-content: flex-start !important;
-        padding-left: 60px;
+        padding-left: 55px;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 3.5rem;
     }
 
     .kx-timeline-content {
         width: 100%;
-        padding: 0;
+        padding: 0 !important;
+        justify-content: flex-start !important;
     }
 
     .kx-timeline-card {
         width: 100%;
-        max-width: 400px;
+        max-width: none;
     }
 }
 
@@ -908,7 +938,47 @@ section h2 {
 .kx-timeline-item.active,
 .kx-timeline-item.animate {
     opacity: 1;
-    transform: translateY(0);
+}
+
+/* Side slide animations */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fade-in-left {
+    opacity: 0;
+}
+
+.fade-in-left.animate {
+    animation: fadeInLeft 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.fade-in-right {
+    opacity: 0;
+}
+
+.fade-in-right.animate {
+    animation: fadeInRight 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
 
 /* Stagger delays for cards */

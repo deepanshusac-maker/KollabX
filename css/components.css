@@ -86,3 +86,40 @@
     text-transform: uppercase;
     vertical-align: middle;
 }
+
+/* Skeleton Loaders */
+.skeleton-line {
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.project-card-skeleton {
+    padding: 2rem;
+    background: white;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Auth Loading State */
+.auth-loading-state .nav-right .btn-signin,
+.auth-loading-state .nav-right .user-menu,
+.auth-loading-state .nav-right .notification-icon {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}

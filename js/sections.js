@@ -34,14 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
-    // Observe all fade-in-up elements
-    const fadeElements = document.querySelectorAll('.fade-in-up');
-    fadeElements.forEach(el => {
-        observer.observe(el);
-    });
-
-    const timelineItems = document.querySelectorAll('.kx-timeline-item');
-    timelineItems.forEach(el => {
+    // Observe all scroll-animated elements
+    const animateElements = document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right, .kx-timeline-item');
+    animateElements.forEach(el => {
         observer.observe(el);
     });
 

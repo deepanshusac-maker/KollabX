@@ -24,11 +24,10 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item active">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post Idea</a>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post Project</a>
             </li>
             <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
                     class="nav-item">Dashboard</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="chat.html" class="nav-item">Chat</a></li>
             <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a>
             </li>
             <div class="nav-indicator"></div>
@@ -102,7 +101,7 @@
                 <div class="problem-card card3 fade-in-up">
                     <div class="card-question" style="color: rgb(255, 255, 255);">Lost in the Chat Noise?</div>
                     <div class="card-solution" style="color: black;">WhatsApp and Discord are for talking. KollabX is
-                        for doing. Turn your 'maybe one day' into a live mission today.</div>
+                        for doing. Turn your 'maybe one day' into a live project today.</div>
                 </div>
             </div>
         </section>
@@ -111,11 +110,11 @@
         <section class="features-section">
             <h2 class="fade-in-up">What You Can Do</h2>
             <div class="kx-card-container">
-                <!-- Card 1: Signal Your Mission -->
+                <!-- Card 1: Signal Your Project -->
                 <div class="kx-card kx-card--purple fade-in-up">
                     <div class="kx-card-icon"><i data-lucide="radio"></i></div>
                     <div class="kx-card-header">
-                        <h3 class="kx-card-title">Post Your Project Idea</h3>
+                        <h3 class="kx-card-title">Post Your Project</h3>
                         <p class="kx-card-subtitle">Define your team's needs. Post the specs and let the right talent
                             apply to you.</p>
                     </div>
@@ -128,8 +127,8 @@
                 <div class="kx-card kx-card--peach fade-in-up">
                     <div class="kx-card-icon"><i data-lucide="target"></i></div>
                     <div class="kx-card-header">
-                        <h3 class="kx-card-title">Discover Live Missions</h3>
-                        <p class="kx-card-subtitle">Discover active missions that match your expertise. Filter by domain
+                        <h3 class="kx-card-title">Discover Live Projects</h3>
+                        <p class="kx-card-subtitle">Discover active projects that match your expertise. Filter by domain
                             and intensity.</p>
                     </div>
                     <div class="kx-card-shapes">
@@ -180,7 +179,7 @@
                     <div class="kx-timeline-content">
                         <div class="kx-timeline-card">
                             <div class="kx-timeline-icon"><i data-lucide="search"></i></div>
-                            <h3 class="kx-timeline-title">Explore Missions</h3>
+                            <h3 class="kx-timeline-title">Explore Projects</h3>
                             <span class="kx-timeline-tag">Discovery</span>
                             <p>Browse through hundreds of live project requests. Filter by category, skill level, and
                                 location.</p>
@@ -197,8 +196,8 @@
                             <div class="kx-timeline-icon"><i data-lucide="message-square"></i></div>
                             <h3 class="kx-timeline-title">Connect & Chat</h3>
                             <span class="kx-timeline-tag">Communication</span>
-                            <p>Found a match? Start an instant conversation and discuss the mission details with your
-                                potential squad.</p>
+                            <p>Found a match? Start an instant conversation and discuss the project details with your
+                                potential team.</p>
                         </div>
                     </div>
                 </div>
@@ -293,7 +292,7 @@
                         <i data-lucide="rocket" style="width: 48px; height: 48px; position: relative; z-index: 3;"></i>
                     </div>
                     <div class="kx-content-area">
-                        <h3 class="kx-feature-title">Squad Growth</h3>
+                        <h3 class="kx-feature-title">Team Growth</h3>
                         <p class="kx-feature-desc">Build your roster, track team progress, and level up your leadership
                             skills through collaboration.</p>
                         <span class="kx-feature-meta" id="active-teams-count">Active project teams</span>
@@ -352,7 +351,7 @@
                     <img src="images/logo.png" alt="KollabX Logo">
                     <span>KollabX</span>
                 </div>
-                <p>Connecting builders, one idea at a time. Find teammates by skills, not spam.</p>
+                <p>Connecting builders, one project at a time. Find teammates by skills, not spam.</p>
 
             </div>
 
@@ -362,7 +361,7 @@
                     <li><a href="explore.html">Features</a></li>
                     <li><a href="index.html#how-it-works">How it works</a></li>
                     <li><a href="index.html#faq">FAQ</a></li>
-                    <li><a href="explore.html">Explore ideas</a></li>
+                    <li><a href="explore.html">Explore projects</a></li>
                 </ul>
             </div>
 
@@ -424,12 +423,13 @@
         window.addEventListener('DOMContentLoaded', async () => {
             await window.session.initAuth();
 
-            // Smart redirect for Get Started button: post idea if logged in, sign in if not
+            // Smart redirect for Get Started button: post project if logged in, sign in if not
             const getStartedBtn = document.getElementById('get-started-btn');
             if (getStartedBtn) {
                 const isLoggedIn = await window.auth.checkAuth();
                 if (isLoggedIn) {
                     getStartedBtn.href = 'post.html';
+                    getStartedBtn.textContent = 'Post a Project';
                 }
             }
 

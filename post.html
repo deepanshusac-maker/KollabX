@@ -27,7 +27,7 @@
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
             <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item active">Post
-                    Idea</a>
+                    Project</a>
             </li>
             <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
                     class="nav-item">Dashboard</a></li>
@@ -62,8 +62,8 @@
                 <span aria-current="page">Post Project</span>
             </nav>
             <div class="profile-header">
-                <h1 class="profile-title" id="post-page-title">Share Your Idea</h1>
-                <p id="post-page-subtitle">Post your project idea and find the perfect collaborators</p>
+                <h1 class="profile-title" id="post-page-title">Post Your Project</h1>
+                <p id="post-page-subtitle">Post your project and find the perfect collaborators</p>
             </div>
 
             <form class="profile-card" id="create-post-form">
@@ -151,7 +151,7 @@
                     <button type="button" id="cancel-post" class="btn-signin"
                         style="padding: 1rem 3rem; font-size: 1rem; cursor: pointer; background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color);">Cancel</button>
                     <button type="submit" id="submit-post" class="btn-signin"
-                        style="padding: 1rem 3rem; font-size: 1rem; cursor: pointer;">Post Idea</button>
+                        style="padding: 1rem 3rem; font-size: 1rem; cursor: pointer;">Post Project</button>
                 </div>
             </form>
         </div>
@@ -202,9 +202,9 @@
             // If editing, load the project and prefill the form
             if (editProjectId) {
                 try {
-                    if (pageTitle) pageTitle.textContent = 'Edit Your Idea';
-                    if (pageSubtitle) pageSubtitle.textContent = 'Update your project details. Only you can edit your idea.';
-                    submitButton.textContent = 'Update Idea';
+                    if (pageTitle) pageTitle.textContent = 'Edit Your Project';
+                    if (pageSubtitle) pageSubtitle.textContent = 'Update your project details. Only you can edit your project.';
+                    submitButton.textContent = 'Update Project';
 
                     const result = await window.projects.getProjectById(editProjectId);
                     if (!result.success || !result.data) {
@@ -256,7 +256,7 @@
                 }
 
                 // Show loading state
-                showLoading(submitButton, 'Post Idea');
+                showLoading(submitButton, 'Post Project');
 
                 try {
                     // Prepare project data
@@ -278,7 +278,7 @@
 
                     if (result.success) {
                         // Show success message
-                        window.toast.success(editProjectId ? 'Idea updated successfully! Redirecting...' : 'Idea posted successfully! Redirecting...');
+                        window.toast.success(editProjectId ? 'Project updated successfully! Redirecting...' : 'Project posted successfully! Redirecting...');
 
                         // Redirect after short delay
                         setTimeout(() => {

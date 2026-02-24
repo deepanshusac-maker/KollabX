@@ -452,7 +452,6 @@ function appendNewMessage(msg, timeStr, isRealtime = false) {
         : '';
 
     group.innerHTML = `
-        <img src="${avatar}" class="msg-avatar" alt="">
         <div class="msg-content">
             <div class="msg-header">
                 <span class="msg-sender">${displayName}</span>

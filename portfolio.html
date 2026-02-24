@@ -4,18 +4,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio - Resume</title>
-    <!-- Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Aryan Sharma | KollabX Portfolio</title>
+    <!-- Standard KollabX CSS -->
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/portfolio.css">
-    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <!-- Portfolio Loading Overlay Styles -->
+    <style>
+        #portfolioLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #FFFFFF;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        #portfolioLoader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(179, 82, 106, 0.1);
+            border-top: 3px solid #b3526a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loader-text {
+            color: #b3526a;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
+    <!-- Portfolio Loading Overlay -->
+    <div id="portfolioLoader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Loading Portfolio...</div>
+    </div>
+
+    <!-- Standard KollabX Navbar -->
     <nav class="navbar">
         <a href="index.html" class="navbar-brand">
             <img src="images/logo.png" alt="KollabX Logo" class="navbar-logo">
@@ -25,19 +80,17 @@
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item">Home</a></li>
             <li><a href="explore.html" class="nav-item">Explore</a></li>
-            <li><a href="post.html" class="nav-item">Post Idea</a></li>
-            <li><a href="dashboard.html" class="nav-item">Dashboard</a></li>
-            <li><a href="profile.html" class="nav-item">Profile</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="post.html" class="nav-item">Post Project</a>
+            </li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
+                    class="nav-item">Dashboard</a></li>
+            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html" class="nav-item">Profile</a>
+            </li>
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
             <button type="button" class="notification-icon" aria-label="Notifications">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    aria-hidden="true">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
+                <i data-lucide="bell" aria-hidden="true"></i>
                 <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
             </button>
             <a href="signin.html" class="btn-signin">Sign In</a>
@@ -49,245 +102,249 @@
         </div>
     </nav>
 
-    <header class="portfolio-header">
-        <div class="container header-content">
-            <div class="profile-pic-container">
-                <img id="display-photo" src="https://via.placeholder.com/200" alt="Profile Picture">
-            </div>
-            <div class="header-text">
-                <h1 id="display-name">John Doe</h1>
-                <p class="role" id="display-college">Professional Developer</p>
+    <!-- Sub-header for Profile Actions (Standard on Profile/Portfolio pages) -->
+    <header class="portfolio-header" id="portfolioHeader">
+        <div class="container-portfolio">
+            <div class="header-inner">
+                <div class="header-left" onclick="window.history.back()">
+                    <i data-lucide="arrow-left" size="20"></i>
+                    <span>Back</span>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-secondary-outline">Message</button>
+                    <button class="btn btn-primary-maroon">Invite to Project</button>
+                    <button class="btn-icon-more"><i data-lucide="more-horizontal" size="20"></i></button>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="container">
-        <!-- About Section -->
-        <section id="about">
-            <h2><i data-lucide="user"></i> About Me</h2>
-            <div class="card about-grid">
-                <div class="bio-container">
-                    <p class="bio-text" id="display-bio">
-                        Loading bio...
+    <main class="container-portfolio">
+        <!-- Hero Identity Section -->
+        <section class="portfolio-section">
+            <div class="portfolio-hero-card">
+                <div class="profile-main">
+                    <div class="profile-img-container">
+                        <img src="assets/images/avatar-placeholder.png" alt="Profile Image" class="profile-img"
+                            id="profileImg"
+                            onerror="this.src='https://ui-avatars.com/api/?name=User&background=b3526a&color=fff'">
+                        <div class="verification-ring">
+                            <i data-lucide="check" size="14"></i>
+                        </div>
+                    </div>
+                    <div class="profile-info">
+                        <h1 id="profileName">Loading...</h1>
+                        <p class="username" id="profileUsername">@—</p>
+                        <div class="badge-row" id="profileBadges">
+                            <span class="badge badge-campus" id="profileCollege">—</span>
+                            <span class="badge" id="profileMajor">—</span>
+                        </div>
+                        <p class="headline" id="profileHeadline">—</p>
+                        <div class="status-badge status-open">
+                            <i data-lucide="clock" size="14"></i>
+                            <span id="profileStatus">Checking status...</span>
+                        </div>
+                    </div>
+                    <div class="trust-metrics">
+                        <div class="metric-item">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Resp. Rate</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">On-Time</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value" id="statCommitment">—</span>
+                            <span class="metric-label">Commitment</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value" id="statProjectsCount">0</span>
+                            <span class="metric-label">Projects</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-right">
+                    <p class="bio" id="profileBio">
+                        Loading profile narrative...
                     </p>
+
+                    <div class="chip-group">
+                        <span class="chip-label">Looking to Join</span>
+                        <div class="chips" id="lookingForChips">
+                            <!-- Chips loaded via JS -->
+                        </div>
+                    </div>
+
+                    <div class="chip-group">
+                        <span class="chip-label">Preferred Roles</span>
+                        <div class="chips" id="preferredRolesChips">
+                            <!-- Chips loaded via JS -->
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <a href="#" class="social-icon"><i data-lucide="github" size="20"></i></a>
+                        <a href="#" class="social-icon"><i data-lucide="twitter" size="20"></i></a>
+                        <a href="#" class="social-icon"><i data-lucide="linkedin" size="20"></i></a>
+                        <button class="btn btn-secondary-maroon" style="margin-left: auto;">
+                            <i data-lucide="file-text" size="16"></i>
+                            Resume
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Skills & Contact -->
-        <section id="skills-contact">
-            <div class="skills-grid">
-                <div class="skills-card card">
-                    <h2><i data-lucide="zap"></i> Skills</h2>
-                    <div id="skills-list">
-                        <!-- Skills will be populated here -->
-                    </div>
+        <!-- Impact Stats -->
+        <section class="portfolio-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value" id="activeProjectsCount">0</span>
+                    <span class="stat-label">Active Projects</span>
+                    <div class="divider"></div>
                 </div>
-
-                <div class="contact-card card">
-                    <h2><i data-lucide="mail"></i> Contact Me</h2>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>GitHub</label>
-                            <a id="contact-github" href="#" target="_blank"
-                                style="color: var(--portfolio-primary); font-weight: 600; text-decoration: none;">View
-                                Profile</a>
-                        </div>
-                        <div class="info-item" style="margin-top: 1rem;">
-                            <label>LinkedIn</label>
-                            <a id="contact-linkedin" href="#" target="_blank"
-                                style="color: var(--portfolio-primary); font-weight: 600; text-decoration: none;">Connect
-                                on LinkedIn</a>
-                        </div>
-
-                    </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="completedProjectsCount">0</span>
+                    <span class="stat-label">Completed Projects</span>
+                    <div class="divider"></div>
                 </div>
-            </div>
-
-            <div style="display: flex; justify-content: center; margin-top: 4rem; margin-bottom: 1rem;">
-                <a href="profile.html" class="btn-edit-profile">Edit Profile</a>
+                <div class="stat-card">
+                    <span class="stat-value" id="collaboratorsCount">0</span>
+                    <span class="stat-label">Collaborators</span>
+                    <div class="divider"></div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="endorsementsCount">0</span>
+                    <span class="stat-label">Endorsements</span>
+                    <div class="divider"></div>
+                </div>
             </div>
         </section>
+
+        <!-- Main Tabs -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="projects">Projects</div>
+                <div class="tab" data-tab="contributions">Contributions</div>
+                <div class="tab" data-tab="skills">Skills</div>
+                <div class="tab" data-tab="achievements">Achievements</div>
+                <div class="tab" data-tab="reviews">Reviews</div>
+                <div class="tab-indicator"></div>
+            </div>
+        </div>
+
+        <!-- Projects Tab Content -->
+        <div id="projects" class="content-section active">
+            <div class="filter-row">
+                <div class="filters">
+                    <select class="select-filter">
+                        <option>Category: All</option>
+                        <option>Technical</option>
+                        <option>Startup</option>
+                    </select>
+                    <select class="select-filter">
+                        <option>Status: All</option>
+                        <option>Active</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+                <select class="select-filter">
+                    <option>Sort: Recent</option>
+                    <option>Most Impact</option>
+                </select>
+            </div>
+
+            <div class="project-grid" id="projectGrid">
+                <!-- Data loaded via JS -->
+            </div>
+        </div>
+
+        <!-- Contributions Tab Content -->
+        <div id="contributions" class="content-section">
+            <div class="timeline" id="contributionTimeline">
+                <!-- Data loaded via JS -->
+            </div>
+        </div>
+
+        <!-- Skills Tab Content -->
+        <div id="skills" class="content-section">
+            <div class="skills-tab-content" id="skillsTabsContent">
+                <!-- Data loaded via JS -->
+            </div>
+        </div>
+
+        <!-- Achievements Tab Content -->
+        <div id="achievements" class="content-section">
+            <!-- Data loaded via JS -->
+        </div>
+
+        <!-- Reviews Tab Content -->
+        <div id="reviews" class="content-section">
+            <!-- Data loaded via JS -->
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <div class="logo">
-                    <img src="images/logo.png" alt="KollabX Logo">
-                    <span>KollabX</span>
-                </div>
-                <p>Connecting builders, one idea at a time. Find teammates by skills, not spam.</p>
-                <div class="footer-badges">
-                    <span class="f-badge">Student-first</span>
-                    <span class="f-badge">Skill matching</span>
-                    <span class="f-badge">Private chat</span>
-                </div>
-            </div>
+    <!-- Mobile Sticky CTA -->
+    <div class="mobile-cta">
+        <button class="btn btn-secondary-outline" style="flex: 1;">Message</button>
+        <button class="btn btn-primary-maroon" style="flex: 2;">Invite to Project</button>
+    </div>
 
-            <div class="footer-col">
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="explore.html">Features</a></li>
-                    <li><a href="index.html#how-it-works">How it works</a></li>
-                    <li><a href="index.html#faq">FAQ</a></li>
-                    <li><a href="explore.html">Explore ideas</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Community</h4>
-                <ul>
-                    <li><a href="mailto:community@kollabx.com">Campus ambassadors</a></li>
-                    <li><a href="mailto:partners@kollabx.com">Hackathon partners</a></li>
-                    <li><a href="mailto:clubs@kollabx.com">Clubs & societies</a></li>
-                    <li><a href="mailto:feedback@kollabx.com">Feedback</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="mailto:privacy@kollabx.com">Privacy & safety</a></li>
-                    <li><a href="mailto:legal@kollabx.com">Terms</a></li>
-                    <li><a href="mailto:support@kollabx.com">Report an issue</a></li>
-                    <li><a href="mailto:contact@kollabx.com">Contact</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-newsletter">
-                <h4>Get updates</h4>
-                <p>New features, campus launches, and hackathon-ready updates.</p>
-                <form class="subscribe-form">
-                    <input type="email" placeholder="you@college.edu" required>
-                    <button type="submit" class="btn-subscribe">Subscribe</button>
-                </form>
-                <div class="footer-socials">
-                    <a href="#" class="social-btn"><i data-lucide="mail"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="link"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="instagram"></i></a>
-                    <a href="#" class="social-btn"><i data-lucide="github"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>© 2026 KollabX • Made with 🔥 for problem solvers</p>
-            <div class="status-indicator">
-                <div class="dot"></div>
-                <span>Status: Beta</span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Supabase Client -->
+    <!-- Standard KollabX Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/session.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/teams.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/portfolio.js"></script>
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+        // Initialize everything
+        window.addEventListener('DOMContentLoaded', async () => {
+            await window.session.initAuth();
+            lucide.createIcons();
 
-        // Load data from database
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Get user ID from URL parameter or use current user
-                const urlParams = new URLSearchParams(window.location.search);
-                const userIdParam = urlParams.get('user');
+            // Tab switcher logic
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.content-section');
+            const indicator = document.querySelector('.tab-indicator');
 
-                let userId = userIdParam;
-                if (!userId) {
-                    // Use current user if no parameter
-                    const user = await window.authHelpers.getCurrentUser();
-                    if (user) {
-                        userId = user.id;
-                    } else {
-                        // Not logged in and no user param - show error or redirect
-                        document.getElementById('display-name').textContent = 'Profile Not Found';
-                        document.getElementById('display-college').textContent = 'Please sign in or provide a valid user ID';
-                        return;
-                    }
-                }
-
-                // Fetch profile from database
-                const { data: profile, error } = await window.supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', userId)
-                    .single();
-
-                if (error || !profile) {
-                    document.getElementById('display-name').textContent = 'Profile Not Found';
-                    document.getElementById('display-college').textContent = 'This user profile does not exist';
-                    return;
-                }
-
-                // Display profile data
-                document.getElementById('display-name').textContent = profile.full_name || 'User';
-                document.getElementById('display-college').textContent = profile.college || 'Member';
-                document.getElementById('display-bio').textContent = profile.bio || 'No bio available.';
-
-                // Display profile image if exists
-                if (profile.avatar_url) {
-                    document.getElementById('display-photo').src = profile.avatar_url;
-                }
-
-                // Map skills
-                if (profile.skills && Array.isArray(profile.skills) && profile.skills.length > 0) {
-                    const skillsList = document.getElementById('skills-list');
-                    skillsList.innerHTML = '';
-
-                    profile.skills.forEach(skill => {
-                        if (!skill) return;
-                        const div = document.createElement('div');
-                        div.className = 'skill-item';
-                        // Calculate match percentage based on skill length (placeholder logic)
-                        // In a real app, this could be based on project requirements or experience
-                        const percent = Math.min(70 + (skill.length * 2), 95);
-                        div.innerHTML = `
-                            <div class="skill-info"><span>${escapeHtml(skill)}</span><span>${percent}%</span></div>
-                            <div class="progress-bar-bg"><div class="progress-bar" style="width: ${percent}%"></div></div>
-                        `;
-                        skillsList.appendChild(div);
-                    });
-                } else {
-                    document.getElementById('skills-list').innerHTML = '<p style="color: var(--text-mist);">No skills listed</p>';
-                }
-
-                // Map social links
-                if (profile.github_url) {
-                    const githubLinks = document.querySelectorAll('#contact-github, [id*="github"]');
-                    githubLinks.forEach(link => {
-                        if (link.tagName === 'A') {
-                            link.href = profile.github_url;
-                        }
-                    });
-                }
-                if (profile.linkedin_url) {
-                    const linkedinLinks = document.querySelectorAll('#contact-linkedin, [id*="linkedin"]');
-                    linkedinLinks.forEach(link => {
-                        if (link.tagName === 'A') {
-                            link.href = profile.linkedin_url;
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading portfolio:', error);
-                document.getElementById('display-name').textContent = 'Error Loading Profile';
-                document.getElementById('display-college').textContent = 'Please try again later';
+            function updateIndicator(tab) {
+                indicator.style.width = `${tab.offsetWidth}px`;
+                indicator.style.left = `${tab.offsetLeft}px`;
             }
-        });
 
-        // Escape HTML helper
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    document.getElementById(target).classList.add('active');
+                    updateIndicator(tab);
+                });
+            });
+
+            // Initial indicator position
+            const activeTab = document.querySelector('.tab.active');
+            if (activeTab) updateIndicator(activeTab);
+
+            // Back functionality
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('portfolioHeader');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        });
     </script>
 </body>
 

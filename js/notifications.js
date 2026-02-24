@@ -123,7 +123,10 @@ function ensureNotificationDropdown() {
       <div class="notification-dropdown-list"></div>
     </div>
     <div class="notification-dropdown-footer">
-      <a href="notifications.html">Open full inbox</a>
+      <button type="button" class="notification-clear-btn" data-action="clear-all">
+        <i data-lucide="trash-2"></i>
+        <span>Clear all</span>
+      </button>
     </div>
   `;
 
@@ -145,12 +148,21 @@ async function renderNotificationDropdown() {
   listEl.innerHTML = '';
 
   const result = await getAllNotifications();
-  if (!result.success || !Array.isArray(result.data) || result.data.length === 0) {
+
+  // Toggle visibility of management buttons
+  const markAllBtn = dropdown.querySelector('[data-action="mark-all-read"]');
+  const footerEl = dropdown.querySelector('.notification-dropdown-footer');
+  const hasNotifications = result.success && Array.isArray(result.data) && result.data.length > 0;
+
+  if (markAllBtn) markAllBtn.style.display = hasNotifications ? 'block' : 'none';
+  if (footerEl) footerEl.style.display = hasNotifications ? 'flex' : 'none';
+
+  if (!hasNotifications) {
+    emptyEl.style.display = 'block';
     emptyEl.textContent = 'No notifications yet. You’ll see updates here when something changes.';
     return;
   }
-
-  emptyEl.textContent = '';
+  emptyEl.style.display = 'none';
 
   listEl.innerHTML = result.data
     .map((n) => {
@@ -201,7 +213,6 @@ async function renderNotificationDropdown() {
   });
 
   // Mark all as read
-  const markAllBtn = dropdown.querySelector('[data-action="mark-all-read"]');
   if (markAllBtn) {
     markAllBtn.onclick = async (e) => {
       e.stopPropagation();
@@ -210,8 +221,32 @@ async function renderNotificationDropdown() {
         dropdown
           .querySelectorAll('.notification-dropdown-item-unread')
           .forEach((el) => el.classList.remove('notification-dropdown-item-unread'));
+        // Turn off badge immediately
+        const badges = document.querySelectorAll('.notification-badge');
+        badges.forEach(badge => badge.style.display = 'none');
+
+        // Close dropdown as requested
+        closeNotificationDropdown();
       } else if (window.toast) {
         window.toast.error(result.error || 'Failed to mark all as read.');
+      }
+    };
+  }
+
+  // Clear all notifications
+  const clearAllBtn = dropdown.querySelector('[data-action="clear-all"]');
+  if (clearAllBtn) {
+    clearAllBtn.onclick = async (e) => {
+      e.stopPropagation();
+      if (!confirm('Are you sure you want to clear all notifications?')) return;
+
+      const result = await clearAllNotifications();
+      if (result.success) {
+        listEl.innerHTML = '';
+        emptyEl.textContent = 'No notifications yet. You’ll see updates here when something changes.';
+        // Badge is updated inside clearAllNotifications -> updateNotificationBadge
+      } else if (window.toast) {
+        window.toast.error(result.error || 'Failed to clear notifications.');
       }
     };
   }
@@ -402,6 +437,36 @@ async function markAllNotificationsAsRead() {
   }
 }
 
+// Clear all notifications for current user
+async function clearAllNotifications() {
+  try {
+    const supabase = window.supabase;
+    if (!supabase) {
+      return { success: false, error: 'Supabase not initialized' };
+    }
+
+    const user = await window.authHelpers.getCurrentUser();
+    if (!user) {
+      return { success: false, error: 'User not logged in' };
+    }
+
+    const { error } = await supabase
+      .from('notifications')
+      .delete()
+      .eq('user_id', user.id);
+
+    if (error) throw error;
+
+    // Update badge after clearing
+    await updateNotificationBadge();
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error clearing all notifications:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 // Initialize notification badge and dropdown on page load
 document.addEventListener('DOMContentLoaded', async () => {
   // Small delay to ensure auth has had a chance to initialize elsewhere
@@ -444,5 +509,6 @@ window.notifications = {
   getAllNotifications,
   markNotificationAsRead,
   markAllNotificationsAsRead,
+  clearAllNotifications,
   setupNotificationSubscription
 };

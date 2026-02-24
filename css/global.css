@@ -423,20 +423,35 @@ body {
 }
 
 .notification-dropdown-footer {
-    padding: 0.5rem 1rem 0.25rem;
+    padding: 0.65rem 1rem;
     border-top: 1px solid rgba(15, 23, 42, 0.06);
-    text-align: right;
+    display: flex;
+    justify-content: center;
 }
 
-.notification-dropdown-footer a {
+.notification-clear-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 0.8rem;
-    color: var(--primary-color);
-    text-decoration: none;
+    color: #ef4444;
+    background: transparent;
+    border: none;
+    cursor: pointer;
     font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    transition: all 0.2s ease;
 }
 
-.notification-dropdown-footer a:hover {
-    text-decoration: underline;
+.notification-clear-btn:hover {
+    background: #fef2f2;
+    transform: translateY(-1px);
+}
+
+.notification-clear-btn i {
+    width: 14px;
+    height: 14px;
 }
 
 
