@@ -547,6 +547,188 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        /* Forgot Password Modal */
+        .fp-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fpFadeIn 0.25s ease;
+        }
+
+        .fp-modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fpFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fpSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .fp-modal {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            padding: 2.5rem 2rem;
+            width: 420px;
+            max-width: 92vw;
+            text-align: center;
+            animation: fpSlideIn 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .fp-modal-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--maroon-grad);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+
+        .fp-modal-icon svg {
+            width: 26px;
+            height: 26px;
+            color: white;
+            stroke: white;
+        }
+
+        .fp-modal h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+
+        .fp-modal .fp-subtitle {
+            font-size: 13.5px;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .fp-modal input[type="email"] {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .fp-modal input[type="email"]:focus {
+            border-color: var(--primary-maroon);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(179, 82, 106, 0.1);
+        }
+
+        .fp-modal .fp-error {
+            color: #dc3545;
+            font-size: 12.5px;
+            margin-top: -8px;
+            margin-bottom: 10px;
+            display: none;
+            text-align: left;
+        }
+
+        .fp-modal .fp-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 0.5rem;
+        }
+
+        .fp-modal .btn-fp-cancel {
+            flex: 1;
+            padding: 12px;
+            border-radius: 30px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            background: transparent;
+            color: #555;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fp-modal .btn-fp-cancel:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .fp-modal .btn-fp-send {
+            flex: 1;
+            padding: 12px;
+            border-radius: 30px;
+            border: none;
+            background: var(--maroon-grad);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px -4px rgba(179, 82, 106, 0.35);
+        }
+
+        .fp-modal .btn-fp-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -4px rgba(179, 82, 106, 0.45);
+        }
+
+        .fp-modal .btn-fp-send:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Success state */
+        .fp-success-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #34d399, #10b981);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+
+        .fp-success-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+        }
     </style>
 </head>
 
@@ -670,6 +852,28 @@
                     <p>Start your journey with us and discover top-tier talent for your next project.</p>
                     <button class="btn-ghost" id="signUpBtn">GET STARTED</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="fp-modal-overlay" id="fp-modal-overlay">
+        <div class="fp-modal" id="fp-modal">
+            <div class="fp-modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <h2>Reset Password</h2>
+            <p class="fp-subtitle">Enter the email address associated with your account and we'll send you a link to
+                reset your password.</p>
+            <input type="email" id="fp-email" placeholder="Enter your email" autocomplete="email" />
+            <div class="fp-error" id="fp-error">Error message</div>
+            <div class="fp-actions">
+                <button type="button" class="btn-fp-cancel" id="fp-cancel">Cancel</button>
+                <button type="button" class="btn-fp-send" id="fp-send">Send Reset Link</button>
             </div>
         </div>
     </div>
@@ -879,33 +1083,137 @@
             });
         }
 
-        // Password reset functionality
+        // Forgot Password Modal
         const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const fpOverlay = document.getElementById('fp-modal-overlay');
+        const fpModal = document.getElementById('fp-modal');
+        const fpEmailInput = document.getElementById('fp-email');
+        const fpError = document.getElementById('fp-error');
+        const fpCancel = document.getElementById('fp-cancel');
+        const fpSend = document.getElementById('fp-send');
+
+        function openForgotModal() {
+            // Pre-fill with email from sign-in field if available
+            const signinEmail = document.getElementById('signin-email').value;
+            fpEmailInput.value = signinEmail || '';
+            fpError.style.display = 'none';
+            fpSend.disabled = false;
+            fpSend.textContent = 'Send Reset Link';
+            // Reset to input state in case modal was in success state
+            fpModal.innerHTML = '';
+            fpModal.innerHTML = `
+                <div class="fp-modal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <h2>Reset Password</h2>
+                <p class="fp-subtitle">Enter the email address associated with your account and we'll send you a link to reset your password.</p>
+                <input type="email" id="fp-email" placeholder="Enter your email" autocomplete="email" value="${signinEmail || ''}" />
+                <div class="fp-error" id="fp-error" style="display:none;">Error</div>
+                <div class="fp-actions">
+                    <button type="button" class="btn-fp-cancel" id="fp-cancel">Cancel</button>
+                    <button type="button" class="btn-fp-send" id="fp-send">Send Reset Link</button>
+                </div>
+            `;
+            // Re-bind events after innerHTML reset
+            document.getElementById('fp-cancel').addEventListener('click', closeForgotModal);
+            document.getElementById('fp-send').addEventListener('click', handleForgotSend);
+            document.getElementById('fp-email').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') handleForgotSend();
+            });
+            fpOverlay.classList.add('active');
+            setTimeout(() => document.getElementById('fp-email').focus(), 100);
+        }
+
+        function closeForgotModal() {
+            fpOverlay.classList.remove('active');
+        }
+
+        async function handleForgotSend() {
+            const emailInput = document.getElementById('fp-email');
+            const errorDiv = document.getElementById('fp-error');
+            const sendBtn = document.getElementById('fp-send');
+            const email = emailInput.value.trim();
+
+            // Validate email
+            if (!email) {
+                errorDiv.textContent = 'Please enter your email address.';
+                errorDiv.style.display = 'block';
+                emailInput.focus();
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorDiv.textContent = 'Please enter a valid email address.';
+                errorDiv.style.display = 'block';
+                emailInput.focus();
+                return;
+            }
+
+            // Show loading
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            errorDiv.style.display = 'none';
+
+            try {
+                // Send reset email via Supabase
+                // Supabase only sends the email if the account exists (secure by default)
+                const result = await window.auth.resetPassword(email);
+
+                if (result.success) {
+                    // Show success state in modal
+                    const modal = document.getElementById('fp-modal');
+                    modal.innerHTML = `
+                        <div class="fp-success-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <h2>Check Your Email</h2>
+                        <p class="fp-subtitle">If an account exists for <strong>${email}</strong>, you'll receive a password reset link shortly. Please check your inbox and spam folder.</p>
+                        <div class="fp-actions">
+                            <button type="button" class="btn-fp-send" id="fp-done" style="flex: 1;">Got It</button>
+                        </div>
+                    `;
+                    document.getElementById('fp-done').addEventListener('click', closeForgotModal);
+                } else {
+                    errorDiv.textContent = result.error || 'Failed to send reset email. Please try again.';
+                    errorDiv.style.display = 'block';
+                    sendBtn.disabled = false;
+                    sendBtn.textContent = 'Send Reset Link';
+                }
+            } catch (error) {
+                console.error('Password reset error:', error);
+                errorDiv.textContent = 'Something went wrong. Please try again.';
+                errorDiv.style.display = 'block';
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send Reset Link';
+            }
+        }
+
         if (forgotPasswordLink) {
-            forgotPasswordLink.addEventListener('click', async (e) => {
+            forgotPasswordLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                const email = document.getElementById('signin-email').value;
-
-                if (!email) {
-                    showFormError('Please enter your email address first.');
-                    return;
-                }
-
-                try {
-                    const result = await window.auth.resetPassword(email);
-                    if (result.success) {
-                        window.toast.success('Password reset email sent! Check your inbox.');
-                    } else {
-                        const friendlyError = getUserFriendlyError(result.error || new Error('Failed to send reset email'));
-                        window.toast.error(friendlyError);
-                    }
-                } catch (error) {
-                    const friendlyError = getUserFriendlyError(error);
-                    window.toast.error(friendlyError);
-                    console.error('Password reset error:', error);
-                }
+                openForgotModal();
             });
         }
+
+        // Close modal on overlay click
+        if (fpOverlay) {
+            fpOverlay.addEventListener('click', (e) => {
+                if (e.target === fpOverlay) closeForgotModal();
+            });
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && fpOverlay.classList.contains('active')) {
+                closeForgotModal();
+            }
+        });
 
         // Google sign-in buttons
         function handleGoogleSignIn() {

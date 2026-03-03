@@ -112,6 +112,28 @@ function updateProfileUI(profile) {
     } else if (imgEl) {
         imgEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.full_name || 'U')}&background=b3526a&color=fff&size=128`;
     }
+
+    // Social links — show only if the user has set them
+    const githubLink = document.getElementById('socialGithub');
+    const linkedinLink = document.getElementById('socialLinkedin');
+
+    if (githubLink) {
+        if (profile.github_url) {
+            githubLink.href = profile.github_url;
+            githubLink.style.display = '';
+        } else {
+            githubLink.style.display = 'none';
+        }
+    }
+
+    if (linkedinLink) {
+        if (profile.linkedin_url) {
+            linkedinLink.href = profile.linkedin_url;
+            linkedinLink.style.display = '';
+        } else {
+            linkedinLink.style.display = 'none';
+        }
+    }
 }
 
 /**

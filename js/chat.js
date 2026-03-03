@@ -624,27 +624,70 @@ function setupRealtimeSubscription(channelId) {
 
 async function loadMembers(projectId) {
     const memberList = document.getElementById('memberList');
+    const headerRight = document.getElementById('headerRight');
     if (!memberList) return;
 
     const result = await window.teams.getTeamMembers(projectId);
     if (!result.success) return;
 
-    memberList.innerHTML = result.data.map(m => {
+    const members = result.data;
+
+    // Sort current user to the top
+    members.sort((a, b) => {
+        if (currentUser && a.user_id === currentUser.id) return -1;
+        if (currentUser && b.user_id === currentUser.id) return 1;
+        return 0;
+    });
+
+    // Render sidebar member list
+    memberList.innerHTML = members.map(m => {
+        const isMe = currentUser && m.user_id === currentUser.id;
         const name = escapeHtml(m.profile?.full_name || 'Member');
         const rawAvatarUrl = m.profile?.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.profile?.full_name || 'Member');
         const avatarUrl = window.authHelpers.sanitizeUrl(rawAvatarUrl) || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.profile?.full_name || 'Member');
         const safeAvatarUrl = window.authHelpers.sanitizeAttr(avatarUrl);
+        const isCreator = currentProject && m.user_id === currentProject.creator_id;
+        const badge = isMe ? ' <span style="color: var(--green); font-size: 0.65rem; font-weight: 700;">(You)</span>'
+            : isCreator ? ' <span style="color: var(--primary); font-size: 0.65rem; font-weight: 700;">(Lead)</span>'
+                : '';
         return `
-        <div class="member-item">
+        <a href="portfolio.html?id=${m.user_id}" class="member-item" style="text-decoration: none; color: inherit; cursor: pointer;">
             <img src="${safeAvatarUrl}" alt="" class="member-avatar">
             <div class="member-info">
-                <div class="member-name">${name}</div>
-                <div class="member-role">${escapeHtml(m.role || 'Member')}</div>
+                <div class="member-name">${name}${badge}</div>
+                <div class="member-role">${escapeHtml(m.role || (isCreator ? 'Project Lead' : 'Member'))}</div>
             </div>
             <div class="member-status-dot online"></div>
-        </div>
+        </a>
     `;
     }).join('');
+
+    // Render header avatar stack
+    if (headerRight) {
+        const maxShow = 4;
+        const shown = members.slice(0, maxShow);
+        const remaining = members.length - maxShow;
+
+        const avatarsHtml = shown.map(m => {
+            const rawUrl = m.profile?.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.profile?.full_name || 'M');
+            const url = window.authHelpers.sanitizeUrl(rawUrl) || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.profile?.full_name || 'M');
+            const safeUrl = window.authHelpers.sanitizeAttr(url);
+            return `<a href="portfolio.html?id=${m.user_id}" title="${escapeHtml(m.profile?.full_name || 'Member')}"><img src="${safeUrl}" alt="${escapeHtml(m.profile?.full_name || 'Member')}"></a>`;
+        }).join('');
+
+        headerRight.innerHTML = `
+            <div class="header-members-stack">
+                ${avatarsHtml}
+            </div>
+            <span class="header-member-count">${members.length} member${members.length !== 1 ? 's' : ''}</span>
+        `;
+    }
+
+    // Update team member count in sidebar
+    const teamMemberCount = document.getElementById('teamMemberCount');
+    if (teamMemberCount) {
+        teamMemberCount.textContent = `${members.length} member${members.length !== 1 ? 's' : ''}`;
+    }
 }
 
 function scrollToBottom() {

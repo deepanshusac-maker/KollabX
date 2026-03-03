@@ -397,6 +397,9 @@
                                 <span class="team-status-badge ${project?.status === 'open' ? 'status-open' : ''}">${project?.status || 'Unknown'}</span>
                             </div>
                             ${project?.description ? `<div class="team-project-desc">${escapeHtml(project.description.length > 100 ? project.description.substring(0, 100) + '...' : project.description)}</div>` : ''}
+                            <div class="team-members-stack" data-project-id="${project?.id}">
+                                <span style="font-size: 0.8rem; color: var(--text-mist);">Loading members...</span>
+                            </div>
                             <div class="team-card-actions">
                                 <a href="explore.html#project-${project?.id}" class="btn-view-team-project">View Project</a>
                                 <a href="chat.html?project=${project?.id}" class="btn-chat-team-card">
@@ -410,6 +413,30 @@
                         </div>
                     `;
                 }).join('');
+
+                // Load team members for each card
+                const projectIds = result.data.map(t => t.project?.id).filter(Boolean);
+                for (const pid of projectIds) {
+                    const membersResult = await window.teams.getTeamMembers(pid);
+                    const stackEl = container.querySelector(`.team-members-stack[data-project-id="${pid}"]`);
+                    if (!stackEl || !membersResult.success) continue;
+
+                    const members = membersResult.data;
+                    const maxShow = 5;
+                    const shown = members.slice(0, maxShow);
+                    const remaining = members.length - maxShow;
+
+                    stackEl.innerHTML = `
+                        <div class="members-avatar-row">
+                            ${shown.map(m => {
+                        const name = escapeHtml(m.profile?.full_name || 'Member');
+                        const avatar = m.profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.profile?.full_name || 'M')}&background=b3526a&color=fff&size=32`;
+                        return `<a href="portfolio.html?id=${m.user_id}" title="${name}"><img src="${avatar}" alt="${name}" class="stack-avatar"></a>`;
+                    }).join('')}
+                            ${remaining > 0 ? `<span class="stack-more">+${remaining}</span>` : ''}
+                        </div>
+                    `;
+                }
 
                 // Add leave team handlers
                 container.querySelectorAll('.btn-leave-team-card').forEach(btn => {

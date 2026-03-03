@@ -111,9 +111,6 @@
                     <span>Back</span>
                 </div>
                 <div class="header-right">
-                    <button class="btn btn-secondary-outline">Message</button>
-                    <button class="btn btn-primary-maroon">Invite to Project</button>
-                    <button class="btn-icon-more"><i data-lucide="more-horizontal" size="20"></i></button>
                 </div>
             </div>
         </div>
@@ -185,9 +182,10 @@
                     </div>
 
                     <div class="social-links">
-                        <a href="#" class="social-icon"><i data-lucide="github" size="20"></i></a>
-                        <a href="#" class="social-icon"><i data-lucide="twitter" size="20"></i></a>
-                        <a href="#" class="social-icon"><i data-lucide="linkedin" size="20"></i></a>
+                        <a href="#" class="social-icon" id="socialGithub" target="_blank" rel="noopener noreferrer"
+                            style="display: none;" title="GitHub Profile"><i data-lucide="github" size="20"></i></a>
+                        <a href="#" class="social-icon" id="socialLinkedin" target="_blank" rel="noopener noreferrer"
+                            style="display: none;" title="LinkedIn Profile"><i data-lucide="linkedin" size="20"></i></a>
                         <button class="btn btn-secondary-maroon" style="margin-left: auto;">
                             <i data-lucide="file-text" size="16"></i>
                             Resume
@@ -287,10 +285,7 @@
     </main>
 
     <!-- Mobile Sticky CTA -->
-    <div class="mobile-cta">
-        <button class="btn btn-secondary-outline" style="flex: 1;">Message</button>
-        <button class="btn btn-primary-maroon" style="flex: 2;">Invite to Project</button>
-    </div>
+
 
     <!-- Standard KollabX Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

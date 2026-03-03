@@ -77,14 +77,20 @@
                                 placeholder="Smart Attendance using Face Recognition" required>
                         </div>
                         <div class="form-group">
-                            <label for="category">Category *</label>
-                            <select id="category" class="form-control" required>
-                                <option value="" disabled selected>Select category</option>
-                                <option value="Web">Web</option>
-                                <option value="App">App</option>
-                                <option value="AI/ML">AI/ML</option>
-                                <option value="Robotics">Robotics</option>
-                                <option value="Iot">IoT</option>
+                            <label for="main-category">Main Category *</label>
+                            <select id="main-category" class="form-control" required>
+                                <option value="" disabled selected>Select main category</option>
+                                <option value="Technical">Technical</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Cultural">Cultural</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group-row">
+                        <div class="form-group">
+                            <label for="category">Sub Category *</label>
+                            <select id="category" class="form-control" required disabled>
+                                <option value="" disabled selected>Select main category first</option>
                             </select>
                         </div>
                     </div>
@@ -177,6 +183,42 @@
             // Initialize Lucide Icons
             lucide.createIcons();
 
+            // Category hierarchy definition
+            const categoryHierarchy = {
+                'Technical': ['Web Development', 'AI/ML', 'Robotics', 'IoT', 'Blockchain', 'Cybersecurity', 'Data Science'],
+                'Sports': ['Cricket', 'Football', 'Basketball', 'Badminton', 'Other Sports'],
+                'Cultural': ['Dance', 'Music', 'Drama', 'Art & Design', 'Other Cultural']
+            };
+
+            // Reverse lookup: sub-category → main category
+            function getMainCategory(subCategory) {
+                for (const [main, subs] of Object.entries(categoryHierarchy)) {
+                    if (subs.includes(subCategory)) return main;
+                }
+                return '';
+            }
+
+            // Dynamic sub-category population
+            const mainCatSelect = document.getElementById('main-category');
+            const subCatSelect = document.getElementById('category');
+
+            function populateSubCategories(mainCategory, preselect) {
+                const subs = categoryHierarchy[mainCategory] || [];
+                subCatSelect.innerHTML = '<option value="" disabled selected>Select sub category</option>';
+                subs.forEach(sub => {
+                    const opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.textContent = sub;
+                    subCatSelect.appendChild(opt);
+                });
+                subCatSelect.disabled = false;
+                if (preselect) subCatSelect.value = preselect;
+            }
+
+            mainCatSelect.addEventListener('change', () => {
+                populateSubCategories(mainCatSelect.value);
+            });
+
             const postForm = document.getElementById('create-post-form');
             const submitButton = document.getElementById('submit-post');
             const pageTitle = document.getElementById('post-page-title');
@@ -204,7 +246,19 @@
 
                     // Prefill fields
                     document.getElementById('project-title').value = project.title || '';
-                    document.getElementById('category').value = project.category || '';
+
+                    // Handle category prefill with hierarchy
+                    const savedCategory = project.category || '';
+                    const mainCat = getMainCategory(savedCategory);
+                    if (mainCat) {
+                        mainCatSelect.value = mainCat;
+                        populateSubCategories(mainCat, savedCategory);
+                    } else if (savedCategory) {
+                        // Legacy category - try to place it under Technical as fallback
+                        mainCatSelect.value = 'Technical';
+                        populateSubCategories('Technical', savedCategory);
+                    }
+
                     document.getElementById('description').value = project.description || '';
                     document.getElementById('required-skills').value = Array.isArray(project.required_skills) ? project.required_skills.join(', ') : '';
                     document.getElementById('team-size').value = project.team_size || 1;

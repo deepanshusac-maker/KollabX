@@ -66,30 +66,68 @@
     color: var(--text-mist);
 }
 
-.btn-post-idea {
+.btn-post-project {
     background: var(--maroon-grad);
     color: white;
     border: none;
-    padding: 0.8rem 1.8rem;
-    border-radius: 12px;
-    font-weight: 600;
+    padding: 0.85rem 2rem;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(179, 82, 106, 0.25);
     text-decoration: none;
+    white-space: nowrap;
 }
 
-.btn-post-idea:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+.btn-post-project:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(179, 82, 106, 0.35);
 }
 
-.btn-post-idea i {
+.btn-post-project:active {
+    transform: translateY(-1px);
+}
+
+.btn-post-project i,
+.btn-post-project svg {
     width: 18px;
     height: 18px;
+}
+
+/* Chat Button in Team Cards */
+.btn-chat-team-card {
+    padding: 0.55rem 1.1rem;
+    border-radius: 10px;
+    background: rgba(99, 102, 241, 0.08);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-chat-team-card:hover {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.btn-chat-team-card i,
+.btn-chat-team-card svg {
+    width: 15px;
+    height: 15px;
 }
 
 /* Tabs */
@@ -454,9 +492,19 @@ footer {
 }
 
 @media (max-width: 992px) {
+    .dashboard-container {
+        padding: 110px 5% 60px;
+    }
+
     .footer-content {
         grid-template-columns: 1fr;
         gap: 3rem;
+    }
+
+    .horizontal-card {
+        padding: 2rem 2.5rem;
+        gap: 2rem;
+        border-radius: 28px;
     }
 }
 
@@ -466,7 +514,21 @@ footer {
     }
 
     .stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem 1rem;
+        border-radius: 18px;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
     }
 
     .content-grid {
@@ -476,56 +538,86 @@ footer {
     .dashboard-hero {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1.5rem;
+        gap: 1.25rem;
     }
 
     .hero-text h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+
+    .btn-post-project {
+        width: 100%;
+        justify-content: center;
+        padding: 0.85rem 1.8rem;
     }
 
     .horizontal-card {
         flex-direction: column;
         padding: 1.5rem;
         border-radius: 20px;
-        gap: 1.5rem;
-        text-align: center;
+        gap: 1.25rem;
+        text-align: left;
     }
 
-    .card-icon {
-        width: 48px;
-        height: 48px;
+    .horizontal-card .card-icon {
+        width: 44px;
+        height: 44px;
     }
 
-    .card-icon i {
-        width: 36px;
-        height: 36px;
+    .horizontal-card .card-icon i {
+        width: 32px;
+        height: 32px;
     }
 
     .card-content h2 {
-        font-size: 1.25rem;
+        font-size: 1.2rem;
     }
 
     .card-content p {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+    }
+
+    .card-action {
+        align-self: flex-end;
+    }
+
+    .btn-arrow {
+        width: 42px;
+        height: 42px;
+    }
+
+    .btn-arrow i {
+        width: 20px;
+        height: 20px;
     }
 
     .dashboard-tabs {
-        gap: 1rem;
+        gap: 0.5rem;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: 0.75rem;
+    }
+
+    .dashboard-tabs::-webkit-scrollbar {
+        display: none;
     }
 
     .tab-item {
         font-size: 0.9rem;
         white-space: nowrap;
+        padding: 0.5rem 0.6rem;
     }
 
-    .stat-card {
-        padding: 1.5rem;
-    }
-
-    .stat-value {
-        font-size: 2rem;
+    /* Application items mobile */
+    .application-item {
+        padding: 1.25rem;
+        border-radius: 14px;
     }
 
     .application-header {
@@ -533,28 +625,282 @@ footer {
         gap: 0.75rem;
     }
 
+    .applicant-info {
+        gap: 0.75rem;
+    }
+
+    .applicant-avatar,
+    .applicant-avatar-placeholder {
+        width: 40px;
+        height: 40px;
+    }
+
+    .applicant-name {
+        font-size: 0.95rem;
+    }
+
+    .application-project {
+        font-size: 0.8rem;
+    }
+
     .application-actions {
         width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .btn-accept,
+    .btn-reject,
+    .btn-cancel-application,
+    .btn-view-profile,
+    .btn-view-project {
+        flex: 1;
+        min-width: 0;
+        text-align: center;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.82rem;
+    }
+
+    .application-message {
+        font-size: 0.85rem;
+        padding: 0.85rem;
+    }
+
+    /* Team cards mobile */
+    .team-card-item {
+        padding: 1.25rem;
+        border-radius: 14px;
+    }
+
+    .team-card-header {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .team-project-title {
+        font-size: 0.95rem;
+    }
+
+    .team-project-meta {
+        font-size: 0.8rem;
+    }
+
+    .team-project-desc {
+        font-size: 0.85rem;
+    }
+
+    .team-card-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-view-team-project,
+    .btn-chat-team-card,
+    .btn-leave-team-card {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 0.65rem 1rem;
+    }
+
+    /* Recommended projects mobile */
+    .recommended-project-item {
+        padding: 1.25rem;
+        border-radius: 14px;
+    }
+
+    .recommended-project-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .recommended-project-title {
+        font-size: 0.95rem;
+    }
+
+    .recommended-project-meta {
+        font-size: 0.8rem;
+    }
+
+    .recommended-project-desc {
+        font-size: 0.85rem;
+    }
+
+    .recommended-project-skills {
+        gap: 0.4rem;
+    }
+
+    .skill-tag-small {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .recommended-project-actions {
+        width: 100%;
+    }
+
+    .btn-view-recommended {
+        width: 100%;
+        text-align: center;
+        padding: 0.65rem 1rem;
+    }
+
+    /* Breadcrumbs */
+    .breadcrumbs {
+        font-size: 0.82rem;
+        margin-bottom: 1.5rem;
     }
 }
 
 @media (max-width: 480px) {
     .dashboard-container {
-        padding: 90px 3% 40px;
+        padding: 90px 3.5% 40px;
     }
 
     .hero-text h1 {
-        font-size: 1.8rem;
+        font-size: 1.65rem;
+    }
+
+    .hero-text p {
+        font-size: 0.9rem;
+    }
+
+    .btn-post-project {
+        padding: 0.75rem 1.4rem;
+        font-size: 0.88rem;
+        border-radius: 12px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.6rem;
+    }
+
+    .stat-card {
+        padding: 1rem 0.5rem;
+        border-radius: 14px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.72rem;
     }
 
     .horizontal-card {
-        padding: 1.25rem;
+        padding: 1.15rem;
+        border-radius: 16px;
+        gap: 1rem;
     }
 
-    .btn-post-idea {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
+    .horizontal-card .card-icon {
+        width: 38px;
+        height: 38px;
     }
+
+    .horizontal-card .card-icon i {
+        width: 28px;
+        height: 28px;
+    }
+
+    .card-content h2 {
+        font-size: 1.1rem;
+    }
+
+    .card-content p {
+        font-size: 0.85rem;
+    }
+
+    .dashboard-tabs {
+        gap: 0.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .tab-item {
+        font-size: 0.82rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .application-item,
+    .team-card-item,
+    .recommended-project-item {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Make empty state CTAs full-width on small mobile */
+    .empty-state a {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .match-score-badge {
+        font-size: 0.68rem;
+        padding: 0.15rem 0.45rem;
+    }
+
+    .role-badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
+    }
+
+    .team-status-badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .application-status {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+/* Team Members Avatar Stack */
+.team-members-stack {
+    margin: 0.5rem 0 0.25rem;
+}
+
+.members-avatar-row {
+    display: flex;
+    align-items: center;
+}
+
+.stack-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid white;
+    margin-left: -8px;
+    object-fit: cover;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    background: #ECF4E5;
+}
+
+.stack-avatar:first-child {
+    margin-left: 0;
+}
+
+.stack-avatar:hover {
+    transform: scale(1.15) translateY(-2px);
+    z-index: 2;
+}
+
+.stack-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(179, 82, 106, 0.12);
+    color: var(--primary-color);
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-left: -8px;
+    border: 2px solid white;
 }
 
 /* Applications Styles */

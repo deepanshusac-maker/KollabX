@@ -97,9 +97,22 @@ async function getAllProjects(filters = {}) {
 
     // Apply filters
     if (filters.category && filters.category !== 'All') {
-      query = query.eq('category', filters.category);
-    }
+      // Category hierarchy for group-based filtering
+      const categoryGroups = {
+        'Technical': ['Web Development', 'AI/ML', 'Robotics', 'IoT', 'Blockchain', 'Cybersecurity', 'Data Science',
+          'Web', 'App', 'Iot'],  // Include legacy values
+        'Sports': ['Cricket', 'Football', 'Basketball', 'Badminton', 'Other Sports'],
+        'Cultural': ['Dance', 'Music', 'Drama', 'Art & Design', 'Other Cultural']
+      };
 
+      if (categoryGroups[filters.category]) {
+        // Main category selected - filter by all sub-categories in the group
+        query = query.in('category', categoryGroups[filters.category]);
+      } else {
+        // Direct sub-category match
+        query = query.eq('category', filters.category);
+      }
+    }
     if (filters.search) {
       query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
     }
