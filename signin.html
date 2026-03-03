@@ -847,22 +847,24 @@
                         // Handle "Remember Me"
                         const rememberMe = document.getElementById('remember-me').checked;
                         if (!rememberMe) {
-                            // Clear session when the browser/tab is closed
                             window.addEventListener('beforeunload', () => {
                                 window.auth.signOut();
                             });
                         }
 
-                        window.toast.success('Signed in successfully! Redirecting...');
-                        // Always go to home; nudge if profile is incomplete
-                        setTimeout(async () => {
+                        // Check profile completeness before redirecting
+                        try {
                             const profileComplete = await window.auth.isProfileComplete();
                             if (!profileComplete) {
-                                // Store flag so index.html can show the reminder
                                 sessionStorage.setItem('profile_incomplete', 'true');
                             }
-                            window.location.href = 'index.html';
-                        }, 1000);
+                        } catch (err) {
+                            console.warn('Profile check failed:', err);
+                        }
+
+                        // Flag so index.html shows the success toast on arrival
+                        sessionStorage.setItem('signin_success', 'true');
+                        window.location.href = 'index.html';
                     } else {
                         hideLoading(signinButton);
                         const friendlyError = getUserFriendlyError(result.error || new Error('Sign in failed'));
@@ -910,9 +912,9 @@
             window.auth.signInWithGoogle().then((result) => {
                 if (!result.success && !result.redirecting) {
                     window.toast.error(result.error || 'Google sign-in failed. Please try again.');
-                } else if (result.success) {
-                    window.toast.success('Signed in with Google successfully!');
                 }
+                // Don't show success toast here — OAuth redirects away.
+                // The toast will show on the landing page via sessionStorage flag.
             });
         }
 
@@ -925,7 +927,6 @@
         window.addEventListener('DOMContentLoaded', async () => {
             const isAuth = await window.auth.checkAuth();
             if (isAuth) {
-                // User is already logged in or just returned from OAuth
                 const googleSigninAttempt = sessionStorage.getItem('google_signin_attempt');
                 sessionStorage.removeItem('google_signin_attempt');
 
@@ -934,16 +935,16 @@
                 const isNew = session && window.auth.isNewUser(session);
                 const isNewSignup = sessionStorage.getItem('is_new_user') === 'true';
 
-                // Only redirect to profile for truly new users (first-time signup or first-time Google)
                 if (isNewSignup || (googleSigninAttempt && isNew)) {
                     sessionStorage.removeItem('is_new_user');
                     window.location.href = 'profile.html?onboarding=true';
                 } else {
-                    // Returning user — go to home, nudge if profile is incomplete
                     const profileComplete = await window.auth.isProfileComplete();
                     if (!profileComplete) {
                         sessionStorage.setItem('profile_incomplete', 'true');
                     }
+                    // Flag so index.html shows the success toast on arrival
+                    sessionStorage.setItem('signin_success', 'true');
                     window.location.href = 'index.html';
                 }
             }

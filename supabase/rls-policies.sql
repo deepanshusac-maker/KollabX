@@ -1,5 +1,5 @@
 -- Row Level Security (RLS) Policies for KollabX
--- Run this after creating the schema
+-- Idempotent: safe to run multiple times (drops before re-creating)
 
 -- Enable RLS on all tables
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
@@ -13,17 +13,17 @@ ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
 -- PROFILES POLICIES
 -- ============================================
 
--- Anyone can read profiles
+DROP POLICY IF EXISTS "Profiles are viewable by everyone" ON profiles;
 CREATE POLICY "Profiles are viewable by everyone"
   ON profiles FOR SELECT
   USING (true);
 
--- Users can update their own profile
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
 CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
   USING (auth.uid() = id);
 
--- Users can insert their own profile (via trigger, but policy needed)
+DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
 CREATE POLICY "Users can insert own profile"
   ON profiles FOR INSERT
   WITH CHECK (auth.uid() = id);
@@ -32,22 +32,22 @@ CREATE POLICY "Users can insert own profile"
 -- PROJECTS POLICIES
 -- ============================================
 
--- Anyone can read public projects
+DROP POLICY IF EXISTS "Public projects are viewable by everyone" ON projects;
 CREATE POLICY "Public projects are viewable by everyone"
   ON projects FOR SELECT
   USING (visibility = 'public' OR creator_id = auth.uid());
 
--- Authenticated users can create projects
+DROP POLICY IF EXISTS "Authenticated users can create projects" ON projects;
 CREATE POLICY "Authenticated users can create projects"
   ON projects FOR INSERT
   WITH CHECK (auth.uid() = creator_id);
 
--- Project creators can update their projects
+DROP POLICY IF EXISTS "Creators can update own projects" ON projects;
 CREATE POLICY "Creators can update own projects"
   ON projects FOR UPDATE
   USING (auth.uid() = creator_id);
 
--- Project creators can delete their projects
+DROP POLICY IF EXISTS "Creators can delete own projects" ON projects;
 CREATE POLICY "Creators can delete own projects"
   ON projects FOR DELETE
   USING (auth.uid() = creator_id);
@@ -56,7 +56,7 @@ CREATE POLICY "Creators can delete own projects"
 -- APPLICATIONS POLICIES
 -- ============================================
 
--- Users can view their own applications
+DROP POLICY IF EXISTS "Users can view own applications" ON applications;
 CREATE POLICY "Users can view own applications"
   ON applications FOR SELECT
   USING (applicant_id = auth.uid() OR 
@@ -66,12 +66,12 @@ CREATE POLICY "Users can view own applications"
            AND projects.creator_id = auth.uid()
          ));
 
--- Authenticated users can create applications
+DROP POLICY IF EXISTS "Authenticated users can create applications" ON applications;
 CREATE POLICY "Authenticated users can create applications"
   ON applications FOR INSERT
   WITH CHECK (auth.uid() = applicant_id);
 
--- Project creators can update applications for their projects
+DROP POLICY IF EXISTS "Creators can update applications for their projects" ON applications;
 CREATE POLICY "Creators can update applications for their projects"
   ON applications FOR UPDATE
   USING (
@@ -82,7 +82,7 @@ CREATE POLICY "Creators can update applications for their projects"
     )
   );
 
--- Applicants can cancel their own applications
+DROP POLICY IF EXISTS "Applicants can delete own applications" ON applications;
 CREATE POLICY "Applicants can delete own applications"
   ON applications FOR DELETE
   USING (applicant_id = auth.uid() AND status = 'pending');
@@ -91,13 +91,10 @@ CREATE POLICY "Applicants can delete own applications"
 -- TEAM MEMBERS POLICIES
 -- ============================================
 
--- Team members can view team members for projects they're part of
+DROP POLICY IF EXISTS "Team members can view team" ON team_members;
 CREATE POLICY "Team members can view team"
   ON team_members FOR SELECT
   USING (
-    -- Allow a row if:
-    -- - it's the current user, OR
-    -- - the current user is the creator of the project
     user_id = auth.uid() OR
     EXISTS (
       SELECT 1 FROM projects
@@ -106,7 +103,7 @@ CREATE POLICY "Team members can view team"
     )
   );
 
--- Project creators can add team members
+DROP POLICY IF EXISTS "Creators can add team members" ON team_members;
 CREATE POLICY "Creators can add team members"
   ON team_members FOR INSERT
   WITH CHECK (
@@ -117,7 +114,7 @@ CREATE POLICY "Creators can add team members"
     )
   );
 
--- Project creators can remove team members
+DROP POLICY IF EXISTS "Creators can remove team members" ON team_members;
 CREATE POLICY "Creators can remove team members"
   ON team_members FOR DELETE
   USING (
@@ -128,7 +125,7 @@ CREATE POLICY "Creators can remove team members"
     )
   );
 
--- Users can leave teams themselves
+DROP POLICY IF EXISTS "Users can leave teams" ON team_members;
 CREATE POLICY "Users can leave teams"
   ON team_members FOR DELETE
   USING (user_id = auth.uid());
@@ -137,22 +134,24 @@ CREATE POLICY "Users can leave teams"
 -- NOTIFICATIONS POLICIES
 -- ============================================
 
--- Users can only view their own notifications
+DROP POLICY IF EXISTS "Users can view own notifications" ON notifications;
 CREATE POLICY "Users can view own notifications"
   ON notifications FOR SELECT
   USING (user_id = auth.uid());
 
--- System can create notifications (via triggers)
+-- System can create notifications (via SECURITY DEFINER triggers)
+-- Users can only insert notifications targeting themselves
+DROP POLICY IF EXISTS "System can create notifications" ON notifications;
 CREATE POLICY "System can create notifications"
   ON notifications FOR INSERT
-  WITH CHECK (true);
+  WITH CHECK (user_id = auth.uid());
 
--- Users can update their own notifications
+DROP POLICY IF EXISTS "Users can update own notifications" ON notifications;
 CREATE POLICY "Users can update own notifications"
   ON notifications FOR UPDATE
   USING (user_id = auth.uid());
 
--- Users can delete their own notifications
+DROP POLICY IF EXISTS "Users can delete own notifications" ON notifications;
 CREATE POLICY "Users can delete own notifications"
   ON notifications FOR DELETE
   USING (user_id = auth.uid());
@@ -161,12 +160,24 @@ CREATE POLICY "Users can delete own notifications"
 -- MATCHES POLICIES
 -- ============================================
 
--- Users can view their own matches
+DROP POLICY IF EXISTS "Users can view own matches" ON matches;
 CREATE POLICY "Users can view own matches"
   ON matches FOR SELECT
   USING (user_id = auth.uid());
 
--- System can create matches
+DROP POLICY IF EXISTS "System can create matches" ON matches;
 CREATE POLICY "System can create matches"
   ON matches FOR INSERT
   WITH CHECK (true);
+
+-- Restricted to match owner
+DROP POLICY IF EXISTS "System can update matches" ON matches;
+CREATE POLICY "System can update matches"
+  ON matches FOR UPDATE
+  USING (user_id = auth.uid());
+
+-- Restricted to match owner
+DROP POLICY IF EXISTS "System can delete matches" ON matches;
+CREATE POLICY "System can delete matches"
+  ON matches FOR DELETE
+  USING (user_id = auth.uid());

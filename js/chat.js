@@ -127,9 +127,11 @@ function renderCurrentUser(profile) {
     if (!sidebarUser) return;
 
     const name = escapeHtml(profile.full_name || 'User');
-    const avatarUrl = profile.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.full_name || 'User');
+    const rawAvatarUrl = profile.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.full_name || 'User');
+    const avatarUrl = window.authHelpers.sanitizeUrl(rawAvatarUrl) || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.full_name || 'User');
+    const safeAvatarUrl = window.authHelpers.sanitizeAttr(avatarUrl);
     sidebarUser.innerHTML = `
-        <img src="${avatarUrl}" alt="${name}" class="user-avatar">
+        <img src="${safeAvatarUrl}" alt="${name}" class="user-avatar">
         <div class="user-info">
             <div class="user-name">${name}</div>
             <div class="user-status">Online</div>
@@ -446,7 +448,8 @@ function appendNewMessage(msg, timeStr, isRealtime = false) {
     group.dataset.userId = msg.user_id;
 
     const displayName = isMe ? 'You' : escapeHtml(msg.profile?.full_name || 'Unknown');
-    const avatar = msg.profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.profile?.full_name || 'User')}`;
+    const rawAvatar = msg.profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.profile?.full_name || 'User')}`;
+    const avatar = window.authHelpers.sanitizeUrl(rawAvatar) || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.profile?.full_name || 'User')}`;
     const actionsHtml = isMe
         ? `<div class="msg-actions"><button type="button" class="msg-action edit" data-message-id="${escapeHtml(msg.id)}" aria-label="Edit">Edit</button><button type="button" class="msg-action delete" data-message-id="${escapeHtml(msg.id)}" aria-label="Delete">Delete</button></div>`
         : '';
@@ -628,10 +631,12 @@ async function loadMembers(projectId) {
 
     memberList.innerHTML = result.data.map(m => {
         const name = escapeHtml(m.profile?.full_name || 'Member');
-        const avatarUrl = m.profile?.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.profile?.full_name || 'Member');
+        const rawAvatarUrl = m.profile?.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.profile?.full_name || 'Member');
+        const avatarUrl = window.authHelpers.sanitizeUrl(rawAvatarUrl) || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.profile?.full_name || 'Member');
+        const safeAvatarUrl = window.authHelpers.sanitizeAttr(avatarUrl);
         return `
         <div class="member-item">
-            <img src="${avatarUrl}" alt="" class="member-avatar">
+            <img src="${safeAvatarUrl}" alt="" class="member-avatar">
             <div class="member-info">
                 <div class="member-name">${name}</div>
                 <div class="member-role">${escapeHtml(m.role || 'Member')}</div>

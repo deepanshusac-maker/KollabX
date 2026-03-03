@@ -13,7 +13,7 @@ function ensureSupabase() {
 async function getTeamMembers(projectId) {
   try {
     const supabase = ensureSupabase();
-    
+
     const { data, error } = await supabase
       .from('team_members')
       .select(`
@@ -45,7 +45,7 @@ async function getUserTeams(userId = null) {
   try {
     const supabase = ensureSupabase();
     const user = userId ? { id: userId } : await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in', data: [] };
     }
@@ -84,7 +84,7 @@ async function removeTeamMember(projectId, userIdToRemove) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -114,16 +114,15 @@ async function removeTeamMember(projectId, userIdToRemove) {
 
     if (error) throw error;
 
-    // Create notification for removed member
-    await supabase
-      .from('notifications')
-      .insert({
-        user_id: userIdToRemove,
-        type: 'team_member_removed',
-        title: 'Removed from Team',
-        message: `You have been removed from the project "${project.title}".`,
-        link: '/dashboard.html?tab=teams'
-      });
+    // Create notification for removed member via secure RPC
+    await supabase.rpc('send_notification', {
+      p_target_user_id: userIdToRemove,
+      p_type: 'team_member_removed',
+      p_title: 'Removed from Team',
+      p_message: `You have been removed from the project "${project.title}".`,
+      p_link: '/dashboard.html?tab=teams',
+      p_project_id: projectId
+    });
 
     return { success: true };
   } catch (error) {
@@ -137,7 +136,7 @@ async function leaveTeam(projectId) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -175,17 +174,16 @@ async function leaveTeam(projectId) {
 
     if (error) throw error;
 
-    // Create notification for project creator
+    // Create notification for project creator via secure RPC
     if (project) {
-      await supabase
-        .from('notifications')
-        .insert({
-          user_id: project.creator_id,
-          type: 'team_member_left',
-          title: 'Team Member Left',
-          message: `${user.email?.split('@')[0] || 'A member'} left the project "${project.title}".`,
-          link: `/dashboard.html?tab=teams`
-        });
+      await supabase.rpc('send_notification', {
+        p_target_user_id: project.creator_id,
+        p_type: 'team_member_left',
+        p_title: 'Team Member Left',
+        p_message: `${user.email?.split('@')[0] || 'A member'} left the project "${project.title}".`,
+        p_link: '/dashboard.html?tab=teams',
+        p_project_id: projectId
+      });
     }
 
     return { success: true };
@@ -200,7 +198,7 @@ async function isTeamMember(projectId, userId = null) {
   try {
     const supabase = ensureSupabase();
     const user = userId ? { id: userId } : await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return false;
     }
@@ -223,7 +221,7 @@ async function isProjectCreator(projectId) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return false;
     }

@@ -236,3 +236,59 @@ DROP TRIGGER IF EXISTS on_application_accepted ON applications;
 CREATE TRIGGER on_application_accepted
   AFTER UPDATE ON applications
   FOR EACH ROW EXECUTE FUNCTION notify_application_accepted();
+
+-- Secure RPC: Send a notification to another user.
+-- Validates that the caller has a legitimate relationship to the target:
+--   - caller is the project creator (can notify applicants/team members), OR
+--   - caller is a team member (can notify the project creator)
+-- This replaces direct INSERT to notifications from client-side JS.
+CREATE OR REPLACE FUNCTION public.send_notification(
+  p_target_user_id UUID,
+  p_type TEXT,
+  p_title TEXT,
+  p_message TEXT,
+  p_link TEXT DEFAULT NULL,
+  p_project_id UUID DEFAULT NULL
+)
+RETURNS UUID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  is_authorized BOOLEAN := FALSE;
+  notif_id UUID;
+BEGIN
+  -- Allow sending to yourself
+  IF p_target_user_id = auth.uid() THEN
+    is_authorized := TRUE;
+  END IF;
+
+  -- If a project_id is given, check project relationship
+  IF NOT is_authorized AND p_project_id IS NOT NULL THEN
+    -- Is the caller the creator of the project? (can notify team members/applicants)
+    SELECT EXISTS (
+      SELECT 1 FROM projects
+      WHERE id = p_project_id AND creator_id = auth.uid()
+    ) INTO is_authorized;
+
+    -- Or is the caller a team member? (can notify the project creator)
+    IF NOT is_authorized THEN
+      SELECT EXISTS (
+        SELECT 1 FROM team_members
+        WHERE project_id = p_project_id AND user_id = auth.uid()
+      ) INTO is_authorized;
+    END IF;
+  END IF;
+
+  IF NOT is_authorized THEN
+    RAISE EXCEPTION 'Not authorized to send notification to this user';
+  END IF;
+
+  INSERT INTO notifications (user_id, type, title, message, link)
+  VALUES (p_target_user_id, p_type, p_title, p_message, p_link)
+  RETURNING id INTO notif_id;
+
+  RETURN notif_id;
+END;
+$$;

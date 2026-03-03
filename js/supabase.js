@@ -68,12 +68,12 @@ const getCurrentProfile = async () => {
       .select('*')
       .eq('id', user.id)
       .single();
-    
+
     if (error) {
       console.error('Error fetching profile:', error);
       return null;
     }
-    
+
     return data;
   } catch (error) {
     console.error('Error getting profile:', error);
@@ -81,10 +81,36 @@ const getCurrentProfile = async () => {
   }
 };
 
+// Sanitize a URL to prevent XSS when interpolated into innerHTML.
+// Returns the sanitized href or null if invalid / non-http(s).
+function sanitizeUrl(url) {
+  if (!url || typeof url !== 'string') return null;
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return null;
+    return parsed.href;
+  } catch {
+    return null;
+  }
+}
+
+// Escape a string for safe use inside an HTML attribute value.
+// Prevents breaking out of src="..." or alt="..." contexts.
+function sanitizeAttr(str) {
+  if (!str) return '';
+  return str.replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 // Export functions for use in other files
 window.authHelpers = {
   isAuthenticated,
   getCurrentUser,
   getCurrentProfile,
+  sanitizeUrl,
+  sanitizeAttr,
   supabase: supabaseClient
 };

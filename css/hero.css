@@ -1,25 +1,31 @@
-/* Hero Section - Mesh Minimalist */
+/* Hero Section - Video Background */
 .hero {
     position: relative;
     min-height: 100vh;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(-1 * (100vw - 100%) / 2);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background: url('../assets/images/mesh-gradient.png') no-repeat center center/cover;
-    background-size: cover;
+    background: #f0ede8;
     color: var(--text-main);
     text-align: center;
     padding-top: 80px;
 }
 
-/* Canvas Background - Hidden for Mesh Theme */
-#smokeCanvas {
-    display: none;
+/* Fullscreen Video Background */
+.hero-video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
 }
 
 /* Hero Content Wrapper - Transparent (Glass Removed) */
@@ -342,7 +348,7 @@
     }
 
     .card {
-        padding: 0.35rem 1rem;
+        padding: 0.35rem 0.75rem;
         border-radius: 1rem;
     }
 

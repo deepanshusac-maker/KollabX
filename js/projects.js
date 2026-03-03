@@ -14,7 +14,7 @@ async function createProject(projectData) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in to create a project' };
     }
@@ -23,7 +23,7 @@ async function createProject(projectData) {
     const skillsArray = projectData.requiredSkills
       ? projectData.requiredSkills.split(',').map(s => s.trim()).filter(s => s.length > 0)
       : [];
-    
+
     const rolesArray = projectData.rolesNeeded
       ? projectData.rolesNeeded.split(',').map(r => r.trim()).filter(r => r.length > 0)
       : [];
@@ -107,7 +107,7 @@ async function getAllProjects(filters = {}) {
     if (filters.skills && filters.skills.length > 0) {
       // Filter projects that contain any of the specified skills
       // Build OR conditions for each skill (case-insensitive)
-      const skillConditions = filters.skills.map(skill => 
+      const skillConditions = filters.skills.map(skill =>
         `required_skills.cs.{${skill}}`
       ).join(',');
       if (skillConditions) {
@@ -200,7 +200,7 @@ async function updateProject(projectId, updates) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -258,7 +258,7 @@ async function deleteProject(projectId) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -292,7 +292,7 @@ async function deleteProject(projectId) {
 async function calculateMatchScore(userId, projectId) {
   try {
     const supabase = ensureSupabase();
-    
+
     // Get user profile
     const { data: profile } = await supabase
       .from('profiles')
@@ -319,8 +319,8 @@ async function calculateMatchScore(userId, projectId) {
     }
 
     // Calculate match percentage
-    const matchingSkills = userSkills.filter(skill => 
-      requiredSkills.some(req => 
+    const matchingSkills = userSkills.filter(skill =>
+      requiredSkills.some(req =>
         req.toLowerCase().includes(skill.toLowerCase()) ||
         skill.toLowerCase().includes(req.toLowerCase())
       )
@@ -338,7 +338,7 @@ async function calculateMatchScore(userId, projectId) {
 async function updateUserMatchScores(userId) {
   try {
     const supabase = ensureSupabase();
-    
+
     if (!userId) {
       return { success: false, error: 'User ID required' };
     }
@@ -374,13 +374,13 @@ async function updateUserMatchScores(userId) {
     // Calculate match scores for each project
     for (const project of projects) {
       const requiredSkills = project.required_skills || [];
-      
+
       let matchScore = 0;
       if (requiredSkills.length === 0) {
         matchScore = 50; // Default match if no skills required
       } else {
-        const matchingSkills = userSkills.filter(skill => 
-          requiredSkills.some(req => 
+        const matchingSkills = userSkills.filter(skill =>
+          requiredSkills.some(req =>
             req.toLowerCase().includes(skill.toLowerCase()) ||
             skill.toLowerCase().includes(req.toLowerCase())
           )
@@ -389,8 +389,8 @@ async function updateUserMatchScores(userId) {
         matchScore = Math.min(matchScore, 100);
       }
 
-      // Only store matches with score >= 30 (filter out very low matches)
-      if (matchScore >= 30) {
+      // Only store matches with score >= 10 (filter out very low matches)
+      if (matchScore >= 10) {
         matchesToInsert.push({
           user_id: userId,
           project_id: project.id,
@@ -424,7 +424,7 @@ async function updateUserMatchScores(userId) {
 async function getRecommendedProjects(userId, limit = 6) {
   try {
     const supabase = ensureSupabase();
-    
+
     if (!userId) {
       return { success: false, error: 'User ID required', data: [] };
     }
@@ -434,7 +434,7 @@ async function getRecommendedProjects(userId, limit = 6) {
       .from('matches')
       .select(`
         match_score,
-        project:projects!matches_project_id_fkey(
+        project:projects(
           id,
           title,
           category,
@@ -445,7 +445,7 @@ async function getRecommendedProjects(userId, limit = 6) {
           status,
           created_at,
           creator_id,
-          creator:profiles!projects_creator_id_fkey(full_name, avatar_url)
+          creator:profiles(full_name, avatar_url)
         )
       `)
       .eq('user_id', userId)
@@ -459,9 +459,9 @@ async function getRecommendedProjects(userId, limit = 6) {
     }
 
     // Filter out projects that are closed or user's own projects
-    const filteredMatches = matches.filter(match => 
-      match.project && 
-      match.project.status === 'open' && 
+    const filteredMatches = matches.filter(match =>
+      match.project &&
+      match.project.status === 'open' &&
       match.project.creator_id !== userId
     );
 
@@ -482,7 +482,7 @@ async function getRecommendedProjects(userId, limit = 6) {
 async function updateMatchScoresForNewProject(projectId) {
   try {
     const supabase = ensureSupabase();
-    
+
     // Get all users with profiles
     const { data: profiles, error: profilesError } = await supabase
       .from('profiles')
@@ -518,8 +518,8 @@ async function updateMatchScoresForNewProject(projectId) {
       if (requiredSkills.length === 0) {
         matchScore = 50; // Default match if no skills required
       } else {
-        const matchingSkills = userSkills.filter(skill => 
-          requiredSkills.some(req => 
+        const matchingSkills = userSkills.filter(skill =>
+          requiredSkills.some(req =>
             req.toLowerCase().includes(skill.toLowerCase()) ||
             skill.toLowerCase().includes(req.toLowerCase())
           )
@@ -528,8 +528,8 @@ async function updateMatchScoresForNewProject(projectId) {
         matchScore = Math.min(matchScore, 100);
       }
 
-      // Only store matches with score >= 30
-      if (matchScore >= 30) {
+      // Only store matches with score >= 10
+      if (matchScore >= 10) {
         matchesToInsert.push({
           user_id: profile.id,
           project_id: projectId,

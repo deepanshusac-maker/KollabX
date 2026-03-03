@@ -14,7 +14,7 @@ async function applyToProject(projectId, applicationData) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in to apply to projects' };
     }
@@ -120,7 +120,7 @@ async function getProjectApplications(projectId) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -167,7 +167,7 @@ async function getUserApplications(userId = null) {
   try {
     const supabase = ensureSupabase();
     const user = userId ? { id: userId } : await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -205,7 +205,7 @@ async function acceptApplication(applicationId) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -264,7 +264,7 @@ async function rejectApplication(applicationId) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -301,16 +301,15 @@ async function rejectApplication(applicationId) {
 
     if (error) throw error;
 
-    // Create notification for applicant
-    await supabase
-      .from('notifications')
-      .insert({
-        user_id: application.applicant_id,
-        type: 'application_rejected',
-        title: 'Application Rejected',
-        message: `Your application to "${application.project.title}" was not accepted.`,
-        link: '/dashboard.html?tab=applications'
-      });
+    // Create notification for applicant via secure RPC
+    await supabase.rpc('send_notification', {
+      p_target_user_id: application.applicant_id,
+      p_type: 'application_rejected',
+      p_title: 'Application Rejected',
+      p_message: `Your application to "${application.project.title}" was not accepted.`,
+      p_link: '/dashboard.html?tab=applications',
+      p_project_id: application.project_id
+    });
 
     return { success: true, data };
   } catch (error) {
@@ -324,7 +323,7 @@ async function cancelApplication(applicationId) {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in' };
     }
@@ -368,7 +367,7 @@ async function getIncomingApplications() {
   try {
     const supabase = ensureSupabase();
     const user = await window.authHelpers.getCurrentUser();
-    
+
     if (!user) {
       return { success: false, error: 'You must be logged in', data: [] };
     }

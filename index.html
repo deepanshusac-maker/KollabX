@@ -52,7 +52,9 @@
     </nav>
     <main>
         <section class="hero">
-            <canvas id="smokeCanvas"></canvas>
+            <video class="hero-video-bg" autoplay muted loop playsinline>
+                <source src="assets/animations/Untitled design (1).mp4" type="video/mp4">
+            </video>
 
             <div class="hero-content">
                 <p class="tagline">A student-only platform to form reliable teams fast</p>
@@ -431,6 +433,12 @@
                     getStartedBtn.href = 'post.html';
                     getStartedBtn.textContent = 'Post a Project';
                 }
+            }
+
+            // Show sign-in success toast (set during signin redirect)
+            if (sessionStorage.getItem('signin_success') === 'true') {
+                sessionStorage.removeItem('signin_success');
+                window.toast.success('Signed in successfully!');
             }
 
             // Show reminder if profile is incomplete (set during sign-in)

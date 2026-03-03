@@ -77,15 +77,21 @@
         <!-- Stats Grid -->
         <div class="stats-grid">
             <div class="glass-card stat-card">
-                <span class="stat-value">—</span>
+                <span class="stat-value">
+                    <div class="skeleton" style="width: 30px; height: 40px; border-radius: 8px;"></div>
+                </span>
                 <span class="stat-label">Active Teams</span>
             </div>
             <div class="glass-card stat-card">
-                <span class="stat-value">0</span>
+                <span class="stat-value">
+                    <div class="skeleton" style="width: 30px; height: 40px; border-radius: 8px;"></div>
+                </span>
                 <span class="stat-label">Incoming Requests</span>
             </div>
             <div class="glass-card stat-card">
-                <span class="stat-value">0</span>
+                <span class="stat-value">
+                    <div class="skeleton" style="width: 30px; height: 40px; border-radius: 8px;"></div>
+                </span>
                 <span class="stat-label">My Applications</span>
             </div>
         </div>
@@ -101,8 +107,10 @@
                     <h2>Recommended for You</h2>
                     <p>Discover projects tailored to your specific skill set and interests.</p>
                     <div id="recommended-projects-container" class="recommended-projects-container">
-                        <div class="empty-state">
-                            <span class="sub-text">Calculating recommendations...</span>
+                        <div class="recommended-project-item">
+                            <div class="skeleton skeleton-title" style="width: 200px;"></div>
+                            <div class="skeleton skeleton-text" style="width: 120px; height: 14px;"></div>
+                            <div class="skeleton skeleton-text" style="height: 40px; margin-top: 1rem;"></div>
                         </div>
                     </div>
                 </div>
@@ -327,6 +335,9 @@
                     }
                     statValues.forEach(stat => {
                         stat.style.opacity = '1';
+                        // Clean up any skeleton children if they exist
+                        const skeleton = stat.querySelector('.skeleton');
+                        if (skeleton) skeleton.remove();
                     });
                 }
 
@@ -647,11 +658,10 @@
                 if (!lastUpdate || (now - parseInt(lastUpdate)) > fiveMinutes) {
                     // Show loading state
                     container.innerHTML = Array(3).fill(0).map(() => `
-                        <div class="project-card-skeleton" style="padding: 1.5rem; margin-bottom: 1rem;">
-                            <div class="skeleton-line long" style="height: 20px; margin-bottom: 0.5rem;"></div>
-                            <div class="skeleton-line medium" style="width: 120px; height: 16px; margin-bottom: 1rem;"></div>
-                            <div class="skeleton-line long" style="height: 14px; margin-bottom: 0.5rem;"></div>
-                            <div class="skeleton-line short" style="width: 80px; height: 24px;"></div>
+                        <div class="recommended-project-item">
+                            <div class="skeleton skeleton-title" style="width: 200px;"></div>
+                            <div class="skeleton skeleton-text" style="width: 120px; height: 14px;"></div>
+                            <div class="skeleton skeleton-text" style="height: 40px; margin-top: 1rem;"></div>
                         </div>
                     `).join('');
 

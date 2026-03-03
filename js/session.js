@@ -123,7 +123,8 @@ async function updateAuthUI(session) {
         // Use first name only and trim length so navbar stays clean
         const firstName = rawName.split(' ')[0] || rawName;
         const displayName = firstName.length > 12 ? firstName.slice(0, 11) + '…' : firstName;
-        const avatarUrl = profile?.avatar_url ? `${profile.avatar_url}?t=${new Date().getTime()}` : null;
+        const rawAvatarUrl = profile?.avatar_url ? `${profile.avatar_url}?t=${new Date().getTime()}` : null;
+        const avatarUrl = window.authHelpers.sanitizeUrl(rawAvatarUrl);
         const userMenu = createUserMenu(displayName, avatarUrl);
         navRight.insertBefore(userMenu, navRight.firstChild);
 
@@ -172,14 +173,25 @@ async function updateAuthUI(session) {
   }
 }
 
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // Create user menu dropdown
 function createUserMenu(userName, avatarUrl) {
   const userMenu = document.createElement('div');
   userMenu.className = 'user-menu';
+  const safeName = escapeHtml(userName || 'User');
+  const initial = (userName || 'U').trim().charAt(0).toUpperCase();
+  const safeInitial = escapeHtml(initial);
+  const safeAvatarUrl = window.authHelpers.sanitizeAttr(avatarUrl || '');
   userMenu.innerHTML = `
     <button class="user-menu-btn" aria-label="User menu" aria-expanded="false">
-      ${avatarUrl ? `<img src="${avatarUrl}" alt="${userName}" class="user-avatar" crossorigin="anonymous">` : `<div class="user-avatar-placeholder">${userName.charAt(0).toUpperCase()}</div>`}
-      <span class="user-name">${userName}</span>
+      ${avatarUrl ? `<img src="${safeAvatarUrl}" alt="${safeName}" class="user-avatar" crossorigin="anonymous">` : `<div class="user-avatar-placeholder">${safeInitial}</div>`}
+      <span class="user-name">${safeName}</span>
       <i data-lucide="chevron-down" class="chevron-icon"></i>
     </button>
     <div class="user-menu-dropdown">

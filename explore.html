@@ -499,22 +499,22 @@
             container.innerHTML = '';
             for (let i = 0; i < count; i++) {
                 const skeleton = document.createElement('div');
-                skeleton.className = 'project-card-skeleton';
+                skeleton.className = 'glass-card project-card skeleton-card-item';
                 skeleton.innerHTML = `
-                    <div class="skeleton-line short" style="width: 80px; height: 24px; margin-bottom: 1rem;"></div>
-                    <div class="skeleton-line long" style="height: 28px; margin-bottom: 0.5rem;"></div>
-                    <div class="skeleton-line medium" style="width: 120px; height: 20px; margin-bottom: 1rem;"></div>
-                    <div class="skeleton-line long" style="height: 16px; margin-bottom: 0.5rem;"></div>
-                    <div class="skeleton-line long" style="height: 16px; margin-bottom: 0.5rem;"></div>
-                    <div class="skeleton-line medium" style="width: 200px; height: 16px; margin-bottom: 1.5rem;"></div>
-                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
-                        <div class="skeleton-line" style="width: 60px; height: 24px;"></div>
-                        <div class="skeleton-line" style="width: 80px; height: 24px;"></div>
-                        <div class="skeleton-line" style="width: 70px; height: 24px;"></div>
+                    <div class="skeleton-line skeleton skeleton-title" style="width: 80%; height: 28px; margin-bottom: 1rem;"></div>
+                    <div class="skeleton-line skeleton skeleton-text" style="width: 40%; height: 20px; margin-bottom: 1.5rem;"></div>
+                    <div class="skeleton-line skeleton skeleton-text" style="width: 100%; height: 60px; margin-bottom: 2rem;"></div>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
+                        <div class="skeleton" style="width: 60px; height: 24px; border-radius: 20px;"></div>
+                        <div class="skeleton" style="width: 80px; height: 24px; border-radius: 20px;"></div>
+                        <div class="skeleton" style="width: 50px; height: 24px; border-radius: 20px;"></div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05);">
-                        <div class="skeleton-line" style="width: 100px; height: 20px;"></div>
-                        <div class="skeleton-line" style="width: 80px; height: 36px;"></div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div class="skeleton skeleton-circle" style="width: 32px; height: 32px;"></div>
+                            <div class="skeleton skeleton-text" style="width: 80px; margin-bottom: 0;"></div>
+                        </div>
+                        <div class="skeleton" style="width: 100px; height: 36px; border-radius: 12px;"></div>
                     </div>
                 `;
                 container.appendChild(skeleton);

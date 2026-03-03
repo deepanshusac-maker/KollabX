@@ -49,6 +49,7 @@ const validators = {
     }
 };
 
+
 // Show error message
 function showError(input, message) {
     const formGroup = input.closest('.form-group') || input.parentElement;
@@ -56,12 +57,13 @@ function showError(input, message) {
 
     if (!errorElement) {
         errorElement = document.createElement('div');
-        errorElement.className = 'error-message';
+        errorElement.className = 'error-message text-xs mt-1 text-red-500';
         formGroup.appendChild(errorElement);
     }
 
     errorElement.textContent = message;
-    input.classList.add('error');
+    input.classList.remove('input-success');
+    input.classList.add('error', 'input-error');
     input.setAttribute('aria-invalid', 'true');
 }
 
@@ -74,14 +76,29 @@ function clearError(input) {
         errorElement.remove();
     }
 
-    input.classList.remove('error');
+    input.classList.remove('error', 'input-error');
     input.removeAttribute('aria-invalid');
+}
+
+// Show success state
+function showSuccessState(input) {
+    input.classList.remove('error', 'input-error');
+    input.classList.add('input-success');
+    input.setAttribute('aria-invalid', 'false');
 }
 
 // Validate single field
 function validateField(input, rules = []) {
     const value = input.value;
     let error = null;
+
+    // Use built-in validation if no custom rules provided but has required/pattern etc.
+    if (rules.length === 0) {
+        if (input.hasAttribute('required')) rules.push(validators.required);
+        if (input.type === 'email') rules.push(validators.email);
+        if (input.type === 'url') rules.push(validators.url);
+        if (input.type === 'number') rules.push(validators.number);
+    }
 
     for (const rule of rules) {
         if (typeof rule === 'function') {
@@ -96,10 +113,81 @@ function validateField(input, rules = []) {
     if (error) {
         showError(input, error);
         return false;
+    } else if (value.trim() !== '') {
+        showSuccessState(input);
+        return true;
     } else {
-        clearError(input);
+        clearError(input); // Just clear if empty but not required/no error
         return true;
     }
+}
+
+// Character counter utility
+function setupCharacterCounters() {
+    const textAreas = document.querySelectorAll('textarea[maxlength], input[maxlength]');
+    textAreas.forEach(field => {
+        const maxLength = field.getAttribute('maxlength');
+        const container = field.closest('.form-group') || field.parentElement;
+
+        // Find or create counter element
+        let counter = container.querySelector('.char-counter');
+        if (!counter) {
+            counter = document.createElement('div');
+            counter.className = 'char-counter';
+            container.appendChild(counter);
+        }
+
+        const updateCounter = () => {
+            const length = field.value.length;
+            counter.innerHTML = `<span>${length}</span>/${maxLength} characters`;
+
+            // Visual feedback categories
+            counter.classList.remove('near-limit', 'over-limit');
+            if (length >= maxLength) {
+                counter.classList.add('over-limit');
+            } else if (length >= maxLength * 0.9) {
+                counter.classList.add('near-limit');
+            }
+        };
+
+        field.addEventListener('input', updateCounter);
+        updateCounter(); // Initial call
+    });
+}
+
+// Global initialization
+window.addEventListener('DOMContentLoaded', () => {
+    setupCharacterCounters();
+});
+
+// Real-time validation on input
+function setupRealTimeValidation(form, fieldRules = {}) {
+    const inputs = form.querySelectorAll('input, textarea, select');
+
+    inputs.forEach(input => {
+        const getRules = () => {
+            const rules = [...(fieldRules[input.id] || fieldRules[input.name] || [])];
+            if (input.hasAttribute('required') && !rules.includes(validators.required)) {
+                rules.unshift(validators.required);
+            }
+            return rules;
+        };
+
+        // Validate on blur
+        input.addEventListener('blur', () => {
+            validateField(input, getRules());
+        });
+
+
+        // Live validation on input (with small delay if typing)
+        let timeout;
+        input.addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                validateField(input, getRules());
+            }, 500);
+        });
+    });
 }
 
 // Validate entire form
@@ -261,33 +349,4 @@ function getUserFriendlyError(error) {
 
     // Return original error if no match
     return error.message || error.toString();
-}
-
-// Real-time validation on input
-function setupRealTimeValidation(form, fieldRules = {}) {
-    const inputs = form.querySelectorAll('input, textarea, select');
-
-    inputs.forEach(input => {
-        // Validate on blur
-        input.addEventListener('blur', () => {
-            const rules = fieldRules[input.id] || fieldRules[input.name] || [];
-            if (input.hasAttribute('required')) {
-                rules.unshift(validators.required);
-            }
-            if (input.type === 'email') {
-                rules.push(validators.email);
-            }
-            if (input.type === 'url') {
-                rules.push(validators.url);
-            }
-            validateField(input, rules);
-        });
-
-        // Clear error on input
-        input.addEventListener('input', () => {
-            if (input.classList.contains('error')) {
-                clearError(input);
-            }
-        });
-    });
 }

@@ -143,9 +143,6 @@
                         <textarea id="bio" class="form-control"
                             placeholder="Robotics enthusiast | Love building AI projects..." required
                             maxlength="500"></textarea>
-                        <div class="char-counter">
-                            <span id="bio-char-count">0</span>/500 characters
-                        </div>
                     </div>
                 </div>
 
@@ -517,17 +514,6 @@
             'bio': [validators.minLength(10)]
         });
 
-        // Character counter for bio
-        const bioField = document.getElementById('bio');
-        const bioCharCount = document.getElementById('bio-char-count');
-        if (bioField && bioCharCount) {
-            bioField.addEventListener('input', () => {
-                bioCharCount.textContent = bioField.value.length;
-                updateProfileProgress();
-            });
-            // Initialize count
-            bioCharCount.textContent = bioField.value.length;
-        }
 
         const skillsField = document.getElementById('skills');
         if (skillsField) {

@@ -97,9 +97,6 @@
                         <textarea id="description" class="form-control"
                             placeholder="Explain your idea, features, goals and what you want to build..." required
                             maxlength="2000"></textarea>
-                        <div class="char-counter">
-                            <span id="description-char-count">0</span>/2000 characters
-                        </div>
                     </div>
                 </div>
 
@@ -188,16 +185,6 @@
             const params = new URLSearchParams(window.location.search);
             const editProjectId = params.get('edit');
 
-            // Character counter for description
-            const descriptionField = document.getElementById('description');
-            const descriptionCharCount = document.getElementById('description-char-count');
-            if (descriptionField && descriptionCharCount) {
-                descriptionField.addEventListener('input', () => {
-                    descriptionCharCount.textContent = descriptionField.value.length;
-                });
-                // Initialize count
-                descriptionCharCount.textContent = descriptionField.value.length;
-            }
 
             // If editing, load the project and prefill the form
             if (editProjectId) {
@@ -225,10 +212,6 @@
                     document.getElementById('timeline').value = project.timeline || '1-week';
                     document.getElementById('visibility').value = project.visibility || 'public';
 
-                    // Update counter after fill
-                    if (descriptionField && descriptionCharCount) {
-                        descriptionCharCount.textContent = descriptionField.value.length;
-                    }
                 } catch (err) {
                     console.error('Edit mode load error:', err);
                     window.toast.error(getUserFriendlyError ? getUserFriendlyError(err) : 'Could not load project.');
