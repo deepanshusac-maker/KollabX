@@ -39,6 +39,14 @@ const validators = {
         }
         return null;
     },
+    minNumber: (min) => (value) => {
+        if (!value) return null;
+        const num = parseFloat(value);
+        if (isNaN(num) || num < min) {
+            return `Must be at least ${min}`;
+        }
+        return null;
+    },
     matchField: (targetId, message) => (value) => {
         if (!value) return null;
         const targetField = document.getElementById(targetId);

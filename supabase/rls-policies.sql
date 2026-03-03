@@ -91,16 +91,27 @@ CREATE POLICY "Applicants can delete own applications"
 -- TEAM MEMBERS POLICIES
 -- ============================================
 
+-- Helper function to check team membership (bypasses RLS to avoid circular reference)
+DROP FUNCTION IF EXISTS is_team_member(uuid, uuid);
+CREATE OR REPLACE FUNCTION is_team_member(p_project_id uuid, p_user_id uuid)
+RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER
+STABLE
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM team_members
+    WHERE project_id = p_project_id
+    AND user_id = p_user_id
+  );
+$$;
+
 DROP POLICY IF EXISTS "Team members can view team" ON team_members;
 CREATE POLICY "Team members can view team"
   ON team_members FOR SELECT
   USING (
     user_id = auth.uid() OR
-    EXISTS (
-      SELECT 1 FROM projects
-      WHERE projects.id = team_members.project_id
-      AND projects.creator_id = auth.uid()
-    )
+    is_team_member(project_id, auth.uid())
   );
 
 DROP POLICY IF EXISTS "Creators can add team members" ON team_members;

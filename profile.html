@@ -16,10 +16,10 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
-<body>
+<body class="auth-loading-state">
     <nav class="navbar">
         <a href="index.html" class="navbar-brand">
-            <img src="images/logo.png" alt="KollabX Logo" class="navbar-logo">
+            <img src="assets/images/logo11.png" alt="KollabX Logo" class="navbar-logo">
             <h1>KollabX</h1>
         </a>
         <div class="mobile-overlay"></div>
@@ -30,8 +30,7 @@
             </li>
             <li class="nav-item-auth-only" style="display: none;"><a href="dashboard.html"
                     class="nav-item">Dashboard</a></li>
-            <li class="nav-item-auth-only" style="display: none;"><a href="profile.html"
-                    class="nav-item active">Profile</a></li>
+
             <div class="nav-indicator"></div>
         </ul>
         <div class="nav-right">
@@ -90,21 +89,24 @@
                     <div class="onboarding-progress-fill"></div>
                 </div>
                 <div class="onboarding-steps">
-                    <div class="onboarding-step" data-onboarding-step="1">
+                    <div class="onboarding-step" data-onboarding-step="1" style="cursor: pointer;"
+                        onclick="document.getElementById('skills-section').scrollIntoView({behavior: 'smooth', block: 'center'});document.getElementById('skills').focus();">
                         <div class="onboarding-step-index">1</div>
                         <div class="onboarding-step-body">
                             <div class="onboarding-step-title">Add skills</div>
                             <div class="onboarding-step-subtitle">What can you actually ship?</div>
                         </div>
                     </div>
-                    <div class="onboarding-step" data-onboarding-step="2">
+                    <div class="onboarding-step" data-onboarding-step="2" style="cursor: pointer;"
+                        onclick="document.getElementById('bio-section').scrollIntoView({behavior: 'smooth', block: 'center'});document.getElementById('bio').focus();">
                         <div class="onboarding-step-index">2</div>
                         <div class="onboarding-step-body">
                             <div class="onboarding-step-title">Add bio</div>
                             <div class="onboarding-step-subtitle">Help captains understand how you think.</div>
                         </div>
                     </div>
-                    <div class="onboarding-step" data-onboarding-step="3">
+                    <div class="onboarding-step" data-onboarding-step="3" style="cursor: pointer;"
+                        onclick="window.location.href='explore.html';">
                         <div class="onboarding-step-index">3</div>
                         <div class="onboarding-step-body">
                             <div class="onboarding-step-title">Explore projects</div>
@@ -124,7 +126,7 @@
 
             <form class="profile-card">
                 <!-- Basic Information -->
-                <div class="form-section">
+                <div class="form-section" id="bio-section">
                     <h3>Basic Information</h3>
                     <div class="form-group-row">
                         <div class="form-group">
@@ -147,7 +149,7 @@
                 </div>
 
                 <!-- Skills -->
-                <div class="form-section">
+                <div class="form-section" id="skills-section">
                     <h3>Skills (for matching)</h3>
                     <div class="form-group">
                         <input type="text" id="skills" class="form-control"
