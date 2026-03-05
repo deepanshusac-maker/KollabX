@@ -35,11 +35,18 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.400.0"></script>
 
-    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js" integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
     <script>
-      if (window.Sentry) {
-        Sentry.init({ dsn: "YOUR_DSN_HERE" });
-      }
+        // Sentry initialization - only if a real DSN is provided
+        const SENTRY_DSN = "YOUR_DSN_HERE";
+        if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
+            const script = document.createElement('script');
+            script.src = "https://browser.sentry-cdn.com/7.114.0/bundle.min.js";
+            script.crossOrigin = "anonymous";
+            script.onload = () => {
+                Sentry.init({ dsn: SENTRY_DSN });
+            };
+            document.head.appendChild(script);
+        }
     </script>
     <!-- Simple Analytics Placeholder -->
     <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
@@ -162,9 +169,6 @@
                     <div id="incoming-applications-container" class="applications-container">
                         <div class="empty-state">
                             <span class="sub-text">No one has requested to join your projects yet.</span>
-                            <a href="post.html" class="btn-post-project"
-                                style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Post
-                                a Project</a>
                         </div>
                     </div>
                 </div>
@@ -502,7 +506,6 @@
                     container.innerHTML = `
                         <div class="empty-state">
                             <span class="sub-text">No one has requested to join your projects yet.</span>
-                            <a href="post.html" class="btn-post-project" style="margin-top: 1rem; display: inline-block; padding: 0.6rem 1.5rem; background: var(--primary-color); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Post a Project</a>
                         </div>
                     `;
                     return;

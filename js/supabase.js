@@ -47,11 +47,19 @@ const getCurrentUser = async () => {
   try {
     const client = getSupabase();
     if (!client) return null;
+
+    // Use getSession first to avoid console noise if no session exists
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) return null;
+
     const { data: { user }, error } = await client.auth.getUser();
     if (error) throw error;
     return user;
   } catch (error) {
-    console.error('Error getting current user:', error);
+    // Only log if it's not a simple missing session
+    if (error.name !== 'AuthSessionMissingError') {
+      console.error('Error getting current user:', error);
+    }
     return null;
   }
 };

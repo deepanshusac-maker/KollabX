@@ -22,13 +22,13 @@
   --border-light: rgba(0, 0, 0, 0.04);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.05);
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
   --radius-full: 9999px;
-  --sidebar-width: 280px;
-  --header-height: 72px;
-  --transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --sidebar-width: 300px;
+  --header-height: 80px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --maroon-grad: linear-gradient(135deg, #EFA7A7 0%, #b3526a 100%);
   --green: #10b981;
   --amber: #F59E0B;
@@ -66,10 +66,8 @@ body {
   height: 100vh;
   width: 100%;
   background-color: var(--bg);
-  /* Main background color */
-  padding: 1rem;
-  /* Add padding for floating effect */
-  gap: 1rem;
+  padding: 1.5rem;
+  gap: 1.5rem;
 }
 
 /* ============================================
@@ -78,74 +76,66 @@ body {
 .sidebar {
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
-  background: var(--surface);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 2rem);
-  /* account for layout padding */
+  height: calc(100vh - 3rem);
   z-index: 10;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
 }
 
 /* -- Brand Header -- */
 .sidebar-brand {
-  padding: 24px 20px 16px;
-  border-bottom: 1px solid var(--border-light);
+  padding: 32px 24px 20px;
   flex-shrink: 0;
 }
 
-.sidebar-brand h1 {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: -0.04em;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.sidebar-brand .sidebar-brand-link {
+  transition: opacity 0.2s ease;
 }
 
-.sidebar-brand h1 .logo-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--maroon-grad);
-  border-radius: 8px;
+.sidebar-brand .sidebar-brand-link:hover {
+  opacity: 0.8;
+}
+
+.sidebar-brand h1 {
+  font-size: 1.6rem;
+  font-weight: 850;
+  color: var(--text-primary);
+  letter-spacing: -0.05em;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 700;
-  font-size: 0.85rem;
-  box-shadow: 0 4px 10px rgba(179, 82, 106, 0.3);
+  gap: 12px;
 }
 
 .sidebar-brand .brand-sub {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-secondary);
-  margin-top: 4px;
-  font-weight: 500;
+  margin-top: 6px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.7;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
 }
 
 /* -- Team Selector -- */
 .team-selector {
-  padding: 12px 14px;
+  padding: 8px 16px 16px;
   flex-shrink: 0;
 }
 
 .team-select-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  padding: 12px;
-  background: var(--surface-glass);
-  border: 1px solid var(--border);
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition);
@@ -301,7 +291,7 @@ body {
 .channel-item:hover {
   background: var(--primary-bg);
   color: var(--primary);
-  padding-left: 18px;
+  transform: translateX(4px);
 }
 
 .channel-item.active {
@@ -467,14 +457,14 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 2rem);
+  height: calc(100vh - 3rem);
   min-width: 0;
-  background: var(--surface);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
 
@@ -482,12 +472,12 @@ body {
 .chat-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 24px;
+  gap: 16px;
+  padding: 0 32px;
   height: var(--header-height);
   min-height: var(--header-height);
-  background: rgba(255, 255, 255, 0.4);
-  border-bottom: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
 }
 
@@ -526,8 +516,9 @@ body {
 }
 
 .chat-header-channel .channel-name .hash-lg {
-  color: var(--text-muted);
-  font-weight: 700;
+  color: var(--primary);
+  font-weight: 800;
+  opacity: 0.8;
 }
 
 .chat-header-channel .channel-desc {
@@ -719,13 +710,15 @@ body {
   background: white;
   color: var(--text-primary);
   border-bottom-left-radius: 4px;
-  border: 1px solid var(--border-light);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
 .message-group.me .msg-text {
   background: var(--maroon-grad);
   color: white;
   border-bottom-right-radius: 4px;
+  box-shadow: 0 8px 16px rgba(179, 82, 106, 0.15);
 }
 
 .msg-text+.msg-text {
@@ -890,12 +883,12 @@ body {
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 8px 8px 8px 8px;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
   transition: all var(--transition);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
 }
 
 .chat-input-wrapper:focus-within {
@@ -1026,6 +1019,8 @@ body {
 @media (max-width: 768px) {
   .chat-layout {
     position: relative;
+    padding: 0.75rem;
+    gap: 0.75rem;
   }
 
   .sidebar {
@@ -1099,25 +1094,27 @@ body {
 .add-channel-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  margin-top: 4px;
-  border-radius: var(--radius-md);
-  border: 1px dashed var(--border);
+  gap: 10px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  border-radius: var(--radius-sm);
+  border: 1.5px dashed rgba(0, 0, 0, 0.1);
   background: transparent;
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   transition: all var(--transition);
   width: 100%;
-  text-align: left;
 }
 
 .add-channel-btn:hover {
   border-color: var(--primary);
   color: var(--primary);
-  background: var(--primary-bg);
+  background: white;
+  border-style: solid;
+  transform: translateY(-1px);
 }
 
 .add-channel-btn .hash {

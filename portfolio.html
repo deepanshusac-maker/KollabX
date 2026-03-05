@@ -84,11 +84,18 @@
     </style>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.400.0"></script>
-    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js" integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
     <script>
-      if (window.Sentry) {
-        Sentry.init({ dsn: "YOUR_DSN_HERE" });
-      }
+        // Sentry initialization - only if a real DSN is provided
+        const SENTRY_DSN = "YOUR_DSN_HERE";
+        if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
+            const script = document.createElement('script');
+            script.src = "https://browser.sentry-cdn.com/7.114.0/bundle.min.js";
+            script.crossOrigin = "anonymous";
+            script.onload = () => {
+                Sentry.init({ dsn: SENTRY_DSN });
+            };
+            document.head.appendChild(script);
+        }
     </script>
     <!-- Simple Analytics Placeholder -->
     <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
@@ -137,9 +144,7 @@
     <header class="portfolio-header" id="portfolioHeader">
         <div class="container-portfolio">
             <div class="header-inner">
-                <div class="header-left" onclick="window.history.back()">
-                    <i data-lucide="arrow-left" size="20"></i>
-                    <span>Back</span>
+                <div class="header-left">
                 </div>
                 <div class="header-right">
                 </div>
@@ -206,8 +211,8 @@
                     </div>
 
                     <div class="chip-group">
-                        <span class="chip-label">Preferred Roles</span>
-                        <div class="chips" id="preferredRolesChips">
+                        <span class="chip-label">Skills</span>
+                        <div class="chips" id="skillsHeroChips">
                             <!-- Chips loaded via JS -->
                         </div>
                     </div>
@@ -217,10 +222,7 @@
                             style="display: none;" title="GitHub Profile"><i data-lucide="github" size="20"></i></a>
                         <a href="#" class="social-icon" id="socialLinkedin" target="_blank" rel="noopener noreferrer"
                             style="display: none;" title="LinkedIn Profile"><i data-lucide="linkedin" size="20"></i></a>
-                        <button class="btn btn-secondary-maroon" style="margin-left: auto;">
-                            <i data-lucide="file-text" size="16"></i>
-                            Resume
-                        </button>
+
                     </div>
                 </div>
             </div>

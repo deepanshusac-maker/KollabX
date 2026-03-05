@@ -39,11 +39,17 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.400.0"></script>
 
-    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js"
-        integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
     <script>
-        if (window.Sentry) {
-            Sentry.init({ dsn: "YOUR_DSN_HERE" });
+        // Sentry initialization - only if a real DSN is provided
+        const SENTRY_DSN = "YOUR_DSN_HERE";
+        if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
+            const script = document.createElement('script');
+            script.src = "https://browser.sentry-cdn.com/7.114.0/bundle.min.js";
+            script.crossOrigin = "anonymous";
+            script.onload = () => {
+                Sentry.init({ dsn: SENTRY_DSN });
+            };
+            document.head.appendChild(script);
         }
     </script>
     <!-- Simple Analytics Placeholder -->
@@ -120,12 +126,13 @@
                         <input type="text" id="skill-filter" placeholder="e.g., React, Python" class="filter-input" />
                     </div>
                     <div class="filter-group">
-                        <label for="commitment-filter" class="filter-label">Commitment</label>
-                        <select id="commitment-filter" class="filter-select">
+                        <label for="timeline-filter" class="filter-label">Timeline</label>
+                        <select id="timeline-filter" class="filter-select">
                             <option value="">Any</option>
-                            <option value="low">Low (1-5 hrs/week)</option>
-                            <option value="medium">Medium (5-10 hrs/week)</option>
-                            <option value="high">High (10+ hrs/week)</option>
+                            <option value="1-week">1 Week</option>
+                            <option value="1-month">1 Month</option>
+                            <option value="3-months">3 Months</option>
+                            <option value="long-term">Long Term</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -280,7 +287,7 @@
             category: 'All',
             search: '',
             skills: [],
-            commitment: '',
+            timeline: '',
             teamSize: '',
             sort: 'latest'
         };
@@ -871,14 +878,14 @@
                             ` : ''}
                         </div>
                         <div class="modal-footer" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            ${isMember ? `
+                    ${isMember ? `
                                 <a href="chat.html?project=${project.id}" class="btn-primary" style="text-decoration: none; flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                                     <i data-lucide="message-square"></i>
                                     Join Group Chat
                                 </a>
                             ` : ''}
-                            
-                            ${!isMember ? (
+
+                    ${!isMember ? (
                         (project.current_members || 0) >= (project.team_size || 1) ? `
                                     <button class="btn-apply-modal btn-team-full" disabled style="flex: 1;">Team Full</button>
                                 ` : user && user.id !== project.creator_id ? `
@@ -889,8 +896,8 @@
                                     <a href="signin.html" class="btn-apply-modal" style="text-decoration: none; display: inline-block; flex: 1; text-align: center;">Sign In to Apply</a>
                                 `
                     ) : ''}
-                        </div>
-                    </div>
+                </div>
+                    </div >
                 `;
 
                 document.body.appendChild(modal);
@@ -912,7 +919,7 @@
                     modal.remove();
                     document.body.style.overflow = '';
                     // Clear hash when closing modal
-                    if (window.location.hash === `#project-${projectId}`) {
+                    if (window.location.hash === `#project - ${projectId} `) {
                         window.history.replaceState(null, '', window.location.pathname);
                     }
                 };
@@ -940,7 +947,7 @@
 
         // Load and display team members
         async function loadTeamMembers(projectId, modal) {
-            const teamListContainer = modal.querySelector(`#team-members-list-${projectId}`);
+            const teamListContainer = modal.querySelector(`#team - members - list - ${projectId} `);
             if (!teamListContainer) return;
 
             try {
@@ -962,11 +969,11 @@
                     const canRemove = isCreator && !isCreatorMember && user && user.id !== member.user_id;
 
                     const avatarDisplay = memberAvatar
-                        ? `<img src="${memberAvatar}" alt="${memberName}" class="team-member-avatar" loading="lazy">`
-                        : `<div class="team-member-avatar-placeholder">${memberName.charAt(0).toUpperCase()}</div>`;
+                        ? `< img src = "${memberAvatar}" alt = "${memberName}" class="team-member-avatar" loading = "lazy" > `
+                        : `< div class="team-member-avatar-placeholder" > ${memberName.charAt(0).toUpperCase()}</div > `;
 
                     return `
-                        <div class="team-member-item" data-user-id="${member.user_id}">
+                < div class="team-member-item" data - user - id="${member.user_id}" >
                             <div class="team-member-info">
                                 ${avatarDisplay}
                                 <div>
@@ -999,8 +1006,8 @@
                                     </button>
                                 ` : ''}
                             </div>
-                        </div>
-                    `;
+                        </div >
+                `;
                 }).join('');
 
                 // Initialize icons
@@ -1016,7 +1023,7 @@
                         const memberItem = btn.closest('.team-member-item');
                         const memberName = memberItem.querySelector('.team-member-name').textContent.trim().replace('Creator', '').trim();
 
-                        if (confirm(`Are you sure you want to remove ${memberName} from the team?`)) {
+                        if (confirm(`Are you sure you want to remove ${memberName} from the team ? `)) {
                             const result = await window.teams.removeTeamMember(projectId, userIdToRemove);
                             if (result.success) {
                                 window.toast.success('Team member removed successfully.');
@@ -1134,7 +1141,7 @@
                 const modal = document.createElement('div');
                 modal.className = 'application-modal';
                 modal.innerHTML = `
-                    <div class="modal-overlay"></div>
+                < div class="modal-overlay" ></div >
                     <div class="modal-content application-modal-content">
                         <button class="modal-close" aria-label="Close modal">
                             <i data-lucide="x"></i>
@@ -1183,9 +1190,9 @@
                                     <i data-lucide="message-square" style="width:16px;height:16px;vertical-align:-2px"></i>
                                     Why do you want to join? <span class="required-star">*</span>
                                 </label>
-                                <textarea 
-                                    id="application-message" 
-                                    class="form-control" 
+                                <textarea
+                                    id="application-message"
+                                    class="form-control"
                                     placeholder="Share your interest in the project, relevant experience, and what you can bring to the team..."
                                     required
                                     rows="5"
@@ -1331,7 +1338,7 @@
         // Filter event handlers
         const searchInput = document.getElementById('search-input');
         const skillFilter = document.getElementById('skill-filter');
-        const commitmentFilter = document.getElementById('commitment-filter');
+        const timelineFilter = document.getElementById('timeline-filter');
         const teamSizeFilter = document.getElementById('team-size-filter');
         let searchTimeout;
         searchInput.addEventListener('input', (e) => {
@@ -1368,10 +1375,10 @@
             });
         }
 
-        // Commitment filter
-        if (commitmentFilter) {
-            commitmentFilter.addEventListener('change', (e) => {
-                currentFilters.commitment = e.target.value;
+        // Timeline filter
+        if (timelineFilter) {
+            timelineFilter.addEventListener('change', (e) => {
+                currentFilters.timeline = e.target.value;
                 loadProjects();
             });
         }
@@ -1399,13 +1406,13 @@
                     category: 'All',
                     search: '',
                     skills: [],
-                    commitment: '',
+                    timeline: '',
                     teamSize: '',
                     sort: 'latest'
                 };
                 document.getElementById('search-input').value = '';
                 if (skillFilter) skillFilter.value = '';
-                if (commitmentFilter) commitmentFilter.value = '';
+                if (timelineFilter) timelineFilter.value = '';
                 if (teamSizeFilter) teamSizeFilter.value = '';
                 document.querySelectorAll('.category-chips .chip').forEach(c => c.classList.remove('active'));
                 document.querySelector('.category-chips .chip[data-category="All"]')?.classList.add('active');

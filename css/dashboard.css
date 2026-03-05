@@ -1,6 +1,6 @@
 /* Dashboard Page Styles */
 .dashboard-container {
-    padding: 120px 8% 80px;
+    padding: 140px 8% 10px;
     background: #ECF4E5;
     min-height: 100vh;
     animation: fadeIn 0.8s ease-out;
@@ -49,7 +49,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     color: #000000;
 }
 
@@ -174,8 +174,8 @@
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-bottom: 3rem;
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
 }
 
 .stat-card {
@@ -183,7 +183,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2.5rem;
+    padding: 2rem;
     text-align: center;
     color: #111827;
     background: rgba(255, 255, 255, 0.4);
@@ -208,7 +208,7 @@
 .content-grid {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 
@@ -217,8 +217,8 @@
 .horizontal-card {
     display: flex;
     align-items: center;
-    gap: 3rem;
-    padding: 2.5rem 4rem;
+    gap: 2rem;
+    padding: 2.5rem 3rem;
     border-radius: 40px;
     background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(10px);
@@ -234,28 +234,6 @@
 .horizontal-card:hover {
     transform: translateY(-8px);
     background: rgba(255, 255, 255, 0.6);
-}
-
-/* Decorative Particles */
-.horizontal-card::before,
-.horizontal-card::after {
-    content: '';
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    opacity: 0.3;
-    background: var(--primary-color);
-}
-
-.horizontal-card::before {
-    top: 20%;
-    left: 15%;
-}
-
-.horizontal-card::after {
-    bottom: 25%;
-    right: 20%;
 }
 
 /* Base Internal Elements */
@@ -341,7 +319,7 @@
 footer {
     background: #f9fafb;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 80px 8% 40px;
+    padding: 20px 8% 20px;
     color: #111827;
 }
 
@@ -349,7 +327,7 @@ footer {
     display: grid;
     grid-template-columns: 1.5fr 2fr 1.5fr;
     gap: 4rem;
-    margin-bottom: 60px;
+    margin-bottom: 20px;
 }
 
 .footer-brand .logo {
@@ -461,7 +439,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
-    padding-top: 30px;
+    padding-top: 15px;
     font-size: 0.9rem;
     opacity: 0.7;
 }

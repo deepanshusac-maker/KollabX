@@ -132,6 +132,24 @@ function updateProfileUI(profile) {
             linkedinLink.style.display = 'none';
         }
     }
+
+    // Populate Hero Chips (Looking to Join & Skills)
+    const lookingForContainer = document.getElementById('lookingForChips');
+    const skillsHeroContainer = document.getElementById('skillsHeroChips');
+
+    if (lookingForContainer) {
+        const interests = profile.interests || [];
+        lookingForContainer.innerHTML = interests.length > 0
+            ? interests.map(i => `<span class="chip">${i}</span>`).join('')
+            : '<span style="color: var(--text-mist); font-size: 14px;">No specific interests listed</span>';
+    }
+
+    if (skillsHeroContainer) {
+        const skills = profile.skills || [];
+        skillsHeroContainer.innerHTML = skills.length > 0
+            ? skills.map(s => `<span class="chip">${s}</span>`).join('')
+            : '<span style="color: var(--text-mist); font-size: 14px;">No skills listed yet</span>';
+    }
 }
 
 /**

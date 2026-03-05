@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS projects (
   team_size INTEGER NOT NULL CHECK (team_size > 0),
   roles_needed TEXT[] DEFAULT '{}',
   timeline TEXT,
+  commitment TEXT,
   visibility TEXT DEFAULT 'public' CHECK (visibility IN ('public', 'private')),
   status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'completed')),
   current_members INTEGER DEFAULT 1 CHECK (current_members >= 0),

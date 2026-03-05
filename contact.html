@@ -254,10 +254,24 @@
 
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@0.400.0"></script>
+
+    <!-- Sentry -->
+    <script>
+        // Sentry initialization - only if a real DSN is provided
+        const SENTRY_DSN = "YOUR_DSN_HERE";
+        if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
+            const script = document.createElement('script');
+            script.src = `https://js.sentry-cdn.com/${SENTRY_DSN}.min.js`;
+            script.crossOrigin = "anonymous";
+            document.head.appendChild(script);
+        }
+    </script>
     <script type="module">
-        import { supabase } from './js/auth.js';
+        // Use the global supabase client initialized in js/supabase.js
+        const supabase = window.supabase;
         lucide.createIcons();
 
         const contactForm = document.getElementById('contact-form');

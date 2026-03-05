@@ -541,7 +541,7 @@ body {
 
 footer {
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
     background-color: #f9fafb;
     color: var(--text-mist);
     border-top: 1px solid var(--glass-stroke);

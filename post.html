@@ -16,11 +16,17 @@
     <link rel="stylesheet" href="css/toast.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.400.0"></script>
-    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js"
-        integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
     <script>
-        if (window.Sentry) {
-            Sentry.init({ dsn: "YOUR_DSN_HERE" });
+        // Sentry initialization - only if a real DSN is provided
+        const SENTRY_DSN = "YOUR_DSN_HERE";
+        if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
+            const script = document.createElement('script');
+            script.src = "https://browser.sentry-cdn.com/7.114.0/bundle.min.js";
+            script.crossOrigin = "anonymous";
+            script.onload = () => {
+                Sentry.init({ dsn: SENTRY_DSN });
+            };
+            document.head.appendChild(script);
         }
     </script>
     <!-- Simple Analytics Placeholder -->
@@ -306,11 +312,11 @@
                         title: document.getElementById('project-title').value.trim(),
                         category: document.getElementById('category').value,
                         description: document.getElementById('description').value.trim(),
-                        requiredSkills: document.getElementById('required-skills').value,
+                        requiredSkills: document.getElementById('required-skills').value.trim(),
                         teamSize: document.getElementById('team-size').value,
-                        rolesNeeded: document.getElementById('roles-needed').value || '',
-                        timeline: document.getElementById('timeline').value || null,
-                        visibility: document.getElementById('visibility').value || 'public'
+                        rolesNeeded: document.getElementById('roles-needed').value.trim(),
+                        timeline: document.getElementById('timeline').value,
+                        visibility: document.getElementById('visibility').value
                     };
 
                     // Create/update project in database

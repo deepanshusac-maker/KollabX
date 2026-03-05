@@ -34,7 +34,6 @@ async function createProject(projectData) {
       category: projectData.category,
       description: projectData.description,
       required_skills: skillsArray,
-      team_size: parseInt(projectData.teamSize) || 1,
       roles_needed: rolesArray,
       timeline: projectData.timeline || null,
       visibility: projectData.visibility || 'public',
@@ -92,8 +91,7 @@ async function getAllProjects(filters = {}) {
         creator:profiles!projects_creator_id_fkey(full_name, avatar_url)
       `)
       .eq('visibility', 'public')
-      .eq('status', 'open')
-      .order('created_at', { ascending: false });
+      .eq('status', 'open');
 
     // Apply filters
     if (filters.category && filters.category !== 'All') {
@@ -139,8 +137,10 @@ async function getAllProjects(filters = {}) {
       }
     }
 
-    // Note: Commitment filter would require a commitment field in the projects table
-    // For now, we'll skip it or add it later if needed
+    // Filter by timeline
+    if (filters.timeline) {
+      query = query.eq('timeline', filters.timeline);
+    }
 
     // Apply sorting
     if (filters.sort === 'oldest') {
@@ -148,6 +148,9 @@ async function getAllProjects(filters = {}) {
     } else if (filters.sort === 'popular') {
       // Sort by current_members descending (more members = more popular)
       query = query.order('current_members', { ascending: false });
+    } else {
+      // Default to latest
+      query = query.order('created_at', { ascending: false });
     }
 
     const { data, error } = await query;

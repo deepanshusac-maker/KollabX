@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <link rel="icon" type="image/png" href="assets/images/favicon.png">
-    <meta property="og:image" content="assets/images/og-image.png">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <meta property="og:image" content="assets/images/og-image.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KollabX — Team Chat</title>
@@ -11,16 +11,25 @@
   <link rel="stylesheet" href="css/global.css" />
   <link rel="stylesheet" href="css/chat.css" />
   <link rel="stylesheet" href="css/toast.css" />
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@0.400.0"></script>
   <!-- Supabase Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js" integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
-    <script>
-      if (window.Sentry) {
-        Sentry.init({ dsn: "YOUR_DSN_HERE" });
-      }
-    </script>
-    <!-- Simple Analytics Placeholder -->
-    <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
+  <script>
+    // Sentry initialization - only if a real DSN is provided
+    const SENTRY_DSN = "YOUR_DSN_HERE";
+    if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
+      const script = document.createElement('script');
+      script.src = "https://browser.sentry-cdn.com/7.114.0/bundle.min.js";
+      script.crossOrigin = "anonymous";
+      script.onload = () => {
+        Sentry.init({ dsn: SENTRY_DSN });
+      };
+      document.head.appendChild(script);
+    }
+  </script>
+  <!-- Simple Analytics Placeholder -->
+  <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
 </head>
 
 <body>

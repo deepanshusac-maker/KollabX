@@ -14,6 +14,8 @@ let currentChannelId = null;
 let currentUser = null;
 let currentProject = null; // full project (includes creator_id) for leader checks
 let chatSubscription = null;
+let presenceSubscription = null;
+let onlineUserIds = new Set();
 const MAX_CHANNELS_PER_PROJECT = 3; // 1 general + 2 created by leader
 
 function waitForSupabase(maxMs) {
@@ -73,6 +75,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         renderNoTeamsState();
     }
+    // Initialize Lucide Icons
+    if (window.lucide) lucide.createIcons();
 });
 
 async function initChat() {
@@ -201,10 +205,8 @@ async function selectProject(project) {
     }
 
     // Load Channels and Members
-    await Promise.all([
-        loadChannels(project.id),
-        loadMembers(project.id)
-    ]);
+    await loadChannels(project.id);
+    await setupPresenceSubscription(project.id);
 }
 
 async function loadChannels(projectId) {
@@ -614,11 +616,37 @@ function setupRealtimeSubscription(channelId) {
 
                 newMessage.profile = profile;
                 const timeStr = new Date(newMessage.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
                 appendNewMessage(newMessage, timeStr, true);
             }
         )
         .subscribe();
+}
+
+async function setupPresenceSubscription(projectId) {
+    if (presenceSubscription) {
+        window.supabase.removeChannel(presenceSubscription);
+    }
+
+    presenceSubscription = window.supabase
+        .channel(`presence:${projectId}`)
+        .on('presence', { event: 'sync' }, () => {
+            const newState = presenceSubscription.presenceState();
+            onlineUserIds.clear();
+            for (const id in newState) {
+                newState[id].forEach(p => {
+                    if (p.user_id) onlineUserIds.add(p.user_id);
+                });
+            }
+            loadMembers(projectId); // Re-render with online status
+        })
+        .subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+                await presenceSubscription.track({
+                    user_id: currentUser.id,
+                    online_at: new Date().toISOString(),
+                });
+            }
+        });
 }
 
 async function loadMembers(projectId) {
@@ -646,6 +674,7 @@ async function loadMembers(projectId) {
         const avatarUrl = window.authHelpers.sanitizeUrl(rawAvatarUrl) || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.profile?.full_name || 'Member');
         const safeAvatarUrl = window.authHelpers.sanitizeAttr(avatarUrl);
         const isCreator = currentProject && m.user_id === currentProject.creator_id;
+        const isOnline = onlineUserIds.has(m.user_id);
         const badge = isMe ? ' <span style="color: var(--green); font-size: 0.65rem; font-weight: 700;">(You)</span>'
             : isCreator ? ' <span style="color: var(--primary); font-size: 0.65rem; font-weight: 700;">(Lead)</span>'
                 : '';
@@ -656,7 +685,7 @@ async function loadMembers(projectId) {
                 <div class="member-name">${name}${badge}</div>
                 <div class="member-role">${escapeHtml(m.role || (isCreator ? 'Project Lead' : 'Member'))}</div>
             </div>
-            <div class="member-status-dot online"></div>
+            <div class="member-status-dot ${isOnline ? 'online' : 'offline'}"></div>
         </a>
     `;
     }).join('');
@@ -699,14 +728,14 @@ function renderNoTeamsState() {
     if (!chatLayout) return;
 
     chatLayout.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100%; text-align: center; padding: 20px;">
-            <div style="font-size: 4rem; margin-bottom: 20px;">👋</div>
-            <h1 style="margin-bottom: 10px;">No Teams Found</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 30px; max-width: 400px;">
-                You haven't joined any project teams yet. You need to be part of a team to use the chat system.
+        <div class="empty-chat-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 3rem); width: 100%; text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px); border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.5);">
+            <div style="font-size: 5rem; margin-bottom: 24px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));">🤝</div>
+            <h1 style="font-size: 2.2rem; font-weight: 850; letter-spacing: -0.04em; margin-bottom: 12px; color: var(--text-primary);">No Teams Yet</h1>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 32px; max-width: 420px; opacity: 0.8;">
+                Collaborate and build with other creators. Join a project team to unlock the real-time chat.
             </p>
-            <a href="explore.html" class="btn-primary" style="padding: 12px 24px; background: var(--primary); color: white; border-radius: 12px; text-decoration: none; font-weight: 600;">
-                Explore Projects
+            <a href="explore.html" class="btn-primary" style="padding: 14px 32px; background: var(--maroon-grad); color: white; border-radius: var(--radius-md); text-decoration: none; font-weight: 700; font-size: 1rem; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 10px 25px rgba(179, 82, 106, 0.25);" onmouseover="this.style.transform='translateY(-2px)'; this.style.shadow='0 15px 30px rgba(179, 82, 106, 0.35)'" onmouseout="this.style.transform='translateY(0)'; this.style.shadow='0 10px 25px rgba(179, 82, 106, 0.25)'">
+                Find Your Team
             </a>
         </div>
     `;

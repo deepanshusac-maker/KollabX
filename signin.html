@@ -815,11 +815,18 @@
             display: block;
         }
     </style>
-    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js" integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
     <script>
-      if (window.Sentry) {
-        Sentry.init({ dsn: "YOUR_DSN_HERE" });
-      }
+        // Sentry initialization - only if a real DSN is provided
+        const SENTRY_DSN = "YOUR_DSN_HERE";
+        if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
+            const script = document.createElement('script');
+            script.src = "https://browser.sentry-cdn.com/7.114.0/bundle.min.js";
+            script.crossOrigin = "anonymous";
+            script.onload = () => {
+                Sentry.init({ dsn: SENTRY_DSN });
+            };
+            document.head.appendChild(script);
+        }
     </script>
     <!-- Simple Analytics Placeholder -->
     <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
