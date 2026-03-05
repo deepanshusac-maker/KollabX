@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <meta property="og:image" content="assets/images/og-image.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KollabX — Team Chat</title>
@@ -11,6 +13,14 @@
   <link rel="stylesheet" href="css/toast.css" />
   <!-- Supabase Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js" integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
+    <script>
+      if (window.Sentry) {
+        Sentry.init({ dsn: "YOUR_DSN_HERE" });
+      }
+    </script>
+    <!-- Simple Analytics Placeholder -->
+    <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
 </head>
 
 <body>
@@ -24,7 +34,7 @@
       <div class="sidebar-brand">
         <a href="index.html" class="sidebar-brand-link"
           style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
-          <img src="assets/images/logo11.png" alt="KollabX Logo" class="sidebar-logo"
+          <img src="assets/images/logo11.svg" alt="KollabX Logo" class="sidebar-logo"
             style="width: 40px; height: 40px; border-radius: 10px; object-fit: contain;">
           <h1 style="font-size: 1.4rem; font-weight: 800; letter-spacing: -0.04em;">KollabX</h1>
         </a>

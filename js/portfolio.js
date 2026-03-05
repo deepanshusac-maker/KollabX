@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const currentUser = await window.authHelpers.getCurrentUser();
         if (currentUser) {
             userId = currentUser.id;
-            console.log('Viewing own portfolio:', userId);
         } else {
             console.warn('No user ID provided and no user logged in.');
             // Optional: Redirect to explore or show a generic message
@@ -33,7 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function loadPortfolio(userId) {
     try {
-        console.log('Loading portfolio for:', userId);
 
         // Parallel fetch for speed
         const [profileRes, teamsRes] = await Promise.all([

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - KollabX</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <!-- Meta Tags -->
+    <meta name="description" content="Get in touch with the KollabX team for inquiries, partnerships, or support.">
+    <meta property="og:title" content="Contact Us - KollabX">
+    <meta property="og:image" content="assets/images/og-image.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .contact-hero {
+            padding: 120px 20px 60px;
+            text-align: center;
+            background: radial-gradient(circle at top center, rgba(176, 96, 255, 0.05) 0%, transparent 70%);
+        }
+
+        .contact-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-color) 0%, #b060ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-hero p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .contact-container {
+            max-width: 1000px;
+            margin: 0 auto 100px;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+        }
+
+        @media (max-width: 900px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: #b060ff;
+        }
+
+        .info-icon {
+            padding: 12px;
+            background: rgba(176, 96, 255, 0.1);
+            border-radius: 10px;
+            color: #b060ff;
+        }
+
+        .info-content h3 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .info-content p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .contact-form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #b060ff;
+            box-shadow: 0 0 0 4px rgba(176, 96, 255, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: #b060ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(176, 96, 255, 0.2);
+            filter: brightness(1.1);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+    </style>
+</head>
+
+<body class="light-mode">
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">
+            <img src="assets/images/logo11.svg" alt="KollabX Logo" class="navbar-logo">
+            <span class="navbar-title">KollabX</span>
+        </a>
+    </nav>
+
+    <main>
+        <div class="contact-hero">
+            <h1>Get in Touch</h1>
+            <p>Have a question about KollabX? Want to partner with us or bring KollabX to your campus? We're all ears.
+            </p>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="info-card">
+                    <div class="info-icon"><i data-lucide="mail"></i></div>
+                    <div class="info-content">
+                        <h3>Email Us</h3>
+                        <p>kollabxog@gmail.com</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon"><i data-lucide="map-pin"></i></div>
+                    <div class="info-content">
+                        <h3>Our Headquarters</h3>
+                        <p>NIT Patna, Bihar 800006, India</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon"><i data-lucide="message-square"></i></div>
+                    <div class="info-content">
+                        <h3>Community</h3>
+                        <p>Join our Discord or WhatsApp groups through the platform.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form-card" id="form-container">
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="john@nitp.ac.in" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" placeholder="General Inquiry / Partnership" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" rows="5" placeholder="How can we help you?" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submit-btn">
+                        <i data-lucide="send"></i>
+                        Send Message
+                    </button>
+                </form>
+            </div>
+
+            <div class="success-message" id="success-container">
+                <i data-lucide="check-circle" size="64" style="color: #10b981; margin-bottom: 1.5rem;"></i>
+                <h2>Message Sent!</h2>
+                <p>We've received your inquiry and will get back to you as soon as possible.</p>
+                <br>
+                <a href="index.html" class="btn-primary"
+                    style="display: inline-block; padding: 0.8rem 2rem; text-decoration: none;">Back to Home</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@0.400.0"></script>
+    <script type="module">
+        import { supabase } from './js/auth.js';
+        lucide.createIcons();
+
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formContainer = document.getElementById('form-container');
+        const successContainer = document.getElementById('success-container');
+
+        // Pre-fill user data if logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                document.getElementById('email').value = user.email || '';
+                // Get name from profile
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('full_name')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile) {
+                    document.getElementById('full-name').value = profile.full_name;
+                }
+            }
+        });
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Sending...';
+            lucide.createIcons();
+
+            const { data: { user } } = await supabase.auth.getUser();
+
+            const formData = {
+                user_id: user ? user.id : null,
+                full_name: document.getElementById('full-name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('contact_messages')
+                    .insert([formData]);
+
+                if (error) throw error;
+
+                formContainer.style.display = 'none';
+                successContainer.style.display = 'block';
+            } catch (error) {
+                console.error('Contact error:', error);
+                alert('Something went wrong. Please try again later.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i data-lucide="send"></i> Send Message';
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+
+</html>

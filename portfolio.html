@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <meta property="og:image" content="assets/images/og-image.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KollabX Portfolio - Student Showcase</title>
@@ -13,8 +15,9 @@
     <meta property="og:type" content="profile">
     <meta property="og:url" content="https://kollabx.com/portfolio.html">
     <meta property="og:title" content="Student Portfolio - KollabX">
+    <meta name="twitter:image" content="assets/images/og-image.png">
     <meta property="og:description" content="View student portfolios, skills, and project contributions on KollabX.">
-    <meta property="og:image" content="https://kollabx.com/assets/images/og-image.png">
+    <meta property="og:image" content="assets/images/og-image.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -22,7 +25,7 @@
     <meta property="twitter:title" content="Student Portfolio - KollabX">
     <meta property="twitter:description"
         content="View student portfolios, skills, and project contributions on KollabX.">
-    <meta property="twitter:image" content="https://kollabx.com/assets/images/og-image.png">
+    <meta property="twitter:image" content="assets/images/og-image.png">
 
 
     <!-- Standard KollabX CSS -->
@@ -80,7 +83,15 @@
         }
     </style>
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.400.0"></script>
+    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js" integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
+    <script>
+      if (window.Sentry) {
+        Sentry.init({ dsn: "YOUR_DSN_HERE" });
+      }
+    </script>
+    <!-- Simple Analytics Placeholder -->
+    <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
 </head>
 
 <body class="auth-loading-state">
@@ -93,7 +104,7 @@
     <!-- Standard KollabX Navbar -->
     <nav class="navbar">
         <a href="index.html" class="navbar-brand">
-            <img src="assets/images/logo11.png" alt="KollabX Logo" class="navbar-logo">
+            <img src="assets/images/logo11.svg" alt="KollabX Logo" class="navbar-logo">
             <span class="navbar-title">KollabX</span>
         </a>
 

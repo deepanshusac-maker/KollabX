@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <meta property="og:image" content="assets/images/og-image.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KollabX - Profile</title>
@@ -13,13 +15,21 @@
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/toast.css">
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.400.0"></script>
+    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js" integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
+    <script>
+      if (window.Sentry) {
+        Sentry.init({ dsn: "YOUR_DSN_HERE" });
+      }
+    </script>
+    <!-- Simple Analytics Placeholder -->
+    <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
 </head>
 
 <body class="auth-loading-state">
     <nav class="navbar">
         <a href="index.html" class="navbar-brand">
-            <img src="assets/images/logo11.png" alt="KollabX Logo" class="navbar-logo">
+            <img src="assets/images/logo11.svg" alt="KollabX Logo" class="navbar-logo">
             <h1>KollabX</h1>
         </a>
         <div class="mobile-overlay"></div>

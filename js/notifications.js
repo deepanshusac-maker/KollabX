@@ -345,7 +345,6 @@ async function setupNotificationSubscription() {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
-          console.log('Notification change:', payload);
           // Update badge when notifications change
           updateNotificationBadge();
 

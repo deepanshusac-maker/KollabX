@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | KollabX</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <style>
+        :root {
+            --primary: #b3526a;
+            --bg: #fafafa;
+            --text: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .logo {
+            width: 80px;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 5rem;
+            margin: 0;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 99px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js" integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
+    <script>
+      if (window.Sentry) {
+        Sentry.init({ dsn: "YOUR_DSN_HERE" });
+      }
+    </script>
+    <!-- Simple Analytics Placeholder -->
+    <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <img src="assets/images/logo11.svg" alt="KollabX Logo" class="logo">
+        <h1>404</h1>
+        <p>Oops! The page you're looking for has moved to another project.</p>
+        <a href="index.html" class="btn">Back to Home</a>
+    </div>
+</body>
+
+</html>

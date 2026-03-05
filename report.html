@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report an Issue - KollabX</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <!-- Meta Tags -->
+    <meta name="description" content="Report bugs, suggest features, or give feedback to the KollabX team.">
+    <meta property="og:title" content="Report an Issue - KollabX">
+    <meta property="og:image" content="assets/images/og-image.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        .report-hero {
+            padding: 120px 20px 60px;
+            text-align: center;
+            background: radial-gradient(circle at top center, rgba(48, 48, 241, 0.05) 0%, transparent 70%);
+        }
+
+        .report-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-color) 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .report-hero p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .report-section {
+            max-width: 800px;
+            margin: 0 auto 100px;
+            padding: 0 2rem;
+        }
+
+        .report-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .report-card {
+                padding: 1.5rem;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(48, 48, 241, 0.1);
+            background: rgba(48, 48, 241, 0.02);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(48, 48, 241, 0.2);
+            filter: brightness(1.1);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .success-message i {
+            color: #10b981;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-message h2 {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body class="light-mode">
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">
+            <img src="assets/images/logo11.svg" alt="KollabX Logo" class="navbar-logo">
+            <span class="navbar-title">KollabX</span>
+        </a>
+    </nav>
+
+    <main>
+        <div class="report-hero">
+            <h1>Report an Issue</h1>
+            <p>Spotted a bug? Have a feature request? Let us know and help us make KollabX better for everyone.</p>
+        </div>
+
+        <section class="report-section">
+            <div class="report-card" id="form-container">
+                <form id="report-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="reporter-email">Email</label>
+                            <input type="email" id="reporter-email" placeholder="your@nitp.ac.in" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" required>
+                                <option value="bug">Bug Report</option>
+                                <option value="feature_request">Feature Request</option>
+                                <option value="ui_issue">UI/UX Issue</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title">Issue Summary</label>
+                        <input type="text" id="title" placeholder="Brief description of the issue" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Detailed Description</label>
+                        <textarea id="description" rows="5" placeholder="Steps to reproduce, expected behavior, etc."
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select id="priority">
+                            <option value="low">Low - Minor annoyance</option>
+                            <option value="medium" selected>Medium - Functional issue</option>
+                            <option value="high">High - Blocks work</option>
+                            <option value="critical">Critical - System crash / Security</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submit-btn">
+                        <i data-lucide="send"></i>
+                        Submit Report
+                    </button>
+                </form>
+            </div>
+
+            <div class="success-message" id="success-container">
+                <i data-lucide="check-circle" size="64"></i>
+                <h2>Report Submitted!</h2>
+                <p>Thank you for your feedback. Our team will review this and get back to you if needed.</p>
+                <br>
+                <a href="index.html" class="btn-primary"
+                    style="display: inline-block; padding: 0.8rem 2rem; text-decoration: none;">Back to Home</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@0.400.0"></script>
+    <!-- Sentry -->
+    <script src="https://js.sentry-cdn.com/YOUR_DSN_HERE.min.js" crossorigin="anonymous"></script>
+
+    <script type="module">
+        import { supabase } from './js/auth.js';
+
+        lucide.createIcons();
+
+        const reportForm = document.getElementById('report-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formContainer = document.getElementById('form-container');
+        const successContainer = document.getElementById('success-container');
+
+        // Pre-fill email if user is logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user && user.email) {
+                document.getElementById('reporter-email').value = user.email;
+            }
+        });
+
+        reportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Submitting...';
+            lucide.createIcons();
+
+            const { data: { user } } = await supabase.auth.getUser();
+
+            const formData = {
+                reporter_id: user ? user.id : null,
+                reporter_email: document.getElementById('reporter-email').value,
+                category: document.getElementById('category').value,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                priority: document.getElementById('priority').value
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('bug_reports')
+                    .insert([formData]);
+
+                if (error) throw error;
+
+                formContainer.style.display = 'none';
+                successContainer.style.display = 'block';
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Failed to submit report. Please try again later.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i data-lucide="send"></i> Submit Report';
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+
+</html>

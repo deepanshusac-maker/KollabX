@@ -342,7 +342,6 @@ async function handleCreateChannel() {
 
 async function selectChannel(channel) {
     if (!channel) return;
-    console.log('Selecting channel:', channel.name, channel.id);
     currentChannelId = channel.id;
 
     // Update Active UI

@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <meta property="og:image" content="assets/images/og-image.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore Student Projects - KollabX</title>
@@ -13,9 +15,10 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kollabx.com/explore.html">
     <meta property="og:title" content="Explore Projects - KollabX">
+    <meta name="twitter:image" content="assets/images/og-image.png">
     <meta property="og:description"
         content="Discover and join active student projects. Filter by tech, sports, or culture.">
-    <meta property="og:image" content="https://kollabx.com/assets/images/og-image.png">
+    <meta property="og:image" content="assets/images/og-image.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -23,7 +26,7 @@
     <meta property="twitter:title" content="Explore Projects - KollabX">
     <meta property="twitter:description"
         content="Discover and join active student projects. Filter by tech, sports, or culture.">
-    <meta property="twitter:image" content="https://kollabx.com/assets/images/og-image.png">
+    <meta property="twitter:image" content="assets/images/og-image.png">
 
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/global.css">
@@ -34,14 +37,23 @@
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/toast.css">
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.400.0"></script>
 
+    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js"
+        integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
+    <script>
+        if (window.Sentry) {
+            Sentry.init({ dsn: "YOUR_DSN_HERE" });
+        }
+    </script>
+    <!-- Simple Analytics Placeholder -->
+    <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
 </head>
 
 <body class="auth-loading-state">
     <nav class="navbar">
         <a href="index.html" class="navbar-brand">
-            <img src="assets/images/logo11.png" alt="KollabX Logo" class="navbar-logo">
+            <img src="assets/images/logo11.svg" alt="KollabX Logo" class="navbar-logo">
             <span class="navbar-title">KollabX</span>
         </a>
 
@@ -304,8 +316,6 @@
 
                 const result = await window.projects.getAllProjects(currentFilters);
 
-                console.log('Projects loaded:', result); // Debug log
-
                 if (result.success && result.data && result.data.length > 0) {
                     // Refresh applied projects set (for current user)
                     appliedProjectIds = new Set();
@@ -331,8 +341,6 @@
                     // Render projects first
                     try {
                         await renderProjects(result.data);
-                        console.log('Projects rendered successfully');
-
                         // Hide loading, show grid after successful render
                         loadingDiv.classList.add('hidden');
                         emptyDiv.classList.add('hidden');
@@ -352,7 +360,6 @@
                     loadingDiv.classList.add('hidden');
                     emptyDiv.classList.remove('hidden');
                     projectGrid.classList.add('hidden'); // Hide grid when empty
-                    console.log('No projects found');
                 }
             } catch (error) {
                 console.error('Error loading projects:', error);
@@ -549,7 +556,6 @@
             }
 
             if (!projects || !Array.isArray(projects) || projects.length === 0) {
-                console.log('No projects to render');
                 return;
             }
 
@@ -956,7 +962,7 @@
                     const canRemove = isCreator && !isCreatorMember && user && user.id !== member.user_id;
 
                     const avatarDisplay = memberAvatar
-                        ? `<img src="${memberAvatar}" alt="${memberName}" class="team-member-avatar">`
+                        ? `<img src="${memberAvatar}" alt="${memberName}" class="team-member-avatar" loading="lazy">`
                         : `<div class="team-member-avatar-placeholder">${memberName.charAt(0).toUpperCase()}</div>`;
 
                     return `

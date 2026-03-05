@@ -21,7 +21,6 @@ async function initAuth() {
     // Listen to auth state changes (only set up once)
     if (!window.supabase._authStateChangeListenerSet) {
       window.supabase.auth.onAuthStateChange((event, session) => {
-        console.log('Auth state changed:', event, session ? 'User logged in' : 'User logged out');
 
         // Update UI based on auth state
         updateAuthUI(session);

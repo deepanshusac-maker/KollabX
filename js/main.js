@@ -1,6 +1,5 @@
 /* Main JS */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Kollabx Main JS Loaded');
 
     const navItems = document.querySelectorAll('.nav-item');
     const indicator = document.querySelector('.nav-indicator');

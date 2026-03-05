@@ -2,21 +2,24 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <meta property="og:image" content="assets/images/og-image.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KollabX - Build Your Student Team Fast</title>
     <meta name="description"
         content="KollabX is a student-only platform to form reliable teams fast. Post projects, find teammates, and build your portfolio with a community of problem solvers.">
     <meta name="keywords" content="student collaboration, project teams, find teammates, student projects, KollabX">
-    <link rel="canonical" href="https://kollabx.com/index.html">
+    <link rel="canonical" href="https://kollabx.com/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kollabx.com/">
     <meta property="og:title" content="KollabX - Find your next student collaboration">
+    <meta name="twitter:image" content="assets/images/og-image.png">
     <meta property="og:description"
         content="Stop searching in chaotic group chats. Create your team or join an existing one in seconds.">
-    <meta property="og:image" content="https://kollabx.com/assets/images/og-image.png">
+    <meta property="og:image" content="assets/images/og-image.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -24,15 +27,16 @@
     <meta property="twitter:title" content="KollabX - Find your next student collaboration">
     <meta property="twitter:description"
         content="Stop searching in chaotic group chats. Create your team or join an existing one in seconds.">
-    <meta property="twitter:image" content="https://kollabx.com/assets/images/og-image.png">
+    <meta property="twitter:image" content="assets/images/og-image.png">
 
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/hero.css">
     <link rel="stylesheet" href="css/sections.css">
     <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/toast.css">
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.400.0"></script>
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -47,12 +51,21 @@
     }
     </script>
 
+    <script src="https://browser.sentry-cdn.com/7.114.0/bundle.min.js"
+        integrity="sha384-N89u6N+7+t1N917N89u6N+7+t1N917N89u6N+7+t1N91" crossorigin="anonymous"></script>
+    <script>
+        if (window.Sentry) {
+            Sentry.init({ dsn: "YOUR_DSN_HERE" });
+        }
+    </script>
+    <!-- Simple Analytics Placeholder -->
+    <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
 </head>
 
 <body class="auth-loading-state">
     <nav class="navbar">
         <a href="index.html" class="navbar-brand">
-            <img src="assets/images/logo11.png" alt="KollabX Logo" class="navbar-logo">
+            <img src="assets/images/logo11.svg" alt="KollabX Logo" class="navbar-logo">
             <span class="navbar-title">KollabX</span>
         </a>
 
@@ -151,7 +164,7 @@
                             apply to you.</p>
                     </div>
                     <div class="kx-card-shapes">
-                        <img src="assets/images/shape2.png" alt="Abstract Shape">
+                        <img src="assets/images/shape2.png" alt="Abstract Shape" loading="lazy">
                     </div>
                 </div>
 
@@ -164,7 +177,7 @@
                             and intensity.</p>
                     </div>
                     <div class="kx-card-shapes">
-                        <img src="assets/images/shape4.png" alt="Abstract Shape">
+                        <img src="assets/images/shape4.png" alt="Abstract Shape" loading="lazy">
                     </div>
                 </div>
 
@@ -177,7 +190,7 @@
                             that matters.</p>
                     </div>
                     <div class="kx-card-shapes">
-                        <img src="assets/images/shape3.png" alt="Abstract Shape">
+                        <img src="assets/images/shape3.png" alt="Abstract Shape" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -380,7 +393,7 @@
         <div class="footer-container">
             <div class="footer-brand">
                 <div class="logo">
-                    <img src="assets/images/logo11.png" alt="KollabX Logo">
+                    <img src="assets/images/logo11.svg" alt="KollabX Logo" loading="lazy">
                     <span>KollabX</span>
                 </div>
                 <p>Connecting builders, one project at a time. Find teammates by skills, not spam.</p>
@@ -397,23 +410,14 @@
                 </ul>
             </div>
 
-            <div class="footer-col">
-                <h4>Community</h4>
-                <ul>
-                    <li><a href="mailto:community@kollabx.com">Campus ambassadors</a></li>
-                    <li><a href="mailto:partners@kollabx.com">Hackathon partners</a></li>
-                    <li><a href="mailto:clubs@kollabx.com">Clubs & societies</a></li>
-                    <li><a href="mailto:feedback@kollabx.com">Feedback</a></li>
-                </ul>
-            </div>
 
             <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="mailto:privacy@kollabx.com">Privacy & safety</a></li>
-                    <li><a href="mailto:legal@kollabx.com">Terms</a></li>
-                    <li><a href="mailto:support@kollabx.com">Report an issue</a></li>
-                    <li><a href="mailto:deepanshusaraswat@gmail.com">Contact</a></li>
+                    <li><a href="privacy.html">Privacy & safety</a></li>
+                    <li><a href="terms.html">Terms</a></li>
+                    <li><a href="report.html">Report an issue</a></li>
+                    <li><a href="contact.html">Contact</a></li>
                 </ul>
             </div>
 
@@ -447,6 +451,7 @@
     <script src="js/auth.js"></script>
     <script src="js/session.js"></script>
     <script src="js/notifications.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/main.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/sections.js"></script>

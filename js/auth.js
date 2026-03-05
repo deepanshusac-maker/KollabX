@@ -100,6 +100,23 @@ async function resetPassword(email) {
   }
 }
 
+// Update password (used during recovery)
+async function updatePassword(newPassword) {
+  try {
+    const supabase = ensureSupabase();
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+
+    if (error) throw error;
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Update password error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 // Get current session
 async function getSession() {
   try {
@@ -214,9 +231,26 @@ window.auth = {
   signOut,
   signInWithGoogle,
   resetPassword,
+  updatePassword,
   getSession,
   checkAuth,
   isProfileComplete,
   isNewUser,
   onAuthStateChange
 };
+
+// Global Recovery Redirect Handler
+// This detects if the user landed on a page via a recovery link (e.g., #type=recovery)
+// and redirects them to signin.html where the update password modal lives.
+(function handleGlobalRecoveryRedirect() {
+  const hash = window.location.hash;
+  if (hash && (hash.includes('type=recovery') || hash.includes('access_token='))) {
+    if (hash.includes('type=recovery')) {
+      sessionStorage.setItem('is_recovering', 'true');
+
+      if (!window.location.pathname.includes('signin.html')) {
+        window.location.href = `${window.location.origin}/signin.html${hash}`;
+      }
+    }
+  }
+})();
