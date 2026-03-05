@@ -4,7 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KollabX - Home</title>
+    <title>KollabX - Build Your Student Team Fast</title>
+    <meta name="description"
+        content="KollabX is a student-only platform to form reliable teams fast. Post projects, find teammates, and build your portfolio with a community of problem solvers.">
+    <meta name="keywords" content="student collaboration, project teams, find teammates, student projects, KollabX">
+    <link rel="canonical" href="https://kollabx.com/index.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kollabx.com/">
+    <meta property="og:title" content="KollabX - Find your next student collaboration">
+    <meta property="og:description"
+        content="Stop searching in chaotic group chats. Create your team or join an existing one in seconds.">
+    <meta property="og:image" content="https://kollabx.com/assets/images/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://kollabx.com/">
+    <meta property="twitter:title" content="KollabX - Find your next student collaboration">
+    <meta property="twitter:description"
+        content="Stop searching in chaotic group chats. Create your team or join an existing one in seconds.">
+    <meta property="twitter:image" content="https://kollabx.com/assets/images/og-image.png">
+
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/hero.css">
@@ -12,14 +33,29 @@
     <link rel="stylesheet" href="css/auth.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "KollabX",
+      "url": "https://kollabx.com",
+      "description": "A student-only platform to form reliable teams fast for projects and collaborations.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web"
+    }
+    </script>
+
 </head>
 
 <body class="auth-loading-state">
     <nav class="navbar">
         <a href="index.html" class="navbar-brand">
             <img src="assets/images/logo11.png" alt="KollabX Logo" class="navbar-logo">
-            <h1>KollabX</h1>
+            <span class="navbar-title">KollabX</span>
         </a>
+
         <div class="mobile-overlay"></div>
         <ul class="nav-links">
             <li><a href="index.html" class="nav-item active">Home</a></li>
@@ -33,12 +69,7 @@
         </ul>
         <div class="nav-right">
             <button type="button" class="notification-icon" aria-label="Notifications">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    aria-hidden="true">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
+                <i data-lucide="bell" aria-hidden="true"></i>
                 <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
             </button>
             <a href="signin.html" class="btn-signin">Sign In</a>
@@ -63,10 +94,10 @@
                     <div class="card">
                         <div class="loader">
                             <div class="words">
-                                <span class="word">Collaboration</span>
+                                <span class="word">Collaborator</span>
                                 <span class="word">Teammate</span>
                                 <span class="word">Co-creator</span>
-                                <span class="word">Collaboration</span>
+                                <span class="word">Collaborator</span>
                             </div>
                         </div>
                     </div>
@@ -91,18 +122,18 @@
             <div class="bento-grid">
                 <div class="problem-card card1 fade-in-up">
                     <div class="card-question">Left on Read?</div>
-                    <div class="card-solution" style="color: black;">Ditch the dead-end DMs. Our commitment-tracking
-                        system identifies the real players so you never wait for a reply again</div>
+                    <div class="card-solution" style="color: black;">Stop wasting time on ghost teammates.
+                        Our commitment signals highlight students who actually show up.</div>
                 </div>
                 <div class="problem-card card2 fade-in-up">
                     <div class="card-question" style="color: white;">Missing the 'MVP'?</div>
-                    <div class="card-solution" style="color: black;">Whether it's a lead guitarist, a striker, or a
-                        backend dev—find exactly who you need to complete your roster in seconds.</div>
+                    <div class="card-solution" style="color: black;">Whether you need a backend developer, designer, or
+                        team lead — find the exact skill gap and fill it instantly.</div>
                 </div>
                 <div class="problem-card card3 fade-in-up">
                     <div class="card-question" style="color: rgb(255, 255, 255);">Lost in the Chat Noise?</div>
-                    <div class="card-solution" style="color: black;">WhatsApp and Discord are for talking. KollabX is
-                        for doing. Turn your 'maybe one day' into a live project today.</div>
+                    <div class="card-solution" style="color: black;">Messaging apps are built for conversation.
+                        KollabX is built for execution.</div>
                 </div>
             </div>
         </section>

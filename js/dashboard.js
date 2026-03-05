@@ -35,6 +35,7 @@ window.dashboardAnimations = dashboardAnimations;
 document.addEventListener('DOMContentLoaded', () => {
     const tabs = document.querySelectorAll('.tab-item');
     const cards = document.querySelectorAll('.horizontal-card');
+    const statsGrid = document.querySelector('.stats-grid');
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -43,6 +44,15 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('active');
 
             const category = tab.getAttribute('data-tab');
+
+            // Show/Hide stats grid: Only show in "all" section
+            if (statsGrid) {
+                if (category === 'all') {
+                    statsGrid.style.display = 'grid';
+                } else {
+                    statsGrid.style.display = 'none';
+                }
+            }
 
             // Filter cards
             cards.forEach(card => {
@@ -56,4 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    // Handle initial tab selection from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    if (tabParam) {
+        const targetTab = document.querySelector(`.tab-item[data-tab="${tabParam}"]`);
+        if (targetTab) {
+            targetTab.click();
+        }
+    }
 });

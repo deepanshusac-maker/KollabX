@@ -9,9 +9,18 @@ function ensureSupabase() {
   return window.supabase;
 }
 
+// Helper to check if email is NITP domain
+function isNITPEmail(email) {
+  if (!email) return false;
+  return email.toLowerCase().endsWith('@nitp.ac.in');
+}
+
 // Sign up with email and password
 async function signUp(email, password, fullName) {
   try {
+    if (!isNITPEmail(email)) {
+      throw new Error('Only @nitp.ac.in emails are allowed to join KollabX.');
+    }
     const supabase = ensureSupabase();
     const { data, error } = await supabase.auth.signUp({
       email: email,
@@ -36,6 +45,9 @@ async function signUp(email, password, fullName) {
 // Sign in with email and password
 async function signIn(email, password) {
   try {
+    if (!isNITPEmail(email)) {
+      throw new Error('Only @nitp.ac.in emails are allowed.');
+    }
     const supabase = ensureSupabase();
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -57,10 +69,10 @@ async function signOut() {
     const supabase = ensureSupabase();
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    
+
     // Clear any local storage
     localStorage.removeItem('userProfile');
-    
+
     return { success: true };
   } catch (error) {
     console.error('Sign out error:', error);
@@ -71,6 +83,9 @@ async function signOut() {
 // Reset password
 async function resetPassword(email) {
   try {
+    if (!isNITPEmail(email)) {
+      throw new Error('Please enter your @nitp.ac.in email address.');
+    }
     const supabase = ensureSupabase();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/signin.html`
@@ -110,7 +125,8 @@ async function signInWithGoogle() {
         redirectTo: `${window.location.origin}/signin.html`,
         queryParams: {
           access_type: 'offline',
-          prompt: 'consent'
+          prompt: 'consent',
+          hd: 'nitp.ac.in' // Hint for Google to only show NITP accounts
         }
       }
     });
@@ -132,8 +148,20 @@ async function signInWithGoogle() {
 
 // Check if user is authenticated
 async function checkAuth() {
-  const { session } = await getSession();
-  return !!session;
+  const result = await getSession();
+  const session = result.session;
+
+  if (session && session.user) {
+    const email = session.user.email;
+    if (!isNITPEmail(email)) {
+      console.warn('Unauthorized email domain detected. Signing out.', email);
+      await signOut();
+      return false;
+    }
+    return true;
+  }
+
+  return false;
 }
 
 // Check if profile is complete (has required fields)
@@ -141,13 +169,13 @@ async function isProfileComplete() {
   try {
     const profile = await window.authHelpers.getCurrentProfile();
     if (!profile) return false;
-    
+
     // Check if required fields are filled
     const requiredFields = ['full_name', 'college', 'bio', 'skills'];
     return requiredFields.every(field => {
       const value = profile[field];
-      return value && value.toString().trim() !== '' && 
-             (Array.isArray(value) ? value.length > 0 : true);
+      return value && value.toString().trim() !== '' &&
+        (Array.isArray(value) ? value.length > 0 : true);
     });
   } catch (error) {
     console.error('Error checking profile completion:', error);
@@ -158,16 +186,16 @@ async function isProfileComplete() {
 // Check if user is new (just signed up)
 function isNewUser(session) {
   if (!session) return false;
-  
+
   // Handle both direct session and wrapped session
   const actualSession = session.session || session;
   if (!actualSession || !actualSession.user) return false;
-  
+
   // Check if user was created recently (within last 5 minutes)
   const createdAt = new Date(actualSession.user.created_at);
   const now = new Date();
   const minutesSinceCreation = (now - createdAt) / (1000 * 60);
-  
+
   return minutesSinceCreation < 5;
 }
 

@@ -36,12 +36,7 @@
         </ul>
         <div class="nav-right">
             <button type="button" class="notification-icon" aria-label="Notifications">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    aria-hidden="true">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
+                <i data-lucide="bell" aria-hidden="true"></i>
                 <div class="notification-badge" aria-hidden="true" style="display: none;">0</div>
             </button>
             <a href="signin.html" class="btn-signin">Sign In</a>
@@ -71,12 +66,12 @@
                     <h3>Basic Info</h3>
                     <div class="form-group-row">
                         <div class="form-group">
-                            <label for="project-title">Project Title *</label>
+                            <label for="project-title">Project Title</label>
                             <input type="text" id="project-title" class="form-control"
                                 placeholder="Smart Attendance using Face Recognition" required>
                         </div>
                         <div class="form-group">
-                            <label for="main-category">Main Category *</label>
+                            <label for="main-category">Main Category</label>
                             <select id="main-category" class="form-control" required>
                                 <option value="" disabled selected>Select main category</option>
                                 <option value="Technical">Technical</option>
@@ -87,7 +82,7 @@
                     </div>
                     <div class="form-group-row">
                         <div class="form-group">
-                            <label for="category">Sub Category *</label>
+                            <label for="category">Sub Category</label>
                             <select id="category" class="form-control" required disabled>
                                 <option value="" disabled selected>Select main category first</option>
                             </select>
@@ -110,12 +105,12 @@
                     <h3>Team Requirements</h3>
                     <div class="form-group-row">
                         <div class="form-group">
-                            <label for="required-skills">Required Skills *</label>
+                            <label for="required-skills">Required Skills</label>
                             <input type="text" id="required-skills" class="form-control"
                                 placeholder="React, Python, UI/UX, Arduino" required>
                         </div>
                         <div class="form-group">
-                            <label for="team-size">Team Size *</label>
+                            <label for="team-size">Team Size</label>
                             <input type="number" id="team-size" class="form-control" placeholder="2" min="2" required>
                         </div>
                     </div>

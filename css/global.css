@@ -157,18 +157,24 @@ body {
 }
 
 .navbar-logo {
-    height: 45px;
+    height: 55px;
     width: auto;
     object-fit: contain;
+    display: block;
 }
 
-.navbar h1 {
-    font-size: 1.5rem;
+.navbar h1,
+.navbar-title {
+    font-size: 1.8rem;
     font-weight: 700;
     color: var(--nav-text);
     letter-spacing: -0.02em;
     margin: 0;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
 }
+
 
 .nav-links {
     display: flex;
@@ -337,6 +343,15 @@ body {
 
 .notification-icon:hover {
     color: var(--primary-color);
+}
+
+.notification-icon:focus,
+.notification-icon:active,
+.notification-icon:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .notification-badge {

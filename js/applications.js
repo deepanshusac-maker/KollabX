@@ -307,7 +307,7 @@ async function rejectApplication(applicationId) {
       p_type: 'application_rejected',
       p_title: 'Application Rejected',
       p_message: `Your application to "${application.project.title}" was not accepted.`,
-      p_link: '/dashboard.html?tab=applications',
+      p_link: 'dashboard.html?tab=requests',
       p_project_id: application.project_id
     });
 

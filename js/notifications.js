@@ -171,7 +171,10 @@ async function renderNotificationDropdown() {
       const unreadClass = n.read ? '' : ' notification-dropdown-item-unread';
 
       return `
-        <div class="notification-dropdown-item${unreadClass}" data-notification-id="${n.id}" data-notification-link="${n.link || ''}">
+        <div class="notification-dropdown-item${unreadClass}" 
+             data-notification-id="${n.id}" 
+             data-notification-link="${n.link || ''}" 
+             data-notification-type="${n.type || ''}">
           <div class="notification-dropdown-item-icon">
             <i data-lucide="${iconName}"></i>
           </div>
@@ -200,6 +203,7 @@ async function renderNotificationDropdown() {
       e.stopPropagation();
       const id = item.getAttribute('data-notification-id');
       const link = item.getAttribute('data-notification-link');
+      const type = item.getAttribute('data-notification-type');
 
       if (id) {
         await markNotificationAsRead(id);
@@ -207,7 +211,29 @@ async function renderNotificationDropdown() {
       }
 
       if (link) {
-        window.location.href = link;
+        let finalLink = link;
+
+        // Intelligent tab mapping for dashboard
+        if (link.includes('dashboard.html')) {
+          let targetTab = '';
+
+          if (type.includes('accepted') || type.includes('added') || type.includes('left')) {
+            targetTab = 'teams';
+          } else if (type.includes('received') || type.includes('rejected') || type.includes('request')) {
+            targetTab = 'requests';
+          }
+
+          if (targetTab && !link.includes('tab=')) {
+            finalLink = link.includes('?') ? `${link}&tab=${targetTab}` : `${link}?tab=${targetTab}`;
+          }
+        }
+
+        // Clean up leading slash if it's there (prevents file:// link breakages)
+        if (finalLink.startsWith('/')) {
+          finalLink = finalLink.substring(1);
+        }
+
+        window.location.href = finalLink;
       }
     });
   });

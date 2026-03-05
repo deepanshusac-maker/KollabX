@@ -120,7 +120,7 @@ async function removeTeamMember(projectId, userIdToRemove) {
       p_type: 'team_member_removed',
       p_title: 'Removed from Team',
       p_message: `You have been removed from the project "${project.title}".`,
-      p_link: '/dashboard.html?tab=teams',
+      p_link: 'dashboard.html?tab=teams',
       p_project_id: projectId
     });
 
@@ -181,7 +181,7 @@ async function leaveTeam(projectId) {
         p_type: 'team_member_left',
         p_title: 'Team Member Left',
         p_message: `${user.email?.split('@')[0] || 'A member'} left the project "${project.title}".`,
-        p_link: '/dashboard.html?tab=teams',
+        p_link: 'dashboard.html?tab=teams',
         p_project_id: projectId
       });
     }
