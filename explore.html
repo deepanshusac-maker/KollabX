@@ -2,7 +2,20 @@
 <html lang="en">
 
 <head>
-    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z73KBZEV44"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-Z73KBZEV44');
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="assets/images/logo11.svg">
+    <link rel="preconnect" href="https://ssoqnnokeuxznfdyihob.supabase.co">
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://plausible.io">
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
     <meta property="og:image" content="assets/images/og-image.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -224,12 +237,14 @@
         const btnPosted = document.getElementById('btn-posted');
         const exploreView = document.getElementById('explore-view');
         const postedView = document.getElementById('posted-ideas-view');
+        const filterCard = document.querySelector('.filter-card');
 
         btnExplore.addEventListener('click', () => {
             btnExplore.classList.add('active');
             btnPosted.classList.remove('active');
             exploreView.classList.remove('hidden');
             postedView.classList.add('hidden');
+            if (filterCard) filterCard.style.display = '';
         });
 
         btnPosted.addEventListener('click', async () => {
@@ -237,6 +252,7 @@
             btnExplore.classList.remove('active');
             postedView.classList.remove('hidden');
             exploreView.classList.add('hidden');
+            if (filterCard) filterCard.style.display = 'none';
 
             // Load current user's posted projects
             if (typeof loadMyProjects === 'function') {
@@ -822,8 +838,8 @@
                 modal.innerHTML = `
                     <div class="modal-overlay"></div>
                     <div class="modal-content">
-                        <button class="modal-close" aria-label="Close modal">
-                            <i data-lucide="x"></i>
+                        <button class="modal-close" aria-label="Close modal" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="pointer-events:none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </button>
                         <div class="modal-header">
                             <div class="modal-header-top">
@@ -902,6 +918,13 @@
 
                 document.body.appendChild(modal);
                 document.body.style.overflow = 'hidden';
+                // Prevent clicks inside modal-content from bubbling to card handlers below
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                    });
+                }
 
                 // Initialize icons
                 if (window.lucide) {
@@ -916,18 +939,30 @@
                 const overlay = modal.querySelector('.modal-overlay');
 
                 const closeModal = () => {
+                    if (!document.body.contains(modal)) return; // Guard against double-close
                     modal.remove();
                     document.body.style.overflow = '';
                     // Clear hash when closing modal
-                    if (window.location.hash === `#project - ${projectId} `) {
+                    if (window.location.hash === `#project-${projectId}`) {
                         window.history.replaceState(null, '', window.location.pathname);
                     }
                 };
 
-                closeBtn.addEventListener('click', closeModal);
-                overlay.addEventListener('click', closeModal);
-                modal.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') closeModal();
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeModal();
+                });
+
+                overlay.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeModal();
+                });
+
+                document.addEventListener('keydown', function escHandler(e) {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                        document.removeEventListener('keydown', escHandler);
+                    }
                 });
 
                 // Apply button handler
@@ -947,7 +982,7 @@
 
         // Load and display team members
         async function loadTeamMembers(projectId, modal) {
-            const teamListContainer = modal.querySelector(`#team - members - list - ${projectId} `);
+            const teamListContainer = modal.querySelector(`#team-members-list-${projectId}`);
             if (!teamListContainer) return;
 
             try {
@@ -969,11 +1004,11 @@
                     const canRemove = isCreator && !isCreatorMember && user && user.id !== member.user_id;
 
                     const avatarDisplay = memberAvatar
-                        ? `< img src = "${memberAvatar}" alt = "${memberName}" class="team-member-avatar" loading = "lazy" > `
-                        : `< div class="team-member-avatar-placeholder" > ${memberName.charAt(0).toUpperCase()}</div > `;
+                        ? `<img src="${memberAvatar}" alt="${memberName}" class="team-member-avatar" loading="lazy">`
+                        : `<div class="team-member-avatar-placeholder">${memberName.charAt(0).toUpperCase()}</div>`;
 
                     return `
-                < div class="team-member-item" data - user - id="${member.user_id}" >
+                <div class="team-member-item" data-user-id="${member.user_id}">
                             <div class="team-member-info">
                                 ${avatarDisplay}
                                 <div>
@@ -1006,7 +1041,7 @@
                                     </button>
                                 ` : ''}
                             </div>
-                        </div >
+                        </div>
                 `;
                 }).join('');
 

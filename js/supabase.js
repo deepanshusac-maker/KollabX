@@ -120,5 +120,5 @@ window.authHelpers = {
   getCurrentProfile,
   sanitizeUrl,
   sanitizeAttr,
-  supabase: supabaseClient
+  get supabase() { return getSupabase(); }
 };

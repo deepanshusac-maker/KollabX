@@ -30,6 +30,44 @@
     overflow: hidden;
 }
 
+/* Progress bar that auto-depletes */
+.toast::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    opacity: 0.4;
+    animation: toast-progress 4s linear forwards;
+}
+
+.toast-success::after {
+    background: #10b981;
+}
+
+.toast-error::after {
+    background: #ef4444;
+}
+
+.toast-info::after {
+    background: #3b82f6;
+}
+
+.toast-warning::after {
+    background: #f59e0b;
+}
+
+@keyframes toast-progress {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+}
+
 .toast-show {
     opacity: 1;
     transform: translateX(0);

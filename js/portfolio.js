@@ -3,6 +3,14 @@
  * Handles real data fetching from Supabase for User Portfolios
  */
 
+// Escape HTML to prevent XSS
+function escapePortfolioHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Initialize Auth and wait for dependencies
     await window.session.initAuth();
@@ -140,14 +148,14 @@ function updateProfileUI(profile) {
     if (lookingForContainer) {
         const interests = profile.interests || [];
         lookingForContainer.innerHTML = interests.length > 0
-            ? interests.map(i => `<span class="chip">${i}</span>`).join('')
+            ? interests.map(i => `<span class="chip">${escapePortfolioHtml(i)}</span>`).join('')
             : '<span style="color: var(--text-mist); font-size: 14px;">No specific interests listed</span>';
     }
 
     if (skillsHeroContainer) {
         const skills = profile.skills || [];
         skillsHeroContainer.innerHTML = skills.length > 0
-            ? skills.map(s => `<span class="chip">${s}</span>`).join('')
+            ? skills.map(s => `<span class="chip">${escapePortfolioHtml(s)}</span>`).join('')
             : '<span style="color: var(--text-mist); font-size: 14px;">No skills listed yet</span>';
     }
 }
@@ -219,15 +227,15 @@ function updateProjectsTab(projects) {
             <div class="project-card">
                 <div class="project-header">
                     <div>
-                        <h3 class="project-title">${p.title}</h3>
+                        <h3 class="project-title">${escapePortfolioHtml(p.title)}</h3>
                         <div class="project-badges" style="margin-top: 8px;">
-                            <span class="pill ${categoryClass}">${p.category || 'Project'}</span>
-                            <span class="pill ${statusClass}">${p.status.toUpperCase()}</span>
+                            <span class="pill ${categoryClass}">${escapePortfolioHtml(p.category || 'Project')}</span>
+                            <span class="pill ${statusClass}">${escapePortfolioHtml(p.status.toUpperCase())}</span>
                         </div>
                     </div>
                 </div>
-                <div class="role-played">${m.role || 'Contributor'}</div>
-                <p class="project-impact">${p.description ? p.description.substring(0, 120) + '...' : 'Building great things together.'}</p>
+                <div class="role-played">${escapePortfolioHtml(m.role || 'Contributor')}</div>
+                <p class="project-impact">${p.description ? escapePortfolioHtml(p.description.substring(0, 120)) + '...' : 'Building great things together.'}</p>
                 <div class="outcome-metrics">
                     <div class="outcome-item">
                         <span class="outcome-value">${p.current_members}</span>
@@ -238,7 +246,7 @@ function updateProjectsTab(projects) {
                     <div class="project-meta">
                         <span>Joined: ${new Date(m.joined_at).toLocaleDateString()}</span>
                     </div>
-                    <a href="project-details.html?id=${p.id}" class="case-study-link">
+                    <a href="explore.html#project-${p.id}" class="case-study-link">
                         View Project <i data-lucide="arrow-right" size="14"></i>
                     </a>
                 </div>
@@ -293,13 +301,13 @@ function updateSkillsTab(profile) {
         <div class="skill-section">
             <h3>Verified Skills</h3>
             <div class="chips">
-                ${skills.length > 0 ? skills.map(s => `<span class="chip">${s}</span>`).join('') : '<span style="color: var(--text-mist); font-size: 14px;">None listed</span>'}
+                ${skills.length > 0 ? skills.map(s => `<span class="chip">${escapePortfolioHtml(s)}</span>`).join('') : '<span style="color: var(--text-mist); font-size: 14px;">None listed</span>'}
             </div>
         </div>
         <div class="skill-section">
             <h3>Focus Areas</h3>
             <div class="chips">
-                ${interests.length > 0 ? interests.map(i => `<span class="chip">${i}</span>`).join('') : '<span style="color: var(--text-mist); font-size: 14px;">None listed</span>'}
+                ${interests.length > 0 ? interests.map(i => `<span class="chip">${escapePortfolioHtml(i)}</span>`).join('') : '<span style="color: var(--text-mist); font-size: 14px;">None listed</span>'}
             </div>
         </div>
     `;

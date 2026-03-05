@@ -159,7 +159,7 @@ async function renderNotificationDropdown() {
 
   if (!hasNotifications) {
     emptyEl.style.display = 'block';
-    emptyEl.textContent = 'No notifications yet. You’ll see updates here when something changes.';
+    emptyEl.textContent = 'No notifications yet. You\'ll see updates here when something changes.';
     return;
   }
   emptyEl.style.display = 'none';
@@ -269,7 +269,7 @@ async function renderNotificationDropdown() {
       const result = await clearAllNotifications();
       if (result.success) {
         listEl.innerHTML = '';
-        emptyEl.textContent = 'No notifications yet. You’ll see updates here when something changes.';
+        emptyEl.textContent = 'No notifications yet. You\'ll see updates here when something changes.';
         // Badge is updated inside clearAllNotifications -> updateNotificationBadge
       } else if (window.toast) {
         window.toast.error(result.error || 'Failed to clear notifications.');

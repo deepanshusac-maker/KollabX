@@ -269,11 +269,15 @@ async function handleLogout() {
       window.location.href = 'index.html';
     } else {
       console.error('Logout error:', result.error);
-      alert('Failed to sign out. Please try again.');
+      if (window.toast) {
+        window.toast.error('Failed to sign out. Please try again.');
+      }
     }
   } catch (error) {
     console.error('Logout error:', error);
-    alert('An error occurred during sign out.');
+    if (window.toast) {
+      window.toast.error('An error occurred during sign out.');
+    }
   }
 }
 

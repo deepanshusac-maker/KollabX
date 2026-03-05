@@ -38,7 +38,8 @@ async function createProject(projectData) {
       timeline: projectData.timeline || null,
       visibility: projectData.visibility || 'public',
       status: 'open',
-      current_members: 1 // Creator is first member
+      current_members: 1, // Creator is first member
+      team_size: parseInt(projectData.teamSize) || 2
     };
 
     // Insert project
@@ -97,7 +98,7 @@ async function getAllProjects(filters = {}) {
     if (filters.category && filters.category !== 'All') {
       // Category hierarchy for group-based filtering
       const categoryGroups = {
-        'Technical': ['Web Development', 'AI/ML', 'Robotics', 'IoT', 'Blockchain', 'Cybersecurity', 'Data Science',
+        'Technical': ['Web Development', 'AI/ML', 'Robotics', 'IoT', 'Blockchain', 'Cybersecurity', 'Data Science', 'Hackathon',
           'Web', 'App', 'Iot'],  // Include legacy values
         'Sports': ['Cricket', 'Football', 'Basketball', 'Badminton', 'Other Sports'],
         'Cultural': ['Dance', 'Music', 'Drama', 'Art & Design', 'Other Cultural']

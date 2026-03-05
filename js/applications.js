@@ -274,7 +274,7 @@ async function rejectApplication(applicationId) {
       .from('applications')
       .select(`
         *,
-        project:projects!applications_project_id_fkey(creator_id)
+        project:projects!applications_project_id_fkey(creator_id, title)
       `)
       .eq('id', applicationId)
       .single();

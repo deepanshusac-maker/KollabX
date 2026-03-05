@@ -54,6 +54,14 @@ const validators = {
             return message || 'Fields do not match';
         }
         return null;
+    },
+    maxWords: (max) => (value) => {
+        if (!value) return null;
+        const words = value.trim().split(/\s+/).filter(w => w.length > 0);
+        if (words.length > max) {
+            return `Must not exceed ${max} words`;
+        }
+        return null;
     }
 };
 
@@ -132,9 +140,9 @@ function validateField(input, rules = []) {
 
 // Character counter utility
 function setupCharacterCounters() {
-    const textAreas = document.querySelectorAll('textarea[maxlength], input[maxlength]');
+    const textAreas = document.querySelectorAll('textarea[maxlength], input[maxlength], textarea[data-max-length], input[data-max-length]');
     textAreas.forEach(field => {
-        const maxLength = field.getAttribute('maxlength');
+        const maxLength = field.getAttribute('data-max-length') || field.getAttribute('maxlength');
         const container = field.closest('.form-group') || field.parentElement;
 
         // Find or create counter element
@@ -146,15 +154,30 @@ function setupCharacterCounters() {
         }
 
         const updateCounter = () => {
-            const length = field.value.length;
-            counter.innerHTML = `<span>${length}</span>/${maxLength} characters`;
+            const limitType = field.getAttribute('data-limit-type') || 'chars';
+            const value = field.value.trim();
 
-            // Visual feedback categories
-            counter.classList.remove('near-limit', 'over-limit');
-            if (length >= maxLength) {
-                counter.classList.add('over-limit');
-            } else if (length >= maxLength * 0.9) {
-                counter.classList.add('near-limit');
+            if (limitType === 'words') {
+                const wordCount = value.length === 0 ? 0 : value.split(/\s+/).filter(w => w.length > 0).length;
+                counter.innerHTML = `<span>${wordCount}</span>/${maxLength} words`;
+
+                counter.classList.remove('near-limit', 'over-limit');
+                if (wordCount >= maxLength) {
+                    counter.classList.add('over-limit');
+                } else if (wordCount >= maxLength * 0.9) {
+                    counter.classList.add('near-limit');
+                }
+            } else {
+                const length = field.value.length;
+                counter.innerHTML = `<span>${length}</span>/${maxLength} characters`;
+
+                // Visual feedback categories
+                counter.classList.remove('near-limit', 'over-limit');
+                if (length >= maxLength) {
+                    counter.classList.add('over-limit');
+                } else if (length >= maxLength * 0.9) {
+                    counter.classList.add('near-limit');
+                }
             }
         };
 

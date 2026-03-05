@@ -92,7 +92,7 @@ async function removeTeamMember(projectId, userIdToRemove) {
     // Verify user is the project creator
     const { data: project } = await supabase
       .from('projects')
-      .select('creator_id')
+      .select('creator_id, title')
       .eq('id', projectId)
       .single();
 
@@ -176,11 +176,22 @@ async function leaveTeam(projectId) {
 
     // Create notification for project creator via secure RPC
     if (project) {
+      // Get the leaving member's display name
+      let leavingName = 'A member';
+      try {
+        const { data: leavingProfile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
+        if (leavingProfile?.full_name) leavingName = leavingProfile.full_name;
+      } catch (e) { /* fallback to 'A member' */ }
+
       await supabase.rpc('send_notification', {
         p_target_user_id: project.creator_id,
         p_type: 'team_member_left',
         p_title: 'Team Member Left',
-        p_message: `${user.email?.split('@')[0] || 'A member'} left the project "${project.title}".`,
+        p_message: `${leavingName} left the project "${project.title}".`,
         p_link: 'dashboard.html?tab=teams',
         p_project_id: projectId
       });

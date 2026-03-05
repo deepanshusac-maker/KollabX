@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function moveIndicator(element, disableTransition = false) {
         if (!element || !indicator || !navList) return;
 
+        // Skip if the element or its parent is hidden (auth-only not yet visible)
+        const li = element.closest('li');
+        if (li && (li.offsetParent === null || getComputedStyle(li).display === 'none')) {
+            indicator.style.opacity = '0';
+            return;
+        }
+
         if (disableTransition) {
             indicator.style.transition = 'none';
         }
@@ -32,22 +39,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initialize position based on active link (if any) or current URL
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    let activeLink = document.querySelector(`.nav-item[href="${currentPath}"]`);
+    // Find the active link based on current URL
+    function getActiveLink() {
+        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+        let link = document.querySelector(`.nav-item[href="${currentPath}"]`);
 
-    // Fallback for root path
-    if (!activeLink && (currentPath === '' || currentPath === '/')) {
-        activeLink = document.querySelector('.nav-item[href="index.html"]');
+        // Fallback for root path
+        if (!link && (currentPath === '' || currentPath === '/')) {
+            link = document.querySelector('.nav-item[href="index.html"]');
+        }
+
+        return link;
     }
 
-    // Only set active state on page load based on URL or click
-    // Hover effects are removed per user request
-    if (activeLink) {
-        activeLink.style.color = 'var(--primary-color)';
-        // Call immediately with transition disabled to avoid "double animation"
-        moveIndicator(activeLink, true);
+    // Position indicator — called on load and whenever auth state changes
+    function positionIndicator(disableTransition = false) {
+        const activeLink = getActiveLink();
+
+        // Reset all nav item colors
+        navItems.forEach(item => {
+            item.style.color = '';
+        });
+
+        if (activeLink) {
+            activeLink.style.color = 'var(--primary-color)';
+            moveIndicator(activeLink, disableTransition);
+        } else {
+            // Current page is not in the nav (profile, portfolio, chat, etc.)
+            if (indicator) {
+                indicator.style.opacity = '0';
+            }
+        }
     }
+
+    // Initial positioning (no transition)
+    positionIndicator(true);
+
+    // Reposition after auth UI updates show/hide nav items
+    // Uses a MutationObserver on the nav list watching for style/display changes
+    if (navList) {
+        const observer = new MutationObserver(() => {
+            // Small delay to let DOM settle after auth changes
+            setTimeout(() => positionIndicator(true), 50);
+        });
+        observer.observe(navList, { attributes: true, subtree: true, attributeFilter: ['style'] });
+    }
+
+    // Reposition on window resize (layout may shift)
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => positionIndicator(true), 100);
+    });
 
     // We only set the indicator once based on the current URL.
     // Clicks no longer animate the indicator, avoiding the brief “jump” before navigation.
