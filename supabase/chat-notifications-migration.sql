@@ -30,7 +30,6 @@ BEGIN
         FROM public.team_members 
         WHERE project_id = v_project_id 
         AND user_id != NEW.user_id
-        AND status = 'accepted'
     LOOP
         -- Anti-spam: Check if this user ALREADY has an UNREAD chat notification for this project
         SELECT id INTO v_existing_notification

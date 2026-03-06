@@ -657,9 +657,11 @@
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             ${user ? `
-                            <button type="button" class="btn-like ${isLiked ? 'liked' : ''}" data-project-id="${project.id}" aria-label="Like project" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: transparent; border: 1px solid var(--border-color); color: var(--text-color); border-radius: 20px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; height: 36px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="${isLiked ? '#e11d48' : 'none'}" stroke="${isLiked ? '#e11d48' : 'currentColor'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                                <span class="like-count" style="font-size: 13px; font-weight: 600;">${likesCount > 0 ? likesCount : ''}</span>
+                            <button type="button" class="btn-like ${isLiked ? 'liked' : ''}" data-project-id="${project.id}" aria-label="${isLiked ? 'Unlike' : 'Like'} project" title="${isLiked ? 'Unlike project' : 'Like project'}">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                                <span class="like-count">${likesCount > 0 ? likesCount : ''}</span>
                             </button>
                             ` : ''}
                             <button 
@@ -688,28 +690,31 @@
                         likeBtn.addEventListener('click', async (e) => {
                             e.stopPropagation();
 
+                            // Prevent spam clicks / race conditions
+                            if (likeBtn.dataset.isLiking === 'true') return;
+                            likeBtn.dataset.isLiking = 'true';
+
                             // Optimistic UI update
                             const isCurrentlyLiked = likeBtn.classList.contains('liked');
-                            const svg = likeBtn.querySelector('svg');
                             const countSpan = likeBtn.querySelector('.like-count');
                             let currentCount = parseInt(countSpan.textContent) || 0;
 
-                            // Animate press
-                            svg.style.transform = 'scale(1.2)';
-                            setTimeout(() => { svg.style.transform = 'scale(1)'; }, 200);
+                            // Animation class trigger
+                            likeBtn.classList.remove('animate-like');
+                            void likeBtn.offsetWidth; // trigger reflow
+                            likeBtn.classList.add('animate-like');
 
+                            // Toggle UI classes / attributes
                             if (isCurrentlyLiked) {
-                                // Unlike visually
                                 likeBtn.classList.remove('liked');
-                                svg.setAttribute('fill', 'none');
-                                svg.setAttribute('stroke', 'currentColor');
+                                likeBtn.setAttribute('title', 'Like project');
+                                likeBtn.setAttribute('aria-label', 'Like project');
                                 currentCount = Math.max(0, currentCount - 1);
                                 countSpan.textContent = currentCount > 0 ? currentCount : '';
                             } else {
-                                // Like visually
                                 likeBtn.classList.add('liked');
-                                svg.setAttribute('fill', '#e11d48');
-                                svg.setAttribute('stroke', '#e11d48');
+                                likeBtn.setAttribute('title', 'Unlike project');
+                                likeBtn.setAttribute('aria-label', 'Unlike project');
                                 currentCount++;
                                 countSpan.textContent = currentCount;
                             }
@@ -723,16 +728,18 @@
                                 // Revert optimistic update on failure
                                 if (isCurrentlyLiked) {
                                     likeBtn.classList.add('liked');
-                                    svg.setAttribute('fill', '#e11d48');
-                                    svg.setAttribute('stroke', '#e11d48');
+                                    likeBtn.setAttribute('title', 'Unlike project');
+                                    likeBtn.setAttribute('aria-label', 'Unlike project');
                                     countSpan.textContent = (currentCount + 1) > 0 ? (currentCount + 1) : '';
                                 } else {
                                     likeBtn.classList.remove('liked');
-                                    svg.setAttribute('fill', 'none');
-                                    svg.setAttribute('stroke', 'currentColor');
+                                    likeBtn.setAttribute('title', 'Like project');
+                                    likeBtn.setAttribute('aria-label', 'Like project');
                                     countSpan.textContent = (currentCount - 1) > 0 ? (currentCount - 1) : '';
                                 }
                                 if (window.toast) window.toast.error('Failed to update like status');
+                            } finally {
+                                likeBtn.dataset.isLiking = 'false';
                             }
                         });
                     }

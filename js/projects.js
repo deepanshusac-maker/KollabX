@@ -594,7 +594,7 @@ async function toggleProjectLike(projectId) {
       .select('id')
       .eq('project_id', projectId)
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     if (existing) {
       // Unlike
