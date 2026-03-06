@@ -2,14 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z73KBZEV44"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-Z73KBZEV44');
-    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,18 +67,9 @@
             transform: translateY(-2px);
         }
     </style>
-    <script>
-        // Sentry initialization - only if a real DSN is provided
-        const SENTRY_DSN = "YOUR_DSN_HERE";
-        if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
-            const script = document.createElement('script');
-            script.src = `https://js.sentry-cdn.com/${SENTRY_DSN}.min.js`;
-            script.crossOrigin = "anonymous";
-            document.head.appendChild(script);
-        }
-    </script>
     <!-- Simple Analytics Placeholder -->
     <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
+    <link rel="stylesheet" href="css/cookie-consent.css">
 </head>
 
 <body>
@@ -96,6 +79,8 @@
         <p>Oops! The page you're looking for has moved to another project.</p>
         <a href="index.html" class="btn">Back to Home</a>
     </div>
+    <script src="js/analytics.js"></script>
+    <script src="js/cookie-consent.js"></script>
 </body>
 
 </html>

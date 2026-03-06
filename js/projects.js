@@ -68,6 +68,11 @@ async function createProject(projectData) {
       // Don't fail the whole operation, just log it
     }
 
+    if (window.kxAnalytics) window.kxAnalytics.trackEvent('create_project', {
+      category: projectData.category,
+      team_size: parseInt(projectData.teamSize) || 2
+    });
+
     // Trigger match score updates for all users (new project may match existing users)
     // Do this in background to not block the response
     updateMatchScoresForNewProject(data.id).catch(err => {

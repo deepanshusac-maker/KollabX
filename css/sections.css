@@ -569,45 +569,6 @@ section h2 {
     background: transparent;
 }
 
-.feature-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.feature-item {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-}
-
-.checkmark {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 700;
-}
-
-.feature-item h4 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--text-main);
-}
-
-.feature-item p {
-    color: var(--text-mist);
-    line-height: 1.5;
-    font-size: 0.95rem;
-}
 
 /* ========================================
    5. FAQ - Accordion
@@ -727,7 +688,7 @@ section h2 {
 }
 
 .footer-brand .logo img {
-    height: 45px;
+    height: 30px;
     width: auto;
     object-fit: contain;
 }

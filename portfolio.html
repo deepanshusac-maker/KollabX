@@ -2,14 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z73KBZEV44"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-Z73KBZEV44');
-    </script>
 
     <link rel="icon" type="image/svg+xml" href="assets/images/logo11.svg">
     <link rel="preconnect" href="https://ssoqnnokeuxznfdyihob.supabase.co">
@@ -97,21 +89,9 @@
     </style>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.400.0"></script>
-    <script>
-        // Sentry initialization - only if a real DSN is provided
-        const SENTRY_DSN = "YOUR_DSN_HERE";
-        if (SENTRY_DSN && SENTRY_DSN !== "YOUR_DSN_HERE") {
-            const script = document.createElement('script');
-            script.src = "https://browser.sentry-cdn.com/7.114.0/bundle.min.js";
-            script.crossOrigin = "anonymous";
-            script.onload = () => {
-                Sentry.init({ dsn: SENTRY_DSN });
-            };
-            document.head.appendChild(script);
-        }
-    </script>
     <!-- Simple Analytics Placeholder -->
     <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
+    <link rel="stylesheet" href="css/cookie-consent.css">
 </head>
 
 <body class="auth-loading-state">
@@ -388,6 +368,8 @@
             });
         });
     </script>
+    <script src="js/analytics.js"></script>
+    <script src="js/cookie-consent.js"></script>
 </body>
 
 </html>

@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 3. Load the data
     loadPortfolio(userId);
+
+    // 4. Track portfolio view
+    if (window.kxAnalytics) window.kxAnalytics.trackEvent('view_portfolio', { viewed_user_id: userId });
 });
 
 /**

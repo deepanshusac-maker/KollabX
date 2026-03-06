@@ -1,5 +1,6 @@
 /* Global CSS */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
 @import 'variables.css';
 
 * {
@@ -157,7 +158,7 @@ body {
 }
 
 .navbar-logo {
-    height: 55px;
+    height: 35px;
     width: auto;
     object-fit: contain;
     display: block;
@@ -165,10 +166,11 @@ body {
 
 .navbar h1,
 .navbar-title {
+    font-family: 'Roboto', sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--nav-text);
-    letter-spacing: -0.02em;
+    letter-spacing: 0.02em;
     margin: 0;
     line-height: 1.2;
     display: flex;

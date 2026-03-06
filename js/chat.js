@@ -586,6 +586,8 @@ async function handleSendMessage() {
     if (error) {
         console.error('Error sending message:', error);
         window.toast.error('Failed to send message.');
+    } else {
+        if (window.kxAnalytics) window.kxAnalytics.trackEvent('send_message');
     }
 }
 

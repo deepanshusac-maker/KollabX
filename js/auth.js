@@ -35,6 +35,7 @@ async function signUp(email, password, fullName) {
     if (error) throw error;
 
     // Profile will be created automatically by database trigger
+    if (window.kxAnalytics) window.kxAnalytics.trackEvent('sign_up', { method: 'email' });
     return { success: true, data };
   } catch (error) {
     console.error('Sign up error:', error);
@@ -56,6 +57,7 @@ async function signIn(email, password) {
 
     if (error) throw error;
 
+    if (window.kxAnalytics) window.kxAnalytics.trackEvent('login', { method: 'email' });
     return { success: true, data };
   } catch (error) {
     console.error('Sign in error:', error);
@@ -152,6 +154,7 @@ async function signInWithGoogle() {
 
     // Redirect to Google OAuth page
     if (data?.url) {
+      if (window.kxAnalytics) window.kxAnalytics.trackEvent('login', { method: 'google' });
       window.location.href = data.url;
       return { success: true, redirecting: true };
     }
