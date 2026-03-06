@@ -277,9 +277,9 @@ function updateContributionsTab(projects) {
             <div class="timeline-dot"></div>
             <p class="timeline-date">${new Date(m.joined_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
             <div class="contribution-card">
-                <h4 style="margin-bottom: 8px;">Joined ${m.project.title}</h4>
-                <p style="font-size: 14px; color: var(--text-mist);">Role: ${m.role || 'Collaborator'}</p>
-                <p style="font-size: 14px; margin-top: 12px;">Started working on this ${m.project.category || 'project'} alongside ${m.project.current_members} team members.</p>
+                <h4 style="margin-bottom: 8px;">Joined ${escapePortfolioHtml(m.project.title)}</h4>
+                <p style="font-size: 14px; color: var(--text-mist);">Role: ${escapePortfolioHtml(m.role || 'Collaborator')}</p>
+                <p style="font-size: 14px; margin-top: 12px;">Started working on this ${escapePortfolioHtml(m.project.category || 'project')} alongside ${m.project.current_members} team members.</p>
             </div>
         </div>
     `).join('');

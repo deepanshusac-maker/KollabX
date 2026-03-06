@@ -749,6 +749,17 @@ section h2 {
 }
 
 /* Newsletter Section */
+.newsletter-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.newsletter-content {
+    flex: 1;
+}
+
 .footer-newsletter h4 {
     font-size: 1.1rem;
     font-weight: 700;
@@ -796,9 +807,11 @@ section h2 {
 .footer-socials {
     display: flex;
     gap: 1rem;
+    transform: translateX(15px);
 }
 
 .social-btn {
+    position: relative;
     width: 42px;
     height: 42px;
     background: rgba(255, 255, 255, 0.1);
@@ -808,6 +821,28 @@ section h2 {
     justify-content: center;
     color: rgba(255, 255, 255, 0.8);
     transition: all 0.3s ease;
+}
+
+.social-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.social-btn:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
 }
 
 .social-btn:hover {
@@ -851,7 +886,6 @@ section h2 {
 
     .footer-newsletter {
         grid-column: span 3;
-        max-width: 400px;
     }
 }
 
@@ -863,6 +897,11 @@ section h2 {
     .footer-brand,
     .footer-newsletter {
         grid-column: span 2;
+    }
+
+    .newsletter-row {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .footer-bottom {

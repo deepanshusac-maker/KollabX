@@ -326,6 +326,98 @@ body {
   text-align: center;
 }
 
+/* Channel Options (3-dots menu) */
+.channel-options-container {
+  position: relative;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.channel-options-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.channel-item:hover .channel-options-btn {
+  opacity: 1;
+  visibility: visible;
+}
+
+.channel-options-btn:hover {
+  background: var(--primary-bg);
+  color: var(--primary);
+}
+
+.channel-item.active .channel-options-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.channel-item.active .channel-options-btn {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.channel-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  min-width: 140px;
+  padding: 6px;
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+}
+
+.channel-dropdown.open {
+  display: flex;
+  animation: fadeInUp 0.2s ease-out;
+}
+
+.channel-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+
+.channel-dropdown-item:hover {
+  background: var(--bg);
+}
+
+.channel-dropdown-item.danger {
+  color: #dc2626;
+}
+
+.channel-dropdown-item.danger:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
 /* -- Members Section -- */
 .members-section {
   flex: 1;

@@ -758,7 +758,7 @@
                                 <div>
                                     <div class="recommended-project-title">${escapeHtml(project.title || 'Untitled Project')}</div>
                                     <div class="recommended-project-meta">
-                                        ${project.category || ''} • ${project.current_members || 0}/${project.team_size || 1} members
+                                        ${escapeHtml(project.category || '')} • ${project.current_members || 0}/${project.team_size || 1} members
                                         ${(project.current_members || 0) >= (project.team_size || 1) ? '<span class="team-full-badge">Team Full</span>' : ''}
                                         <span class="match-score-badge">${matchScore}% match</span>
                                     </div>

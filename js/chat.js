@@ -119,10 +119,36 @@ function setupEventListeners() {
         createChannelModal.addEventListener('click', (e) => { if (e.target === createChannelModal) closeCreateChannelModal(); });
         document.getElementById('newChannelName')?.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeCreateChannelModal();
+            if (e.key === 'Enter') handleCreateChannel();
         });
     }
+
+    const editChannelSubmit = document.getElementById('editChannelSubmit');
+    if (editChannelSubmit) editChannelSubmit.addEventListener('click', () => handleEditChannel());
+
+    const editChannelModal = document.getElementById('editChannelModal');
+    if (editChannelModal) {
+        editChannelModal.addEventListener('click', (e) => { if (e.target === editChannelModal) closeEditChannelModal(); });
+        document.getElementById('editChannelName')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeEditChannelModal();
+            if (e.key === 'Enter') handleEditChannel();
+        });
+    }
+
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && document.getElementById('createChannelModal')?.classList.contains('open')) closeCreateChannelModal();
+        if (e.key === 'Escape') {
+            if (document.getElementById('createChannelModal')?.classList.contains('open')) closeCreateChannelModal();
+            if (document.getElementById('editChannelModal')?.classList.contains('open')) closeEditChannelModal();
+        }
+    });
+
+    // Close any open channel dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.channel-options-container')) {
+            document.querySelectorAll('.channel-dropdown.open').forEach(dropdown => {
+                dropdown.classList.remove('open');
+            });
+        }
     });
 }
 
@@ -249,6 +275,21 @@ async function loadChannels(projectId) {
         <button class="channel-item" data-channel-id="${c.id}">
             <span class="hash">#</span>
             <span class="channel-name">${escapeHtml(c.name)}</span>
+            ${isLeader && c.name.toLowerCase() !== 'general' ? `
+            <div class="channel-options-container">
+                <div class="channel-options-btn" aria-label="Channel options">
+                    <i data-lucide="more-vertical" style="width: 16px; height: 16px;"></i>
+                </div>
+                <div class="channel-dropdown" data-dropdown-id="${c.id}">
+                    <div class="channel-dropdown-item edit-channel" data-id="${c.id}" data-name="${escapeHtml(c.name)}" data-desc="${escapeHtml(c.description || '')}">
+                        <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i> Edit Channel
+                    </div>
+                    <div class="channel-dropdown-item danger delete-channel" data-id="${c.id}" data-name="${escapeHtml(c.name)}">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Delete Channel
+                    </div>
+                </div>
+            </div>
+            ` : ''}
         </button>
     `).join('');
 
@@ -269,7 +310,12 @@ async function loadChannels(projectId) {
     }
 
     channelList.querySelectorAll('.channel-item').forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+            // Prevent selecting channel if clicking on options
+            if (e.target.closest('.channel-options-container')) {
+                return;
+            }
+
             const channel = channels.find(c => c.id === item.dataset.channelId);
             if (channel) {
                 if (chatLayout && window.matchMedia('(max-width: 768px)').matches) {
@@ -278,7 +324,44 @@ async function loadChannels(projectId) {
                 selectChannel(channel);
             }
         });
+
+        // Setup dropdown toggles
+        const optionsBtn = item.querySelector('.channel-options-btn');
+        if (optionsBtn) {
+            optionsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close other open dropdowns
+                document.querySelectorAll('.channel-dropdown.open').forEach(dropdown => {
+                    dropdown.classList.remove('open');
+                });
+                const dropdown = item.querySelector('.channel-dropdown');
+                if (dropdown) {
+                    dropdown.classList.toggle('open');
+                }
+            });
+        }
     });
+
+    // Setup edit/delete actions
+    channelList.querySelectorAll('.edit-channel').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dropdown = btn.closest('.channel-dropdown');
+            if (dropdown) dropdown.classList.remove('open');
+            openEditChannelModal(btn.dataset.id, btn.dataset.name, btn.dataset.desc);
+        });
+    });
+
+    channelList.querySelectorAll('.delete-channel').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dropdown = btn.closest('.channel-dropdown');
+            if (dropdown) dropdown.classList.remove('open');
+            deleteChannel(btn.dataset.id, btn.dataset.name);
+        });
+    });
+
+    if (window.lucide) lucide.createIcons();
 
     if (channels.length > 0) {
         selectChannel(channels[0]);
@@ -340,6 +423,105 @@ async function handleCreateChannel() {
     await loadChannels(currentProjectId);
     if (newChannel) selectChannel(newChannel);
     window.toast.success('Channel created.');
+}
+
+// Edit Channel Modal logic variables
+let editChannelIdTarget = null;
+
+function openEditChannelModal(id, name, desc) {
+    const modal = document.getElementById('editChannelModal');
+    const nameInput = document.getElementById('editChannelName');
+    const descInput = document.getElementById('editChannelDesc');
+
+    if (modal && nameInput) {
+        editChannelIdTarget = id;
+        nameInput.value = name || '';
+        if (descInput) descInput.value = desc || '';
+        modal.classList.add('open');
+        nameInput.focus();
+    }
+}
+
+function closeEditChannelModal() {
+    const modal = document.getElementById('editChannelModal');
+    if (modal) modal.classList.remove('open');
+    editChannelIdTarget = null;
+}
+
+async function handleEditChannel() {
+    if (!editChannelIdTarget || !currentProjectId) return;
+
+    const nameInput = document.getElementById('editChannelName');
+    const descInput = document.getElementById('editChannelDesc');
+    const newName = nameInput && nameInput.value.trim().toLowerCase().replace(/\s+/g, '-');
+
+    if (!newName) {
+        window.toast.error('Enter a channel name.');
+        return;
+    }
+
+    if (newName === 'general') {
+        window.toast.error('Cannot name a channel "general".');
+        return;
+    }
+
+    const { error } = await window.supabase.from('channels')
+        .update({
+            name: newName,
+            description: (descInput && descInput.value.trim()) || null
+        })
+        .eq('id', editChannelIdTarget);
+
+    if (error) {
+        window.toast.error(error.message || 'Failed to update channel.');
+        return;
+    }
+
+    closeEditChannelModal();
+    window.toast.success('Channel updated.');
+
+    // Refresh channels and re-select if currently selected
+    await loadChannels(currentProjectId);
+    if (currentChannelId === editChannelIdTarget) {
+        const { data: updatedChannel } = await window.supabase.from('channels').select('*').eq('id', currentChannelId).single();
+        if (updatedChannel) {
+            document.getElementById('headerChannel').innerHTML = `
+                <div class="channel-name"><span class="hash-lg">#</span> ${escapeHtml(updatedChannel.name)}</div>
+                <div class="channel-desc">${escapeHtml(updatedChannel.description || '')}</div>
+            `;
+            const chatTextarea = document.getElementById('chatTextarea');
+            if (chatTextarea) chatTextarea.placeholder = `Message #${escapeHtml(updatedChannel.name)}…`;
+        }
+    }
+}
+
+async function deleteChannel(id, name) {
+    if (!id || !currentProjectId) return;
+
+    if (name.toLowerCase() === 'general') {
+        window.toast.error('Cannot delete the #general channel.');
+        return;
+    }
+
+    if (!confirm(`Are you sure you want to delete the #${name} channel?\nAll messages inside will be permanently deleted.`)) {
+        return;
+    }
+
+    const { error } = await window.supabase.from('channels').delete().eq('id', id);
+
+    if (error) {
+        window.toast.error('Failed to delete channel.');
+        return;
+    }
+
+    window.toast.success('Channel deleted.');
+
+    // If we deleted the current channel, load general
+    if (currentChannelId === id) {
+        currentChannelId = null;
+    }
+
+    await loadChannels(currentProjectId);
 }
 
 async function selectChannel(channel) {
