@@ -89,7 +89,8 @@ function getNotificationIconName(type) {
     application_rejected: 'x-circle',
     team_member_added: 'users',
     project_update: 'message-square',
-    project_created: 'rocket'
+    project_created: 'rocket',
+    new_chat_message: 'message-circle'
   };
   return icons[type] || 'bell';
 }

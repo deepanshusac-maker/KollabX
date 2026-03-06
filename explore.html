@@ -290,6 +290,8 @@
 
         // Projects the current user has applied to (by project_id)
         let appliedProjectIds = new Set();
+        // Projects the current user has liked
+        let likedProjectIds = new Set();
 
         // Load projects from database
         async function loadProjects() {
@@ -322,23 +324,33 @@
                 if (result.success && result.data && result.data.length > 0) {
                     // Refresh applied projects set (for current user)
                     appliedProjectIds = new Set();
+                    likedProjectIds = new Set();
                     try {
-                        if (window.authHelpers?.getCurrentUser && window.applications?.getUserApplications) {
+                        if (window.authHelpers?.getCurrentUser) {
                             const user = await window.authHelpers.getCurrentUser();
                             if (user) {
-                                const appsResult = await window.applications.getUserApplications();
-                                if (appsResult.success && Array.isArray(appsResult.data)) {
-                                    appsResult.data.forEach(app => {
-                                        // Treat any non-rejected application as "applied"
-                                        if (app.project_id && app.status !== 'rejected') {
-                                            appliedProjectIds.add(app.project_id);
-                                        }
-                                    });
+                                // Load applications
+                                if (window.applications?.getUserApplications) {
+                                    const appsResult = await window.applications.getUserApplications();
+                                    if (appsResult.success && Array.isArray(appsResult.data)) {
+                                        appsResult.data.forEach(app => {
+                                            if (app.project_id && app.status !== 'rejected') {
+                                                appliedProjectIds.add(app.project_id);
+                                            }
+                                        });
+                                    }
+                                }
+                                // Load liked projects
+                                if (window.projects?.getUserLikedProjects) {
+                                    const likesResult = await window.projects.getUserLikedProjects();
+                                    if (likesResult.success && Array.isArray(likesResult.data)) {
+                                        likesResult.data.forEach(projectId => likedProjectIds.add(projectId));
+                                    }
                                 }
                             }
                         }
                     } catch (appsError) {
-                        console.warn('Error loading user applications for applied state:', appsError);
+                        console.warn('Error loading user applications/likes for state:', appsError);
                     }
 
                     // Render projects first
@@ -595,8 +607,10 @@
 
                     // Has the current user already applied to this project?
                     const hasApplied = appliedProjectIds && appliedProjectIds.has(project.id);
+                    const isLiked = likedProjectIds && likedProjectIds.has(project.id);
                     const isOwnProject = user && user.id === project.creator_id;
                     const isFull = (project.current_members || 0) >= (project.team_size || 1);
+                    const likesCount = project.likes_count || 0;
 
                     // Create project card
                     const card = document.createElement('div');
@@ -641,24 +655,87 @@
                                 </div>
                             ` : ''}
                         </div>
-                        <button 
-                            type="button" 
-                            class="btn-apply${isFull ? ' btn-team-full' : ''}${isOwnProject ? ' btn-own-project' : ''}" 
-                            data-project-id="${project.id}"
-                            ${hasApplied || isFull || isOwnProject ? 'disabled' : ''}>
-                            ${isOwnProject ? 'Your Project' : (isFull ? 'Team Full' : (hasApplied ? 'Applied' : 'Apply'))}
-                        </button>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            ${user ? `
+                            <button type="button" class="btn-like ${isLiked ? 'liked' : ''}" data-project-id="${project.id}" aria-label="Like project" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: transparent; border: 1px solid var(--border-color); color: var(--text-color); border-radius: 20px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; height: 36px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="${isLiked ? '#e11d48' : 'none'}" stroke="${isLiked ? '#e11d48' : 'currentColor'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                <span class="like-count" style="font-size: 13px; font-weight: 600;">${likesCount > 0 ? likesCount : ''}</span>
+                            </button>
+                            ` : ''}
+                            <button 
+                                type="button" 
+                                class="btn-apply${isFull ? ' btn-team-full' : ''}${isOwnProject ? ' btn-own-project' : ''}" 
+                                data-project-id="${project.id}"
+                                ${hasApplied || isFull || isOwnProject ? 'disabled' : ''}>
+                                ${isOwnProject ? 'Your Project' : (isFull ? 'Team Full' : (hasApplied ? 'Applied' : 'Apply'))}
+                            </button>
+                        </div>
                     </div>
                 `;
 
                     // Add click handler for card (opens detail modal)
                     card.addEventListener('click', (e) => {
-                        // Don't open modal if clicking on Apply button
-                        if (e.target.closest('.btn-apply')) {
+                        // Don't open modal if clicking on Apply button or Like button
+                        if (e.target.closest('.btn-apply') || e.target.closest('.btn-like')) {
                             return;
                         }
                         showProjectDetail(project.id);
                     });
+
+                    // Add click handler for Like button
+                    const likeBtn = card.querySelector('.btn-like');
+                    if (likeBtn) {
+                        likeBtn.addEventListener('click', async (e) => {
+                            e.stopPropagation();
+
+                            // Optimistic UI update
+                            const isCurrentlyLiked = likeBtn.classList.contains('liked');
+                            const svg = likeBtn.querySelector('svg');
+                            const countSpan = likeBtn.querySelector('.like-count');
+                            let currentCount = parseInt(countSpan.textContent) || 0;
+
+                            // Animate press
+                            svg.style.transform = 'scale(1.2)';
+                            setTimeout(() => { svg.style.transform = 'scale(1)'; }, 200);
+
+                            if (isCurrentlyLiked) {
+                                // Unlike visually
+                                likeBtn.classList.remove('liked');
+                                svg.setAttribute('fill', 'none');
+                                svg.setAttribute('stroke', 'currentColor');
+                                currentCount = Math.max(0, currentCount - 1);
+                                countSpan.textContent = currentCount > 0 ? currentCount : '';
+                            } else {
+                                // Like visually
+                                likeBtn.classList.add('liked');
+                                svg.setAttribute('fill', '#e11d48');
+                                svg.setAttribute('stroke', '#e11d48');
+                                currentCount++;
+                                countSpan.textContent = currentCount;
+                            }
+
+                            try {
+                                const res = await window.projects.toggleProjectLike(project.id);
+                                if (!res.success) {
+                                    throw new Error(res.error);
+                                }
+                            } catch (error) {
+                                // Revert optimistic update on failure
+                                if (isCurrentlyLiked) {
+                                    likeBtn.classList.add('liked');
+                                    svg.setAttribute('fill', '#e11d48');
+                                    svg.setAttribute('stroke', '#e11d48');
+                                    countSpan.textContent = (currentCount + 1) > 0 ? (currentCount + 1) : '';
+                                } else {
+                                    likeBtn.classList.remove('liked');
+                                    svg.setAttribute('fill', 'none');
+                                    svg.setAttribute('stroke', 'currentColor');
+                                    countSpan.textContent = (currentCount - 1) > 0 ? (currentCount - 1) : '';
+                                }
+                                if (window.toast) window.toast.error('Failed to update like status');
+                            }
+                        });
+                    }
 
                     // Add click handler for Apply button
                     const applyBtn = card.querySelector('.btn-apply');

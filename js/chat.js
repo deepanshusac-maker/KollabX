@@ -233,6 +233,28 @@ async function selectProject(project) {
     // Load Channels and Members
     await loadChannels(project.id);
     await setupPresenceSubscription(project.id);
+
+    // Automatically mark chat notifications for this project as read
+    await clearProjectChatNotifications(project.id);
+}
+
+async function clearProjectChatNotifications(projectId) {
+    if (!window.supabase || !currentUser) return;
+    try {
+        const { error } = await window.supabase
+            .from('notifications')
+            .update({ read: true })
+            .eq('user_id', currentUser.id)
+            .eq('type', 'new_chat_message')
+            .eq('read', false)
+            .like('link', `%chat.html?project=${projectId}%`);
+
+        if (!error && window.notifications && typeof window.notifications.updateNotificationBadge === 'function') {
+            window.notifications.updateNotificationBadge();
+        }
+    } catch (err) {
+        console.warn('Failed to clear chat notifications:', err);
+    }
 }
 
 async function loadChannels(projectId) {

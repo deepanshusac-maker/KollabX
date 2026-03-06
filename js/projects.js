@@ -581,6 +581,70 @@ async function updateMatchScoresForNewProject(projectId) {
   }
 }
 
+// Toggle project like status for a user
+async function toggleProjectLike(projectId) {
+  try {
+    const supabase = ensureSupabase();
+    const user = await window.authHelpers.getCurrentUser();
+    if (!user) return { success: false, error: 'You must be logged in to like a project' };
+
+    // Check if liked
+    const { data: existing } = await supabase
+      .from('project_likes')
+      .select('id')
+      .eq('project_id', projectId)
+      .eq('user_id', user.id)
+      .single();
+
+    if (existing) {
+      // Unlike
+      const { error } = await supabase
+        .from('project_likes')
+        .delete()
+        .eq('id', existing.id);
+      if (error) throw error;
+      return { success: true, liked: false };
+    } else {
+      // Like
+      const { error } = await supabase
+        .from('project_likes')
+        .insert({ project_id: projectId, user_id: user.id });
+      if (error) throw error;
+      return { success: true, liked: true };
+    }
+  } catch (error) {
+    console.error('Toggle like error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Fetch all project IDs that the current user has liked
+async function getUserLikedProjects() {
+  try {
+    const supabase = window.supabase;
+    if (!supabase) return { success: true, data: [] };
+
+    // Check if authHelpers exists before trying to use it
+    if (!window.authHelpers || !window.authHelpers.getCurrentUser) {
+      return { success: true, data: [] };
+    }
+
+    const user = await window.authHelpers.getCurrentUser();
+    if (!user) return { success: true, data: [] };
+
+    const { data, error } = await supabase
+      .from('project_likes')
+      .select('project_id')
+      .eq('user_id', user.id);
+
+    if (error) throw error;
+    return { success: true, data: data.map(like => like.project_id) };
+  } catch (error) {
+    console.error('Get user liked projects error:', error);
+    return { success: false, error: error.message, data: [] };
+  }
+}
+
 // Export functions
 window.projects = {
   createProject,
@@ -592,5 +656,7 @@ window.projects = {
   calculateMatchScore,
   updateUserMatchScores,
   getRecommendedProjects,
-  updateMatchScoresForNewProject
+  updateMatchScoresForNewProject,
+  toggleProjectLike,
+  getUserLikedProjects
 };
