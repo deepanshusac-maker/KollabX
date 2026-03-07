@@ -67,9 +67,10 @@ async function loadPortfolio(userId) {
         updateSkillsTab(profile);
         updateExtraTabsUI(userId);
 
-        // Re-initialize icons since we've added dynamic content
+        // Re-initialize icons since we've added dynamic content (scoped)
         if (window.lucide) {
-            lucide.createIcons();
+            const mainEl = document.querySelector('main');
+            if (mainEl) lucide.createIcons({ nodes: [mainEl] });
         }
 
         // 4. Hide Loader
@@ -356,7 +357,7 @@ function showPortfolioError(message) {
                 <a href="explore.html" class="btn btn-primary-maroon" style="margin-top: 32px; display: inline-flex;">Go to Explore</a>
             </div>
         `;
-        if (window.lucide) lucide.createIcons();
+        if (window.lucide) lucide.createIcons({ nodes: [main] });
     }
 
     // Hide loader on error too

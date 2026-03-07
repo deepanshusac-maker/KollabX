@@ -29,64 +29,115 @@ function getSupabase() {
   return window.supabase || supabaseClient;
 }
 
+// ── In-memory caches ──────────────────────────────────────────────
+// undefined = not yet fetched, null = fetched but no user/profile
+let _cachedUser = undefined;
+let _cachedProfile = undefined;
+let _userPromise = null;     // deduplicates concurrent calls
+let _profilePromise = null;
+
+// Reset caches (called on auth state change)
+function clearCaches() {
+  _cachedUser = undefined;
+  _cachedProfile = undefined;
+  _userPromise = null;
+  _profilePromise = null;
+}
+
+// Register onAuthStateChange as early as possible to invalidate caches
+function setupAuthCacheListener() {
+  const client = getSupabase();
+  if (!client || client._authCacheListenerSet) return;
+  client.auth.onAuthStateChange(() => {
+    clearCaches();
+  });
+  client._authCacheListenerSet = true;
+}
+
+// Try immediately; if Supabase isn't ready yet, retry on DOMContentLoaded
+setupAuthCacheListener();
+if (!getSupabase()?._authCacheListenerSet) {
+  window.addEventListener('DOMContentLoaded', setupAuthCacheListener);
+}
+
 // Helper function to check if user is authenticated
 const isAuthenticated = async () => {
   try {
-    const client = getSupabase();
-    if (!client) return false;
-    const { data: { session } } = await client.auth.getSession();
-    return !!session;
+    const user = await getCurrentUser();
+    return !!user;
   } catch (error) {
     console.error('Error checking authentication:', error);
     return false;
   }
 };
 
-// Helper function to get current user
+// Helper function to get current user (cached + deduplicated)
 const getCurrentUser = async () => {
-  try {
-    const client = getSupabase();
-    if (!client) return null;
+  if (_cachedUser !== undefined) return _cachedUser;
+  if (_userPromise) return _userPromise;
 
-    // Use getSession first to avoid console noise if no session exists
-    const { data: { session } } = await client.auth.getSession();
-    if (!session) return null;
+  _userPromise = (async () => {
+    try {
+      const client = getSupabase();
+      if (!client) { _cachedUser = null; return null; }
 
-    const { data: { user }, error } = await client.auth.getUser();
-    if (error) throw error;
-    return user;
-  } catch (error) {
-    // Only log if it's not a simple missing session
-    if (error.name !== 'AuthSessionMissingError') {
-      console.error('Error getting current user:', error);
+      // Use getSession first to avoid console noise if no session exists
+      const { data: { session } } = await client.auth.getSession();
+      if (!session) { _cachedUser = null; return null; }
+
+      const { data: { user }, error } = await client.auth.getUser();
+      if (error) throw error;
+      _cachedUser = user;
+      return user;
+    } catch (error) {
+      if (error.name !== 'AuthSessionMissingError') {
+        console.error('Error getting current user:', error);
+      }
+      _cachedUser = null;
+      return null;
+    } finally {
+      _userPromise = null;
     }
-    return null;
-  }
+  })();
+
+  return _userPromise;
 };
 
-// Helper function to get current user's profile
+// Helper function to get current user's profile (cached + deduplicated)
 const getCurrentProfile = async () => {
-  try {
-    const user = await getCurrentUser();
-    if (!user) return null;
-    const client = getSupabase();
-    if (!client) return null;
-    const { data, error } = await client
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+  if (_cachedProfile !== undefined) return _cachedProfile;
+  if (_profilePromise) return _profilePromise;
 
-    if (error) {
-      console.error('Error fetching profile:', error);
+  _profilePromise = (async () => {
+    try {
+      const user = await getCurrentUser();
+      if (!user) { _cachedProfile = null; return null; }
+      const client = getSupabase();
+      if (!client) { _cachedProfile = null; return null; }
+      const { data, error } = await client
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        _cachedProfile = null;
+        return null;
+      }
+
+      _cachedProfile = data;
+      return data;
+    } catch (error) {
+      console.error('Error getting profile:', error);
+      _cachedProfile = null;
       return null;
+    } finally {
+      _profilePromise = null;
     }
+  })();
 
-    return data;
-  } catch (error) {
-    console.error('Error getting profile:', error);
-    return null;
-  }
+  return _profilePromise;
 };
 
 // Sanitize a URL to prevent XSS when interpolated into innerHTML.
@@ -118,6 +169,7 @@ window.authHelpers = {
   isAuthenticated,
   getCurrentUser,
   getCurrentProfile,
+  clearCaches,
   sanitizeUrl,
   sanitizeAttr,
   get supabase() { return getSupabase(); }

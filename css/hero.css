@@ -55,7 +55,6 @@
     background: rgba(255, 255, 255, 0.5);
     padding: 0.5rem 1rem;
     border-radius: 50px;
-    backdrop-filter: blur(5px);
 }
 
 /* Headline */
@@ -126,6 +125,7 @@
     padding-left: 6px;
     color: #942fa6;
     animation: spin_4991 4s infinite;
+    will-change: transform;
 }
 
 @keyframes spin_4991 {

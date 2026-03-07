@@ -227,16 +227,16 @@
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/session.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/projects.js"></script>
-    <script src="js/applications.js"></script>
-    <script src="js/teams.js"></script>
-    <script src="js/form-validation.js"></script>
-    <script src="js/toast.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/session.js" defer></script>
+    <script src="js/notifications.js" defer></script>
+    <script src="js/projects.js" defer></script>
+    <script src="js/applications.js" defer></script>
+    <script src="js/teams.js" defer></script>
+    <script src="js/form-validation.js" defer></script>
+    <script src="js/toast.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/dashboard.js" defer></script>
     <script>
         // Initialize auth and protect route
         window.addEventListener('DOMContentLoaded', async () => {
@@ -249,8 +249,8 @@
                 // Add toggle handlers for expandable sections
                 setupToggleHandlers();
             }
-            // Initialize Lucide Icons
-            lucide.createIcons();
+            // Initialize Lucide Icons (scoped)
+            lucide.createIcons({ nodes: [document.body] });
         });
 
         // Setup toggle handlers for expandable sections
@@ -470,7 +470,7 @@
                     btn.addEventListener('click', async (e) => {
                         e.stopPropagation();
                         const projectId = btn.dataset.projectId;
-                        if (confirm('Are you sure you want to leave this team?')) {
+                        const leaveAction = async () => {
                             const result = await window.teams.leaveTeam(projectId);
                             if (result.success) {
                                 window.toast.success('You have left the team.');
@@ -479,6 +479,12 @@
                                 const friendlyError = getUserFriendlyError(result.error || new Error('Failed to leave team'));
                                 showFormError(friendlyError);
                             }
+                        };
+
+                        if (window.toast && window.toast.confirm) {
+                            window.toast.confirm('Are you sure you want to leave this team?', leaveAction, null, { confirmText: 'Leave Team', type: 'danger' });
+                        } else {
+                            if (confirm('Are you sure you want to leave this team?')) leaveAction();
                         }
                     });
                 });
@@ -599,8 +605,14 @@
                 // Add cancel event listeners
                 container.querySelectorAll('.btn-cancel-application').forEach(btn => {
                     btn.addEventListener('click', async () => {
-                        if (confirm('Are you sure you want to cancel this application?')) {
-                            await handleCancelApplication(btn.dataset.applicationId);
+                        if (window.toast && window.toast.confirm) {
+                            window.toast.confirm('Are you sure you want to cancel this application?', async () => {
+                                await handleCancelApplication(btn.dataset.applicationId);
+                            }, null, { confirmText: 'Cancel Application', type: 'danger' });
+                        } else {
+                            if (confirm('Are you sure you want to cancel this application?')) {
+                                await handleCancelApplication(btn.dataset.applicationId);
+                            }
                         }
                     });
                 });
@@ -629,23 +641,28 @@
 
         // Handle reject application
         async function handleRejectApplication(applicationId) {
-            if (!confirm('Are you sure you want to reject this application?')) {
-                return;
-            }
+            const rejectAction = async () => {
+                try {
+                    const result = await window.applications.rejectApplication(applicationId);
 
-            try {
-                const result = await window.applications.rejectApplication(applicationId);
-
-                if (result.success) {
-                    window.toast.success('Application rejected.');
-                    await loadDashboardData(); // Reload to update stats and lists
-                } else {
-                    const friendlyError = getUserFriendlyError(result.error || new Error('Failed to reject application'));
+                    if (result.success) {
+                        window.toast.success('Application rejected.');
+                        await loadDashboardData(); // Reload to update stats and lists
+                    } else {
+                        const friendlyError = getUserFriendlyError(result.error || new Error('Failed to reject application'));
+                        showFormError(friendlyError);
+                    }
+                } catch (error) {
+                    const friendlyError = getUserFriendlyError(error);
                     showFormError(friendlyError);
                 }
-            } catch (error) {
-                const friendlyError = getUserFriendlyError(error);
-                showFormError(friendlyError);
+            };
+
+            if (window.toast && window.toast.confirm) {
+                window.toast.confirm('Are you sure you want to reject this application?', rejectAction, null, { confirmText: 'Reject', type: 'danger' });
+            } else {
+                if (!confirm('Are you sure you want to reject this application?')) return;
+                rejectAction();
             }
         }
 
@@ -780,9 +797,9 @@
                     `;
                 }).join('');
 
-                // Initialize icons
+                // Initialize icons (scoped to container)
                 if (window.lucide) {
-                    lucide.createIcons();
+                    lucide.createIcons({ nodes: [container] });
                 }
             } catch (error) {
                 console.error('Error loading recommended projects:', error);

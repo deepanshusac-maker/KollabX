@@ -1,7 +1,7 @@
 // Toast Notification System
 // Provides elegant, non-intrusive notifications for user actions
 
-(function() {
+(function () {
     'use strict';
 
     // Toast container (created once)
@@ -30,7 +30,7 @@
 
         // Icon based on type
         let icon = '';
-        switch(type) {
+        switch (type) {
             case 'success':
                 icon = '<i data-lucide="check-circle"></i>';
                 break;
@@ -60,9 +60,9 @@
         // Add to container
         toastContainer.appendChild(toast);
 
-        // Initialize Lucide icons
+        // Initialize Lucide icons (scoped to this toast only)
         if (window.lucide) {
-            lucide.createIcons();
+            lucide.createIcons({ nodes: [toast] });
         }
 
         // Trigger animation
@@ -108,13 +108,87 @@
         return div.innerHTML;
     }
 
+    // Create a confirmation modal dialog
+    function createConfirm(message, onConfirm, onCancel = null, options = {}) {
+        const { confirmText = 'Confirm', cancelText = 'Cancel', type = 'warning' } = options;
+
+        // Modal overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'toast-modal-overlay';
+
+        let iconHtml = '';
+        if (type === 'danger' || type === 'warning') {
+            iconHtml = '<i data-lucide="alert-triangle" style="color: #ef4444; width: 32px; height: 32px; margin-bottom: 12px; display: block;"></i>';
+        } else {
+            iconHtml = '<i data-lucide="info" style="color: #3b82f6; width: 32px; height: 32px; margin-bottom: 12px; display: block;"></i>';
+        }
+
+        const modal = document.createElement('div');
+        modal.className = 'toast-modal';
+        modal.innerHTML = `
+            <div class="toast-modal-content">
+                ${iconHtml}
+                <div class="toast-modal-message">${escapeHtml(message)}</div>
+                <div class="toast-modal-actions">
+                    <button class="btn-cancel">${escapeHtml(cancelText)}</button>
+                    <button class="btn-confirm ${type === 'danger' || type === 'warning' ? 'btn-danger' : 'btn-primary'}">${escapeHtml(confirmText)}</button>
+                </div>
+            </div>
+        `;
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        if (window.lucide) {
+            lucide.createIcons({ nodes: [overlay] });
+        }
+
+        // Animate in
+        requestAnimationFrame(() => {
+            overlay.classList.add('toast-modal-show');
+            modal.classList.add('toast-modal-show');
+        });
+
+        // Cleanup function
+        const closeBox = () => {
+            overlay.classList.remove('toast-modal-show');
+            modal.classList.remove('toast-modal-show');
+            setTimeout(() => {
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+            }, 300);
+        };
+
+        // Event listeners
+        const btnCancel = modal.querySelector('.btn-cancel');
+        const btnConfirm = modal.querySelector('.btn-confirm');
+
+        btnCancel.addEventListener('click', () => {
+            closeBox();
+            if (onCancel) onCancel();
+        });
+
+        btnConfirm.addEventListener('click', () => {
+            closeBox();
+            if (onConfirm) onConfirm();
+        });
+
+        // Optional clicking outside cancels
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeBox();
+                if (onCancel) onCancel();
+            }
+        });
+    }
+
     // Public API
     window.toast = {
         success: (message, duration) => createToast(message, 'success', duration),
         error: (message, duration) => createToast(message, 'error', duration),
         info: (message, duration) => createToast(message, 'info', duration),
         warning: (message, duration) => createToast(message, 'warning', duration),
-        show: (message, type, duration) => createToast(message, type, duration)
+        show: (message, type, duration) => createToast(message, type, duration),
+        confirm: createConfirm
     };
 
     // Initialize on DOM ready

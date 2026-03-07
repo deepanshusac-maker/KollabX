@@ -75,8 +75,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         renderNoTeamsState();
     }
-    // Initialize Lucide Icons
-    if (window.lucide) lucide.createIcons();
+    // Initialize Lucide Icons (scoped to chat body)
+    if (window.lucide) {
+        const chatLayout = document.getElementById('chatLayout');
+        if (chatLayout) lucide.createIcons({ nodes: [chatLayout] });
+    }
 });
 
 async function initChat() {
@@ -383,7 +386,7 @@ async function loadChannels(projectId) {
         });
     });
 
-    if (window.lucide) lucide.createIcons();
+    if (window.lucide && channelList) lucide.createIcons({ nodes: [channelList] });
 
     if (channels.length > 0) {
         selectChannel(channels[0]);
@@ -525,25 +528,28 @@ async function deleteChannel(id, name) {
         return;
     }
 
-    if (!confirm(`Are you sure you want to delete the #${name} channel?\nAll messages inside will be permanently deleted.`)) {
-        return;
+    if (window.toast && window.toast.confirm) {
+        window.toast.confirm(`Are you sure you want to delete the #${name} channel?\nAll messages inside will be permanently deleted.`, async () => {
+            const { error } = await window.supabase.from('channels').delete().eq('id', id);
+            if (error) {
+                window.toast.error('Failed to delete channel.');
+                return;
+            }
+            window.toast.success('Channel deleted.');
+            if (currentChannelId === id) currentChannelId = null;
+            await loadChannels(currentProjectId);
+        }, null, { confirmText: 'Delete Channel', type: 'danger' });
+    } else {
+        if (!confirm(`Are you sure you want to delete the #${name} channel?\nAll messages inside will be permanently deleted.`)) return;
+        const { error } = await window.supabase.from('channels').delete().eq('id', id);
+        if (error) {
+            window.toast.error('Failed to delete channel.');
+            return;
+        }
+        window.toast.success('Channel deleted.');
+        if (currentChannelId === id) currentChannelId = null;
+        await loadChannels(currentProjectId);
     }
-
-    const { error } = await window.supabase.from('channels').delete().eq('id', id);
-
-    if (error) {
-        window.toast.error('Failed to delete channel.');
-        return;
-    }
-
-    window.toast.success('Channel deleted.');
-
-    // If we deleted the current channel, load general
-    if (currentChannelId === id) {
-        currentChannelId = null;
-    }
-
-    await loadChannels(currentProjectId);
 }
 
 async function selectChannel(channel) {
@@ -693,7 +699,11 @@ function bindMessageActions(container) {
             e.preventDefault();
             const messageId = btn.dataset.messageId;
             const row = container.querySelector(`.msg-row[data-message-id="${messageId}"]`);
-            if (confirm('Delete this message?')) deleteMessage(messageId, row);
+            if (window.toast && window.toast.confirm) {
+                window.toast.confirm('Delete this message?', () => deleteMessage(messageId, row), null, { confirmText: 'Delete', type: 'danger' });
+            } else {
+                if (confirm('Delete this message?')) deleteMessage(messageId, row);
+            }
         });
     });
 }

@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
-    // Initialize Lucide Icons
+    // Initialize Lucide Icons (scoped to body)
     if (window.lucide) {
-        lucide.createIcons();
+        lucide.createIcons({ nodes: [document.body] });
     }
 });

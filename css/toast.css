@@ -205,3 +205,103 @@
     outline: 2px solid var(--primary-color);
     outline-offset: 2px;
 }
+
+/* Toast Confirm Modal */
+.toast-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.toast-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    transform: scale(0.95) translateY(20px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 30px;
+}
+
+.toast-modal-show {
+    opacity: 1;
+}
+
+.toast-modal.toast-modal-show {
+    transform: scale(1) translateY(0);
+}
+
+.toast-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.toast-modal-message {
+    font-size: 1.1rem;
+    color: #1f2937;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.toast-modal-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.toast-modal-actions button {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.toast-modal-actions .btn-cancel {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}
+
+.toast-modal-actions .btn-cancel:hover {
+    background: #e5e7eb;
+}
+
+.toast-modal-actions .btn-primary {
+    background: var(--maroon-grad, linear-gradient(135deg, #b3526a, #8c3b52));
+    color: white;
+}
+
+.toast-modal-actions .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(179, 82, 106, 0.2);
+}
+
+.toast-modal-actions .btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+.toast-modal-actions .btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}

@@ -122,7 +122,7 @@ async function updateAuthUI(session) {
         // Use first name only and trim length so navbar stays clean
         const firstName = rawName.split(' ')[0] || rawName;
         const displayName = firstName.length > 12 ? firstName.slice(0, 11) + '…' : firstName;
-        const rawAvatarUrl = profile?.avatar_url ? `${profile.avatar_url}?t=${new Date().getTime()}` : null;
+        const rawAvatarUrl = profile?.avatar_url || null;
         const avatarUrl = window.authHelpers.sanitizeUrl(rawAvatarUrl);
         const userMenu = createUserMenu(displayName, avatarUrl);
         navRight.insertBefore(userMenu, navRight.firstChild);
@@ -243,9 +243,9 @@ function createUserMenu(userName, avatarUrl) {
     await handleLogout();
   });
 
-  // Initialize Lucide icons
+  // Initialize Lucide icons (scoped to user menu only)
   if (window.lucide) {
-    setTimeout(() => lucide.createIcons(), 100);
+    setTimeout(() => lucide.createIcons({ nodes: [userMenu] }), 100);
   }
 
   return userMenu;
@@ -262,6 +262,8 @@ function createLogoutButton() {
 
 // Handle logout
 async function handleLogout() {
+  // Clear auth caches immediately on logout
+  if (window.authHelpers?.clearCaches) window.authHelpers.clearCaches();
   try {
     const result = await window.auth.signOut();
     if (result.success) {

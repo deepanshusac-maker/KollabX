@@ -189,10 +189,10 @@ async function renderNotificationDropdown() {
     })
     .join('');
 
-  // Initialize icons
+  // Initialize icons (scoped to dropdown list only)
   if (window.lucide) {
     try {
-      window.lucide.createIcons();
+      window.lucide.createIcons({ nodes: [listEl] });
     } catch (e) {
       console.warn('Error initializing lucide icons in notifications dropdown:', e);
     }
