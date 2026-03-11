@@ -77,8 +77,6 @@ body {
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
   background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-lg);
   display: flex;
@@ -552,8 +550,6 @@ body {
   height: calc(100vh - 3rem);
   min-width: 0;
   background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-lg);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
@@ -1221,7 +1217,6 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
   display: none;
   align-items: center;
   justify-content: center;

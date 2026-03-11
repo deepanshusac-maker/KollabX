@@ -279,26 +279,21 @@
     }
 }
 
-/* Split Text Animation Styles */
-.split-line {
-    overflow: hidden;
-    display: inline-block;
+/* Unified Text Animation Styles (Replaces JS Splitting) */
+.animate-heading {
+    opacity: 0;
+    animation: revealText 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
 
-.split-char,
-.split-word {
-    display: inline-block;
+.animate-subheading {
     opacity: 0;
-    transform: translateY(100%);
-    animation: revealText 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-    margin-right: 0.10em;
-    /* Tighter letter spacing */
+    animation: revealText 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s forwards;
 }
 
 @keyframes revealText {
     from {
         opacity: 0;
-        transform: translateY(100%);
+        transform: translateY(20px);
     }
 
     to {

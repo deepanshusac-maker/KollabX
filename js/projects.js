@@ -315,19 +315,14 @@ async function calculateMatchScore(userId, projectId) {
   try {
     const supabase = ensureSupabase();
 
-    // Get user profile
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('skills')
-      .eq('id', userId)
-      .single();
+    // Fire both queries simultaneously to save network round-trip time
+    const [profileResult, projectResult] = await Promise.all([
+      supabase.from('profiles').select('skills').eq('id', userId).single(),
+      supabase.from('projects').select('required_skills').eq('id', projectId).single()
+    ]);
 
-    // Get project
-    const { data: project } = await supabase
-      .from('projects')
-      .select('required_skills')
-      .eq('id', projectId)
-      .single();
+    const profile = profileResult.data;
+    const project = projectResult.data;
 
     if (!profile || !project) {
       return 0;

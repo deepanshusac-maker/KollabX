@@ -141,24 +141,18 @@ async function leaveTeam(projectId) {
       return { success: false, error: 'You must be logged in' };
     }
 
-    // Verify user is a team member
-    const { data: member } = await supabase
-      .from('team_members')
-      .select('project_id, user_id')
-      .eq('project_id', projectId)
-      .eq('user_id', user.id)
-      .single();
+    // Verify user is a team member and get project info concurrently
+    const [memberResult, projectResult] = await Promise.all([
+      supabase.from('team_members').select('project_id, user_id').eq('project_id', projectId).eq('user_id', user.id).single(),
+      supabase.from('projects').select('id, title, creator_id').eq('id', projectId).single()
+    ]);
+
+    const member = memberResult.data;
+    const project = projectResult.data;
 
     if (!member) {
       return { success: false, error: 'You are not a member of this team' };
     }
-
-    // Get project info for notification
-    const { data: project } = await supabase
-      .from('projects')
-      .select('id, title, creator_id')
-      .eq('id', projectId)
-      .single();
 
     // Can't leave if you're the creator
     if (project && project.creator_id === user.id) {

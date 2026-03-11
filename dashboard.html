@@ -31,18 +31,13 @@
     <meta property="twitter:description" content="Manage your project requests, teams, and tracking.">
     <meta property="twitter:image" content="assets/images/og-image.png">
 
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/sections.css">
-    <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="css/toast.css">
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@0.400.0"></script>
+    <script defer src="https://unpkg.com/lucide@0.400.0"></script>
 
     <!-- Simple Analytics Placeholder -->
     <script defer data-domain="kollabx.com" src="https://plausible.io/js/script.js"></script>
-    <link rel="stylesheet" href="css/cookie-consent.css">
 </head>
 
 <body class="auth-loading-state">
@@ -237,7 +232,7 @@
     <script src="js/toast.js" defer></script>
     <script src="js/main.js" defer></script>
     <script src="js/dashboard.js" defer></script>
-    <script>
+    <script type="module">
         // Initialize auth and protect route
         window.addEventListener('DOMContentLoaded', async () => {
             // Check authentication
@@ -819,8 +814,8 @@
             return div.innerHTML;
         }
     </script>
-    <script src="js/analytics.js"></script>
-    <script src="js/cookie-consent.js"></script>
+    <script src="js/analytics.js" defer></script>
+    <script src="js/cookie-consent.js" defer></script>
 </body>
 
 </html>
