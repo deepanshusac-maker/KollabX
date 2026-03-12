@@ -202,38 +202,7 @@
     </main>
 
 
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
 
-        // View Toggling Logic
-        const btnExplore = document.getElementById('btn-explore');
-        const btnPosted = document.getElementById('btn-posted');
-        const exploreView = document.getElementById('explore-view');
-        const postedView = document.getElementById('posted-ideas-view');
-        const filterCard = document.querySelector('.filter-card');
-
-        btnExplore.addEventListener('click', () => {
-            btnExplore.classList.add('active');
-            btnPosted.classList.remove('active');
-            exploreView.classList.remove('hidden');
-            postedView.classList.add('hidden');
-            if (filterCard) filterCard.style.display = '';
-        });
-
-        btnPosted.addEventListener('click', async () => {
-            btnPosted.classList.add('active');
-            btnExplore.classList.remove('active');
-            postedView.classList.remove('hidden');
-            exploreView.classList.add('hidden');
-            if (filterCard) filterCard.style.display = 'none';
-
-            // Load current user's posted projects
-            if (typeof loadMyProjects === 'function') {
-                await loadMyProjects();
-            }
-        });
-    </script>
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase.js"></script>
@@ -251,6 +220,41 @@
         window.addEventListener('DOMContentLoaded', async () => {
             await window.session.initAuth();
             await loadProjects();
+
+            // Initialize Lucide icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            // View Toggling Logic
+            const btnExplore = document.getElementById('btn-explore');
+            const btnPosted = document.getElementById('btn-posted');
+            const exploreView = document.getElementById('explore-view');
+            const postedView = document.getElementById('posted-ideas-view');
+            const filterCard = document.querySelector('.filter-card');
+
+            if (btnExplore) {
+                btnExplore.addEventListener('click', () => {
+                    btnExplore.classList.add('active');
+                    btnPosted.classList.remove('active');
+                    exploreView.classList.remove('hidden');
+                    postedView.classList.add('hidden');
+                    if (filterCard) filterCard.style.display = '';
+                });
+            }
+
+            if (btnPosted) {
+                btnPosted.addEventListener('click', async () => {
+                    btnPosted.classList.add('active');
+                    btnExplore.classList.remove('active');
+                    postedView.classList.remove('hidden');
+                    exploreView.classList.add('hidden');
+                    if (filterCard) filterCard.style.display = 'none';
+
+                    // Load current user's posted projects
+                    await loadMyProjects();
+                });
+            }
 
             // Handle hash-based navigation (e.g., from dashboard)
             const hash = window.location.hash;

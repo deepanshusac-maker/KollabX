@@ -227,6 +227,36 @@ function onAuthStateChange(callback) {
   });
 }
 
+// Delete user account
+async function deleteAccount() {
+  try {
+    const supabase = ensureSupabase();
+    const user = await window.authHelpers.getCurrentUser();
+    
+    if (!user) {
+      throw new Error('You must be logged in to delete your account.');
+    }
+
+    // 1. Delete the profile first (RLS allows this now)
+    // This will cascade to projects, team_members, etc.
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', user.id);
+
+    if (profileError) throw profileError;
+
+    // 2. Sign out the user
+    await signOut();
+
+    if (window.kxAnalytics) window.kxAnalytics.trackEvent('delete_account');
+    return { success: true };
+  } catch (error) {
+    console.error('Delete account error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 // Export functions
 window.auth = {
   signUp,
@@ -239,6 +269,7 @@ window.auth = {
   checkAuth,
   isProfileComplete,
   isNewUser,
+  deleteAccount,
   onAuthStateChange
 };
 

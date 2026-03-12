@@ -1274,3 +1274,91 @@ footer {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(179, 82, 106, 0.3);
 }
+
+/* My Projects Section Specifics */
+.projects-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.project-card-item {
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.project-card-item:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateX(5px);
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.project-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.project-card-meta {
+    font-size: 0.85rem;
+    color: var(--text-mist);
+    margin-top: 0.2rem;
+}
+
+.project-card-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-main);
+    margin-bottom: 1.5rem;
+}
+
+.project-card-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-edit-project, .btn-delete-project {
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-edit-project {
+    background: rgba(30, 64, 175, 0.1);
+    color: #1e40af;
+    border: 1px solid rgba(30, 64, 175, 0.2);
+}
+
+.btn-edit-project:hover {
+    background: #1e40af;
+    color: white;
+}
+
+.btn-delete-project {
+    background: rgba(185, 28, 28, 0.1);
+    color: #b91c1c;
+    border: 1px solid rgba(185, 28, 28, 0.2);
+}
+
+.btn-delete-project:hover {
+    background: #b91c1c;
+    color: white;
+}

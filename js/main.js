@@ -78,11 +78,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reposition after auth UI updates show/hide nav items
     // Uses a MutationObserver on the nav list watching for style/display changes
     if (navList) {
-        const observer = new MutationObserver(() => {
-            // Small delay to let DOM settle after auth changes
-            setTimeout(() => positionIndicator(true), 50);
+        const observer = new MutationObserver((mutations) => {
+            // Check if any of the mutations were on nav-items or their containers
+            const shouldUpdate = mutations.some(mutation => {
+                const target = mutation.target;
+                // Only trigger if it's a nav-item or a nav-item-auth-only that changed visibility
+                return target.classList && (
+                    target.classList.contains('nav-item') || 
+                    target.classList.contains('nav-item-auth-only')
+                );
+            });
+
+            if (shouldUpdate) {
+                // Small delay to let DOM settle after auth changes
+                setTimeout(() => positionIndicator(true), 50);
+            }
         });
-        observer.observe(navList, { attributes: true, subtree: true, attributeFilter: ['style'] });
+
+        // We only care about style changes on the list items themselves
+        observer.observe(navList, { 
+            attributes: true, 
+            subtree: true, 
+            attributeFilter: ['style', 'class'] 
+        });
     }
 
     // Reposition on window resize (layout may shift)

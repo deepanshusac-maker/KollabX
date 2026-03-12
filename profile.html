@@ -199,7 +199,14 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 3rem; display: flex; justify-content: flex-end;">
+                <div style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                    <div class="danger-zone">
+                        <h4 style="color: #ff4d4d; margin-bottom: 0.5rem; font-size: 0.9rem;">Danger Zone</h4>
+                        <p style="color: var(--text-mist); font-size: 0.8rem; margin: 0;">Once you delete your account, there is no going back. Please be certain.</p>
+                        <button type="button" id="delete-account-btn" style="margin-top: 1rem; padding: 0.6rem 1.2rem; background: transparent; color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.3); border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s ease;">
+                            Delete Account
+                        </button>
+                    </div>
                     <button type="submit" id="save-profile" class="btn-signin"
                         style="padding: 1rem 3rem; font-size: 1rem; cursor: pointer;">Save Profile</button>
                 </div>
@@ -651,6 +658,44 @@
                 showFormError(friendlyError);
             }
         });
+        // Handle delete account
+        const deleteAccountBtn = document.getElementById('delete-account-btn');
+        if (deleteAccountBtn) {
+            deleteAccountBtn.addEventListener('click', async () => {
+                const deleteAction = async () => {
+                    try {
+                        showLoading(deleteAccountBtn, 'Deleting...');
+                        const result = await window.auth.deleteAccount();
+                        if (result.success) {
+                            window.toast.success('Your account has been deleted. Redirecting...');
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 2000);
+                        } else {
+                            hideLoading(deleteAccountBtn);
+                            showFormError(result.error || 'Failed to delete account.');
+                        }
+                    } catch (error) {
+                        hideLoading(deleteAccountBtn);
+                        console.error('Error in deletion flow:', error);
+                        showFormError('An unexpected error occurred during account deletion.');
+                    }
+                };
+
+                if (window.toast && window.toast.confirm) {
+                    window.toast.confirm(
+                        'Are you absolutely sure? This will permanently delete your profile, projects, and applications.',
+                        deleteAction,
+                        null,
+                        { confirmText: 'Yes, Delete My Account', type: 'danger' }
+                    );
+                } else {
+                    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                        deleteAction();
+                    }
+                }
+            });
+        }
     </script>
     <script src="js/analytics.js" defer></script>
     <script src="js/cookie-consent.js" defer></script>
