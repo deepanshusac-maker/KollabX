@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const target = mutation.target;
                 // Only trigger if it's a nav-item or a nav-item-auth-only that changed visibility
                 return target.classList && (
-                    target.classList.contains('nav-item') || 
+                    target.classList.contains('nav-item') ||
                     target.classList.contains('nav-item-auth-only')
                 );
             });
@@ -96,10 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // We only care about style changes on the list items themselves
-        observer.observe(navList, { 
-            attributes: true, 
-            subtree: true, 
-            attributeFilter: ['style', 'class'] 
+        observer.observe(navList, {
+            attributes: true,
+            subtree: true,
+            attributeFilter: ['style', 'class']
         });
     }
 

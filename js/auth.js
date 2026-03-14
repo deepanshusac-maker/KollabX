@@ -12,18 +12,20 @@ function ensureSupabase() {
 // Helper to check if email is NITP domain
 function isNITPEmail(email) {
   if (!email) return false;
-  return email.toLowerCase().endsWith('@nitp.ac.in');
+  const trimmedEmail = email.trim().toLowerCase();
+  return trimmedEmail.endsWith('@nitp.ac.in');
 }
 
 // Sign up with email and password
 async function signUp(email, password, fullName) {
   try {
-    if (!isNITPEmail(email)) {
+    const cleanEmail = email ? email.trim() : '';
+    if (!isNITPEmail(cleanEmail)) {
       throw new Error('Only @nitp.ac.in emails are allowed to join KollabX.');
     }
     const supabase = ensureSupabase();
     const { data, error } = await supabase.auth.signUp({
-      email: email,
+      email: cleanEmail,
       password: password,
       options: {
         data: {
@@ -46,12 +48,13 @@ async function signUp(email, password, fullName) {
 // Sign in with email and password
 async function signIn(email, password) {
   try {
-    if (!isNITPEmail(email)) {
+    const cleanEmail = email ? email.trim() : '';
+    if (!isNITPEmail(cleanEmail)) {
       throw new Error('Only @nitp.ac.in emails are allowed.');
     }
     const supabase = ensureSupabase();
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
+      email: cleanEmail,
       password: password
     });
 

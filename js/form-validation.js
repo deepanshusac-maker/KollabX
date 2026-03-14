@@ -344,7 +344,7 @@ function getUserFriendlyError(error) {
         return 'Please verify your email address. Check your inbox for a confirmation email.';
     }
     if (errorStr.includes('user already registered')) {
-        return 'An account with this email already exists. Try signing in instead.';
+        return 'An account with this email already exists. If you previously joined using Google, please use the "Continue with Google" button instead.';
     }
 
     // Database errors

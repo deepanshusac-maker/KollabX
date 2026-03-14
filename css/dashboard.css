@@ -1328,7 +1328,8 @@ footer {
     flex-wrap: wrap;
 }
 
-.btn-edit-project, .btn-delete-project {
+.btn-edit-project,
+.btn-delete-project {
     padding: 0.6rem 1.2rem;
     border-radius: 10px;
     font-weight: 600;
