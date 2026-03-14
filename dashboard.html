@@ -466,10 +466,6 @@
                             </div>
                             ${project.description ? `<div class="project-card-desc">${escapeHtml(description)}</div>` : ''}
                             <div class="project-card-actions">
-                                <button class="btn-copy-invite" data-project-token="${project.invite_token}" title="Copy Invite Link">
-                                    <i data-lucide="link"></i>
-                                    Invite
-                                </button>
                                 <a href="post.html?edit=${project.id}" class="btn-edit-project">
                                     <i data-lucide="edit-3"></i>
                                     Edit Project
@@ -508,27 +504,6 @@
                             window.toast.confirm('Are you sure you want to delete this project? This action cannot be undone.', deleteAction, null, { confirmText: 'Delete Project', type: 'danger' });
                         } else {
                             if (confirm('Are you sure you want to delete this project?')) deleteAction();
-                        }
-                    });
-                });
-
-                // Add copy invite event listeners
-                container.querySelectorAll('.btn-copy-invite').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        e.stopPropagation();
-                        const token = btn.dataset.projectToken;
-                        if (!token || token === 'undefined') {
-                            window.toast.error('Unable to generate invite link. Please recreate the project or contact support.');
-                            return;
-                        }
-                        
-                        const inviteLink = `\${window.location.origin}/invite.html?token=\${token}`;
-                        try {
-                            await navigator.clipboard.writeText(inviteLink);
-                            window.toast.success('Invite link copied to clipboard!');
-                        } catch (err) {
-                            console.error('Failed to copy text: ', err);
-                            prompt('Copy this link to invite members:', inviteLink);
                         }
                     });
                 });

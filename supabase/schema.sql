@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS projects (
   visibility TEXT DEFAULT 'public' CHECK (visibility IN ('public', 'private')),
   status TEXT DEFAULT 'open' CHECK (status IN ('open', 'closed', 'completed')),
   current_members INTEGER DEFAULT 1 CHECK (current_members >= 0),
-  invite_token UUID UNIQUE DEFAULT gen_random_uuid(),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
