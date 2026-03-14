@@ -43,6 +43,16 @@ async function initAuth() {
     if (error) {
       console.error('Error getting session:', error);
     }
+    
+    // Auto-redirect to pending invite if exists and we are not already on that page
+    if (session && session.user) {
+      const pendingToken = sessionStorage.getItem('pending_invite_token');
+      if (pendingToken && !window.location.href.includes('invite.html')) {
+          window.location.href = `invite.html?token=\${pendingToken}`;
+          return session;
+      }
+    }
+    
     updateAuthUI(session);
 
     return session;
