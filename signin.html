@@ -1139,8 +1139,12 @@
                 'signup-confirm-password': [validators.minLength(8), validators.matchField('signup-password', 'Passwords do not match')]
             });
 
+            let isSignupLoading = false;
+
             signupForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                if (isSignupLoading) return;
 
                 const fieldRules = {
                     'signup-password': [validators.minLength(8)],
@@ -1164,6 +1168,8 @@
                 const fullName = document.getElementById('signup-name').value;
 
                 showLoading(signupButton, 'Create Account');
+                isSignupLoading = true;
+                signupButton.disabled = true;
 
                 try {
                     const result = await window.auth.signUp(email, password, fullName);
@@ -1186,6 +1192,9 @@
                     const friendlyError = getUserFriendlyError(error);
                     window.toast.error(friendlyError);
                     console.error('Signup error:', error);
+                } finally {
+                    isSignupLoading = false;
+                    signupButton.disabled = false;
                 }
             });
         }
@@ -1197,8 +1206,12 @@
         if (signinForm) {
             setupRealTimeValidation(signinForm);
 
+            let isSigninLoading = false;
+
             signinForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                if (isSigninLoading) return;
 
                 if (!validateForm(signinForm)) {
                     showFormError('Please enter valid credentials.');
@@ -1209,6 +1222,8 @@
                 const password = document.getElementById('signin-password').value;
 
                 showLoading(signinButton, 'Sign In');
+                isSigninLoading = true;
+                signinButton.disabled = true;
 
                 try {
                     const result = await window.auth.signIn(email, password);
@@ -1245,6 +1260,9 @@
                     const friendlyError = getUserFriendlyError(error);
                     window.toast.error(friendlyError);
                     console.error('Signin error:', error);
+                } finally {
+                    isSigninLoading = false;
+                    signinButton.disabled = false;
                 }
             });
         }

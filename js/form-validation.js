@@ -369,8 +369,8 @@ function getUserFriendlyError(error) {
     }
 
     // Rate limiting
-    if (errorStr.includes('rate limit') || errorStr.includes('too many')) {
-        return 'Too many requests. Please wait a moment and try again.';
+    if (errorStr.includes('rate limit') || errorStr.includes('too many') || (error && error.status === 429)) {
+        return 'Too many attempts. Please wait 60 seconds and try again.';
     }
 
     // Storage errors
